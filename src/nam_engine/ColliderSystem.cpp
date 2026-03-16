@@ -35,7 +35,7 @@ namespace nam
         ecs.ForEach<BoxColliderComponent, TransformComponent, MeshRendererComponent>(
             [&](u32 e1, BoxColliderComponent& b1, TransformComponent& t1, MeshRendererComponent& m) {
                 Vector<u32> nearby;
-                m_spatialHash.GetNearby(e1, t1.GetWorldPosition(), nearby);
+                m_spatialHash.GetNearby(e1, b1.m_box, nearby);
 
                 for (u32 e2 : nearby) {
                     if (e1 >= e2) continue; 
@@ -57,7 +57,7 @@ namespace nam
         ecs.ForEach<SphereColliderComponent, TransformComponent, MeshRendererComponent>(
             [&](u32 e1, SphereColliderComponent& s1, TransformComponent& t1, MeshRendererComponent& m) {
                 Vector<u32> nearby;
-                m_spatialHash.GetNearby(e1, t1.GetWorldPosition(), nearby);
+                m_spatialHash.GetNearby(e1, s1.m_box, nearby);
 
                 for (u32 e2 : nearby) {
                     if (e1 >= e2) continue;
@@ -298,10 +298,12 @@ namespace nam
                 if (velAlongNormal > 0) {
                     float restitution = (physic1.m_collisionRestitution * physic2.m_mass + physic2.m_collisionRestitution * physic1.m_mass) / totalMass;
 
-                    float impulse = -(1 + restitution) * velAlongNormal / totalMass;
+                    float invMass1 = 1.0f / physic1.m_mass;
+                    float invMass2 = 1.0f / physic2.m_mass;
+                    float impulse = -(1 + restitution) * velAlongNormal / (invMass1 + invMass2);
 
-                    XMVECTOR impulse1 = XMVectorMultiply(normal, XMVectorReplicate(impulse * ratio1));
-                    XMVECTOR impulse2 = XMVectorMultiply(normal, XMVectorReplicate(impulse * ratio2));
+                    XMVECTOR impulse1 = XMVectorMultiply(normal, XMVectorReplicate(impulse * invMass1));
+                    XMVECTOR impulse2 = XMVectorMultiply(normal, XMVectorReplicate(impulse * invMass2));
 
                     vel1 = XMVectorAdd(vel1, impulse1);
                     vel2 = XMVectorSubtract(vel2, impulse2); 
