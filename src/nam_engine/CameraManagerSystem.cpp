@@ -23,7 +23,6 @@ namespace nam
 
 	void CameraManagerSystem::Handle3D(Ecs& ecs)
 	{
-		GameObject* pGameObjectCam = App::Get()->GetCamera();
 		TransformComponent* tc = nullptr;
 		CameraComponent* cc = nullptr;
 
