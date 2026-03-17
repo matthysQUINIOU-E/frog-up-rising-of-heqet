@@ -41,7 +41,23 @@ void Frog::OnController()
         m_isSpacePressed = false;
 
         if(m_isGrounded)
-            JumpCamera();
+        {
+            Ecs& ecs = App::Get()->GetEcs();
+
+            TransformComponent* cameraTransform = nullptr;
+            ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
+                {
+                    cameraTransform = &transform;
+                });
+
+            if (cameraTransform == nullptr)
+            {
+                m_jumpImpulse = 0.f;
+                return;
+            }
+            XMFLOAT3 impulse = cameraTransform->GetWorldForward();
+            Jump(impulse);
+        }
     }
 
     if (m_isGrounded == false)
@@ -83,44 +99,28 @@ void Frog::ChargeJump()
     m_jumpImpulse = std::clamp(m_jumpImpulse, 0.f, m_maxImpulse);
     if (m_jumpImpulse == m_maxImpulse)
     {
-        JumpCamera();
-    }
-}
+        Ecs& ecs = App::Get()->GetEcs();
 
-void Frog::JumpCamera()
-{
-    Ecs& ecs = App::Get()->GetEcs();
+        TransformComponent* cameraTransform = nullptr;
+        ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
+            {
+                cameraTransform = &transform;
+            });
 
-    TransformComponent* cameraTransform = nullptr;
-    ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
+        if (cameraTransform == nullptr)
         {
-            cameraTransform = &transform;
-        });
-
-    if (cameraTransform == nullptr)
-    {
-        m_jumpImpulse = 0.f;
-        return;
+            m_jumpImpulse = 0.f;
+            return;
+        }
+        XMFLOAT3 impulse = cameraTransform->GetWorldForward();
+        Jump(impulse);
     }
-
-    XMFLOAT3 impulse = cameraTransform->GetWorldForward();
-    impulse.x *= m_jumpImpulse;
-    impulse.y *= m_jumpImpulse;
-    impulse.z *= m_jumpImpulse;
-
-    m_jumpImpulse = 0.f;
-
-    PhysicComponent& physic = GetComponent<PhysicComponent>();
-    physic.AddImpulse(impulse);
-
-    physic.m_useGravity = true;
-    m_isGrounded = false;
 }
 
 void Frog::Jump(XMFLOAT3 direction)
 {   
     XMVECTOR vimpulse = XMLoadFloat3(&direction);
-    XMVectorScale(vimpulse, m_jumpImpulse);
+    vimpulse = XMVectorScale(vimpulse, m_jumpImpulse);
 
     XMFLOAT3 impulse;
     XMStoreFloat3(&impulse, vimpulse);
@@ -135,25 +135,42 @@ void Frog::Jump(XMFLOAT3 direction)
 
 void Frog::MoveForward()
 {
-    m_jumpImpulse = 5.f;
+    m_jumpImpulse = 2.f;
 
     TransformComponent& transform = GetComponent<TransformComponent>();
     XMFLOAT3 forward = transform.GetWorldForward();
-    forward.y += 2.f;
+    forward.y += 1.f;
     Jump(forward);
 }
 
 void Frog::MoveBack()
 {
+    m_jumpImpulse = 2.f;
 
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    XMFLOAT3 forward = transform.GetWorldForward();
+    forward.y += 1.f;
+    forward.z = -forward.z;
+    Jump(forward);
 }
 
 void Frog::MoveLeft()
 {
+    m_jumpImpulse = 2.f;
 
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    XMFLOAT3 right = transform.GetWorldRight();
+    right.y += 1.f;
+    right.x = -right.x;
+    Jump(right);
 }
 
 void Frog::MoveRight()
 {
+    m_jumpImpulse = 2.f;
 
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    XMFLOAT3 right = transform.GetWorldRight();
+    right.y += 1.f;
+    Jump(right);
 }

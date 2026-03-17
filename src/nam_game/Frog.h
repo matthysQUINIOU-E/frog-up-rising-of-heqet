@@ -18,7 +18,6 @@ public:
 	void OnCollision(nam::u32 self, nam::u32 other, const nam::CollisionInfo& collisionInfo) override;
 private:
 	void ChargeJump();
-	void JumpCamera();
 	void Jump(DirectX::XMFLOAT3 direction);
 
 	void MoveForward();
