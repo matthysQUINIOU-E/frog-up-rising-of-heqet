@@ -18,5 +18,6 @@ public:
 private:
 	void ChargeJump();
 	void Jump();
+	void Rotate();
 };
 

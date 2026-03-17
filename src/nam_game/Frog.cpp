@@ -39,6 +39,8 @@ void Frog::OnController()
         Jump();
         m_isSpacePressed = false;
     }
+
+    Rotate();
 }
 
 void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
@@ -81,6 +83,29 @@ void Frog::Jump()
     impulse.z *= m_jumpImpulse;
 
     m_jumpImpulse = 0.f;
+
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    physic.AddImpulse(impulse);
+}
+
+void Frog::Rotate()
+{
+    App* app = App::Get();
+    GameObject* cam = app->GetCamera();
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    TransformComponent& camTra = cam->GetComponent<TransformComponent>();
+
+    XMFLOAT3 impulse;
+    
+    if (cam == nullptr)
+        return;
+
+    if (camTra.GetWorldRight().x != transform.GetWorldRight().x )
+    {
+        transform.RotateWorldYPR(-cam->GetComponent<TransformComponent>().GetWorldRight().x, 0.0f, 0.0f);
+
+        impulse = { 0.0f, 1.f, 0.0f };
+    }
 
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     physic.AddImpulse(impulse);
