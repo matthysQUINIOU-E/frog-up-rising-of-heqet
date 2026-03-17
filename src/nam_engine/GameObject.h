@@ -10,7 +10,7 @@ namespace nam
 	private:
 		Entity m_entity;
 		Scene* mp_scene;
-		int m_tag;
+		Ecs* mp_ecs;
 
 	public:
 
@@ -28,8 +28,7 @@ namespace nam
 		virtual void OnController();
 		virtual void OnDestroy();
 
-		void SetActiveEntity(bool active);
-		void DestroyGameObject();
+		void SetActive(bool active);
 
 		template<typename Component>
 		void AddComponent(const Component& data);
@@ -43,7 +42,7 @@ namespace nam
 		void SetSphereCollider();
 		void SetController();
 
-		Entity* GetEntity();
+		Entity GetEntity();
 		Scene* GetScene();
 	private:
 		void Destroy();
