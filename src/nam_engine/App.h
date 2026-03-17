@@ -68,7 +68,6 @@ namespace nam
 
 		template<typename T>
 		T& CreateGameObject(size scene, bool active = true);
-		GameObject& GetGameObject(u32 idEntity);
 
 		template<typename T>
 		T& CreateOrGetScene(size scene);

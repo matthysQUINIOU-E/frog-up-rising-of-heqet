@@ -16,8 +16,7 @@ namespace nam
 		gameObject->SetActive(active);
 
 		u32 idEntity = entity.m_id;
-		m_gameObjects->Add(idEntity, gameObject);
-		return gameObject;
+		mp_gameObjects->Add(idEntity, gameObject);
+		return *static_cast<T*>(gameObject);
 	}
-
 }

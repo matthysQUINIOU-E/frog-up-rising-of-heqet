@@ -1,4 +1,6 @@
 #pragma once
+#include "SceneManager.h"
+#include "Scene.h"
 
 namespace nam
 {
@@ -11,7 +13,6 @@ namespace nam
 
 		if (it == m_scenes.end())
 		{
-
 			T* p_scene = new T();
 			p_scene->Init();
 			m_scenes.emplace(scene, p_scene);
@@ -22,5 +23,4 @@ namespace nam
 			return *static_cast<T*>(it->second);
 		}
 	}
-
 }
