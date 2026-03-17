@@ -9,7 +9,7 @@ namespace nam
 	{
 		mp_scene = nullptr;
 		m_entity = Entity();
-		m_tag = -1;
+		mp_ecs = &App::Get()->GetEcs();
 	}
 
 	void GameObject::Init(Scene* scene, Entity entity)
@@ -42,7 +42,7 @@ namespace nam
 	void GameObject::Destroy()
 	{
 		OnDestroy();
-		mp_scene->DestroyEntity(m_entity);
+		mp_scene->DestroyGameObject(*this);
 	}
 
 	void GameObject::OnInit()
@@ -69,14 +69,9 @@ namespace nam
 	{
 	}
 
-	void GameObject::SetActiveEntity(bool active)
+	void GameObject::SetActive(bool active)
 	{
-		mp_scene->SetActiveEntity(m_entity, active);
-	}
-
-	void GameObject::DestroyGameObject()
-	{
-		mp_scene->DestroyGameObject(this);
+		mp_ecs->SetEntityActive(m_entity,active);
 	}
 
 	BehaviorComponent& GameObject::SetBehavior()
@@ -99,9 +94,9 @@ namespace nam
 		return SetController(this, &GameObject::Controller);
 	}
 
-	Entity* GameObject::GetEntity()
+	Entity GameObject::GetEntity()
 	{
-		return &m_entity;
+		return m_entity;
 	}
 
 	Scene* GameObject::GetScene()
