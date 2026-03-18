@@ -103,9 +103,9 @@ void Frog::ChargeJump()
 
         TransformComponent* cameraTransform = nullptr;
         ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
-            {
-                cameraTransform = &transform;
-            });
+        {
+            cameraTransform = &transform;
+        });
 
         if (cameraTransform == nullptr)
         {
