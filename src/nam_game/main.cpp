@@ -19,6 +19,11 @@ enum class SceneTag : size
     _Main
 };
 
+enum class ColliderType : size
+{
+    _Ground
+};
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, int cmdShow)
 {
     App* app = App::Get(hInstance, 1920, 1080);
@@ -50,7 +55,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         mrc.mp_mesh->SetTexture((size)TextureTag::_Grass);
         go.AddComponent<MeshRendererComponent>(mrc);
         go.AddComponent<TransformComponent>(TransformComponent());
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderType::_Ground;
     }
 
     //platforms

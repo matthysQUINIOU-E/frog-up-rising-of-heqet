@@ -22,7 +22,7 @@ namespace nam
 	}
 
 	template<typename T>
-	inline void GameObject::SetFunctionUpdate(T* owner, void(T::* Update)())
+	inline BehaviorComponent& GameObject::SetFunctionUpdate(T* owner, void(T::* Update)())
 	{
 		if (HasComponent<BehaviorComponent>() == false)
 		{
@@ -39,10 +39,11 @@ namespace nam
 				(owner->*Update)();
 				};
 		}
+		return GetComponent<BehaviorComponent>();
 	}
 
 	template<typename T>
-	inline void GameObject::SetBoxCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo))
+	inline BoxColliderComponent& GameObject::SetBoxCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo))
 	{
 		if (HasComponent<BoxColliderComponent>() == false)
 		{
@@ -60,10 +61,11 @@ namespace nam
 				(owner->*Collide)(self, other, collisionInfo);
 				};
 		}
+		return GetComponent<BoxColliderComponent>();
 	}
 
 	template<typename T>
-	void GameObject::SetSphereCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo))
+	inline SphereColliderComponent& GameObject::SetSphereCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo))
 	{
 		if (HasComponent<SphereColliderComponent>() == false)
 		{
@@ -76,14 +78,15 @@ namespace nam
 		}
 		else
 		{
-			BoxColliderComponent& sphereCollider = GetComponent<BoxColliderComponent>();
+			SphereColliderComponent& sphereCollider = GetComponent<SphereColliderComponent>();
 			sphereCollider.OnCollision = [owner, Collide](u32 self, u32 other, const CollisionInfo& collisionInfo) {
 				(owner->*Collide)(self, other, collisionInfo);
 				};
 		}
+		return GetComponent<SphereColliderComponent>();
 	}
 	template<typename T>
-	inline void GameObject::SetController(T* owner, void(T::* Controller)())
+	inline ControllerComponent& GameObject::SetController(T* owner, void(T::* Controller)())
 	{
 		if (HasComponent<ControllerComponent>() == false)
 		{
@@ -100,5 +103,6 @@ namespace nam
 				(owner->*Controller)();
 				};
 		}
+		return GetComponent<ControllerComponent>();
 	}
 }

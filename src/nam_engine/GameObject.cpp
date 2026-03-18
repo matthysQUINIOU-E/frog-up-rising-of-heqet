@@ -75,24 +75,24 @@ namespace nam
 		mp_ecs->SetEntityActive(m_entity,active);
 	}
 
-	void GameObject::SetBehavior()
+	BehaviorComponent& GameObject::SetBehavior()
 	{
-		SetFunctionUpdate(this, &GameObject::Update);
+		return SetFunctionUpdate(this, &GameObject::Update);
 	}
 
-	void GameObject::SetBoxCollider()
+	BoxColliderComponent& GameObject::SetBoxCollider()
 	{
-		SetBoxCollider(this, &GameObject::Collider);
+		return SetBoxCollider(this, &GameObject::Collider);
 	}
 
-	void GameObject::SetSphereCollider()
+	SphereColliderComponent& GameObject::SetSphereCollider()
 	{
-		SetSphereCollider(this, &GameObject::Collider);
+		return SetSphereCollider(this, &GameObject::Collider);
 	}
 
-	void GameObject::SetController()
+	ControllerComponent& GameObject::SetController()
 	{
-		SetController(this, &GameObject::Controller);
+		return SetController(this, &GameObject::Controller);
 	}
 
 	Entity GameObject::GetEntity()

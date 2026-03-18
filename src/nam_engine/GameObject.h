@@ -38,23 +38,23 @@ namespace nam
 		template<typename Component>
 		Component& GetComponent();
 
-		void SetBehavior();
-		void SetBoxCollider();
-		void SetSphereCollider();
-		void SetController();
+		BehaviorComponent& SetBehavior();
+		BoxColliderComponent& SetBoxCollider();
+		SphereColliderComponent& SetSphereCollider();
+		ControllerComponent& SetController();
 
 		Entity GetEntity();
 		Scene* GetScene();
 	private:
 
 		template<typename T>
-		void SetFunctionUpdate(T* owner, void (T::* Update)());
+		BehaviorComponent& SetFunctionUpdate(T* owner, void (T::* Update)());
 		template<typename T>
-		void SetBoxCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo));
+		BoxColliderComponent& SetBoxCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo));
 		template<typename T>
-		void SetSphereCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo));
+		SphereColliderComponent& SetSphereCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo));
 		template<typename T>
-		void SetController(T* owner, void(T::* Controller)());
+		ControllerComponent& SetController(T* owner, void(T::* Controller)());
 
 		friend class App;
 		friend class Scene;

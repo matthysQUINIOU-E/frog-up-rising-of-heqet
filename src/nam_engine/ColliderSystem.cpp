@@ -39,14 +39,21 @@ namespace nam
 
                 for (u32 e2 : nearby) {
                     if (e1 >= e2) continue; 
-
                     if (ecs.HasComponent<BoxColliderComponent>(e2)) {
                         BoxColliderComponent& b2 = ecs.GetComponent<BoxColliderComponent>(e2);
+
+                        if (!ShouldCollide(b1.m_shouldCollideWith, b2.m_shouldCollideWith, b1.m_tag, b2.m_tag))
+                            continue;
+
                         TransformComponent& t2 = ecs.GetComponent<TransformComponent>(e2);
                         CheckCollision(t1, t2, b1, b2, e1, e2, collisions);
                     }
                     else if (ecs.HasComponent<SphereColliderComponent>(e2)) {
                         SphereColliderComponent& s1 = ecs.GetComponent<SphereColliderComponent>(e2);
+
+                        if (!ShouldCollide(b1.m_shouldCollideWith, s1.m_shouldCollideWith, b1.m_tag, s1.m_tag))
+                            continue;
+
                         TransformComponent& t2 = ecs.GetComponent<TransformComponent>(e2);
                         CheckCollision(t1, t2, b1, s1, e1, e2, collisions); // pass box then sphere 
                     }
@@ -64,11 +71,19 @@ namespace nam
 
                     if (ecs.HasComponent<BoxColliderComponent>(e2)) {
                         BoxColliderComponent& b1 = ecs.GetComponent<BoxColliderComponent>(e2);
+
+                        if (!ShouldCollide(s1.m_shouldCollideWith, b1.m_shouldCollideWith, s1.m_tag, b1.m_tag))
+                            continue;
+
                         TransformComponent& t2 = ecs.GetComponent<TransformComponent>(e2);
                         CheckCollision(t1, t2, b1, s1, e1, e2, collisions);  // pass box then sphere 
                     }
                     else if (ecs.HasComponent<SphereColliderComponent>(e2)) {
                         SphereColliderComponent& s2 = ecs.GetComponent<SphereColliderComponent>(e2);
+
+                        if (!ShouldCollide(s1.m_shouldCollideWith, s2.m_shouldCollideWith, s1.m_tag, s2.m_tag))
+                            continue;
+
                         TransformComponent& t2 = ecs.GetComponent<TransformComponent>(e2);
                         CheckCollision(t1, t2, s1, s2, e1, e2, collisions);
                     }
@@ -79,6 +94,26 @@ namespace nam
         ProcessCollisionsIntersection(ecs, collisions);
         ProcessCollisionsOnCollide(collisions);
 	}
+
+    bool ColliderSystem::ShouldCollide(UnSet<size> shouldCollideWith1, UnSet<size> shouldCollideWith2, size tag1, size tag2)
+    {
+        if (shouldCollideWith1.empty() && shouldCollideWith2.empty())
+            return true;
+        
+        bool hasTag1 = shouldCollideWith2.find(tag1) != shouldCollideWith2.end();
+
+        if (shouldCollideWith1.empty() && hasTag1)
+            return true;
+
+        bool hasTag2 = shouldCollideWith1.find(tag2) != shouldCollideWith1.end();
+
+        if (shouldCollideWith2.empty() && hasTag2)
+            return true;
+        if (hasTag1 && hasTag2)
+            return true;
+
+        return false;
+    }
 
     CollisionInfo ColliderSystem::CalculateCollisionInfo(const DirectX::BoundingOrientedBox& box1, const DirectX::BoundingOrientedBox& box2)
     {

@@ -17,6 +17,9 @@ namespace nam
         bool m_noIntersectionPush1 = false;
         bool m_noIntersectionPush2 = false;
 
+        size m_tag1;
+        size m_tag2;
+
         float penetrationDepth = 0.f;
         DirectX::XMFLOAT3 m_normal;
         DirectX::XMFLOAT3 m_contactPoint;
