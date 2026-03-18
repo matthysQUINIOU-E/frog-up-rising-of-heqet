@@ -46,7 +46,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         GameObject& go = scene.CreateGameObject<GameObject>();
         MeshRendererComponent mrc;
         mrc.CreateMeshInstance();
-        mrc.mp_mesh->BuildBox({ 100.f,10.f,100.f }, { 1,1,1,1 });
+        mrc.mp_mesh->BuildBox({ 100.f,0.1f,100.f }, { 1,1,1,1 });
         mrc.mp_mesh->SetTexture((size)TextureTag::_Grass);
         go.AddComponent<MeshRendererComponent>(mrc);
         go.AddComponent<TransformComponent>(TransformComponent());

@@ -95,7 +95,6 @@ void Frog::OnController()
     if (Input::IsKey(VK_CONTROL))
         m_slope -= dt;
 
-
 }
    
 
@@ -159,44 +158,28 @@ void Frog::Jump(XMFLOAT3 direction)
     m_isGrounded = false;
 }
 
-void Frog::MoveForward()
+void Frog::Move(float _forward, float _right)
 {
     m_jumpImpulse = 2.f;
+
+    XMVECTOR vDirection = { 0.f, 1.f, 0.f };
 
     TransformComponent& transform = GetComponent<TransformComponent>();
     XMFLOAT3 forward = transform.GetWorldForward();
-    forward.y += 1.f;
-    Jump(forward);
-}
+    XMVECTOR vForward = XMLoadFloat3(&forward);
+    vForward = XMVectorScale(vForward, _forward);
+    vDirection += vForward;
 
-void Frog::MoveBack()
-{
-    m_jumpImpulse = 2.f;
-
-    TransformComponent& transform = GetComponent<TransformComponent>();
-    XMFLOAT3 forward = transform.GetWorldForward();
-    forward.y += 1.f;
-    forward.z = -forward.z;
-    Jump(forward);
-}
-
-void Frog::MoveLeft()
-{
-    m_jumpImpulse = 2.f;
-
-    TransformComponent& transform = GetComponent<TransformComponent>();
     XMFLOAT3 right = transform.GetWorldRight();
-    right.y += 1.f;
-    right.x = -right.x;
-    Jump(right);
+    XMVECTOR vRight = XMLoadFloat3(&right);
+    vRight = XMVectorScale(vRight, _right);
+    vDirection += vRight;
+
+    vDirection = XMVector3Normalize(vDirection);
+
+    XMFLOAT3 direction;
+    XMStoreFloat3(&direction, vDirection);
+    Jump(direction);
 }
 
-void Frog::MoveRight()
-{
-    m_jumpImpulse = 2.f;
 
-    TransformComponent& transform = GetComponent<TransformComponent>();
-    XMFLOAT3 right = transform.GetWorldRight();
-    right.y += 1.f;
-    Jump(right);
-}
