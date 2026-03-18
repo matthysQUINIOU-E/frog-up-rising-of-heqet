@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Frog.h"
 #include "Camera.h"
+#include "FrogArrow.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -21,12 +22,15 @@ void Frog::OnInit()
     SetBoxCollider();
 	SetBehavior();
     SetController();
+
+    Scene* scene = GetScene();
+    m_arrow = scene->CreateGameObject<FrogArrow>();
+    TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
+    arrowTransform.SetParent(&tc);
 }
 
 void Frog::OnUpdate()
 {
-
-
     if (m_isSpacePressed && m_isGrounded)
         ChargeJump();
 }
@@ -63,33 +67,55 @@ void Frog::OnController()
     if (m_isGrounded == false)
         return;
     
+    float forward = 0.f;
+    float right = 0.f;
+
+    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+
     if(Input::IsKey('Z') || Input::IsKey(VK_UP))
-    {
-        MoveForward();
-    }
+        forward += 1.f;
+    
     if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
-    {
-        MoveBack();
-    }
+        forward -= 1.f;
+    
     if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
-    {
-        MoveLeft();
-    }
+        right -= 1.f;
+    
     if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
-    {
-        MoveRight();
-    }
+        right += 1.f;
+
+    if (forward == 0.f && right == 0.f)
+        return;
+        
+    Move(forward, right);
+
+
+    if(Input::IsKey(VK_SHIFT))
+        m_slope += dt;
+    if (Input::IsKey(VK_CONTROL))
+        m_slope -= dt;
+
 
 }
+   
 
 void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
 {
-    // make this simple and bad for the proto
-    m_isGrounded = true;
-
     PhysicComponent& physic = GetComponent<PhysicComponent>();
-    physic.m_velocity = { 0.f,0.f,0.f };
-    physic.m_useGravity = false;
+
+    // make this simple and bad for the proto
+    // need tag to know when player collide on each other
+    if (collisionInfo.m_normal.y < 0.f)
+    {
+        m_isGrounded = false;
+        physic.m_velocity.y = 0.f;
+    }
+    else
+    {
+        m_isGrounded = true;
+        physic.m_useGravity = false;
+        physic.m_velocity = { 0.f,0.f,0.f };
+    }
 }
 
 void Frog::ChargeJump()

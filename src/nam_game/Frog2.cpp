@@ -6,7 +6,10 @@ using namespace DirectX;
 
 void Frog2::OnInit()
 {
-    MeshRendererComponent mrc;
+    Frog::OnInit();
+
+    MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
+    mrc.mp_mesh->SetColor({ 0.0f,0.0f,0.5f,1.f });
     mrc.CreateMeshInstance();
     mrc.mp_mesh->BuildBox({ 1.f,1.f, 1.f }, { 0.0f,0.0f,0.5f,1.f });
     AddComponent<MeshRendererComponent>(mrc);

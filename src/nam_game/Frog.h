@@ -8,9 +8,13 @@ protected:
 	bool m_isFrogActive = false;
 	bool m_isSpacePressed = false;
 	bool m_isGrounded = false;
+
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;
 	float m_chargeJumpRate = 5.f;
+	float m_slope = 0.f;
+
+	nam::GameObject* m_arrow;
 public:
 	void OnInit() override;
 	void OnUpdate() override;
@@ -19,10 +23,6 @@ public:
 private:
 	void ChargeJump();
 	void Jump(DirectX::XMFLOAT3 direction);
-
-	void MoveForward();
-	void MoveBack();
-	void MoveRight();
-	void MoveLeft();
+	void Move(float _forward, float _right);
 };
 

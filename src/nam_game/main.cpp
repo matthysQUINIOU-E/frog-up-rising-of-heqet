@@ -106,6 +106,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         go.SetBoxCollider();
     }
 
+    {
+        GameObject* go = scene->CreateGameObject<GameObject>();
+        MeshRendererComponent mrc;
+        mrc.CreateMeshInstance();
+        mrc.mp_mesh->BuildBox({ 10,10,10 }, { 1,1,1,1 });
+        mrc.mp_mesh->SetTexture((size)TextureTag::_Dirt);
+        go->AddComponent<MeshRendererComponent>(mrc);
+        TransformComponent tc;
+        tc.SetWorldPosition({ 0,5,-15 });
+        go->AddComponent<TransformComponent>(tc);
+        go->SetBoxCollider();
+    }
+
     //player1
     {
         Frog1& frog = scene.CreateGameObject<Frog1>();
