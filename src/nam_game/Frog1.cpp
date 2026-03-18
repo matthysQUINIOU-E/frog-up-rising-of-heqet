@@ -8,7 +8,7 @@ void Frog1::OnInit()
 {
     MeshRendererComponent mrc;
     mrc.CreateMeshInstance();
-    mrc.mp_mesh->BuildBox({ 1.f,1.f, 1.f }, { 0.5f,0.5f,0.5f,1.f });
+    mrc.mp_mesh->BuildBox({ 1.f,1.f, 1.f }, { 0.5f,0.0f,0.0f,1.f });
     AddComponent<MeshRendererComponent>(mrc);
 
     TransformComponent tc;
