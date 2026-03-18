@@ -25,13 +25,9 @@ void Frog::OnInit()
 
 void Frog::OnUpdate()
 {
-
-
     if (m_isSpacePressed && m_isGrounded)
         ChargeJump();
 
-
-    Rotate();
 }
 
 void Frog::OnController()
@@ -82,6 +78,8 @@ void Frog::OnController()
     {
         MoveRight();
     }
+
+    Rotate();
 
 }
 
@@ -171,14 +169,17 @@ void Frog::Rotate()
     {
         if (m_isGrounded)
         {
-            impulse.y += 0.5f;
-            transform->LookToWorld({ camForward.x, 0.0f, camForward.z });
+            impulse.y += 2.f;
+            transform->LookToWorld({ frogForward.x + XM_PI / 6, 0.0f, frogForward.z + XM_PI / 6 });
         }
     }
 
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     physic.AddImpulse(impulse);
+    physic.m_useGravity = true;
+    m_isGrounded = false;
 }
+
 void Frog::MoveForward()
 {
     m_jumpImpulse = 2.f;
