@@ -27,6 +27,9 @@ void Frog::OnUpdate()
 {
     if (m_isSpacePressed && m_isGrounded)
         ChargeJump();
+
+
+    Rotate();
 }
 
 void Frog::OnController()
@@ -39,8 +42,6 @@ void Frog::OnController()
         Jump();
         m_isSpacePressed = false;
     }
-
-    Rotate();
 }
 
 void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
@@ -90,21 +91,42 @@ void Frog::Jump()
 
 void Frog::Rotate()
 {
-    App* app = App::Get();
-    GameObject* cam = app->GetCamera();
-    TransformComponent& transform = GetComponent<TransformComponent>();
-    TransformComponent& camTra = cam->GetComponent<TransformComponent>();
+    Ecs* ecs = &App::Get()->GetEcs();
 
-    XMFLOAT3 impulse;
-    
-    if (cam == nullptr)
-        return;
+    XMFLOAT3 impulse = { 0.f,0.f,0.f };
 
-    if (camTra.GetWorldRight().x != transform.GetWorldRight().x )
+    TransformComponent* transform = &GetComponent<TransformComponent>();
+    TransformComponent* cameraTransform = nullptr;
+    ecs->ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
+        {
+            cameraTransform = &transform;
+        });
+
+    if (cameraTransform == nullptr || transform == nullptr)
     {
-        transform.RotateWorldYPR(-cam->GetComponent<TransformComponent>().GetWorldRight().x, 0.0f, 0.0f);
+        return;
+    }
 
-        impulse = { 0.0f, 1.f, 0.0f };
+
+    XMFLOAT3 camForward = cameraTransform->GetWorldForward();
+    XMFLOAT3 frogForward = transform->GetWorldForward();
+    
+    XMVECTOR camForwardVect = XMLoadFloat3(&camForward);
+    camForwardVect = XMVector3Normalize(camForwardVect);    
+    XMVECTOR frogForwardVect = XMLoadFloat3(&frogForward);
+    frogForwardVect = XMVector3Normalize(frogForwardVect);
+
+    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(camForwardVect, frogForwardVect);
+    XMFLOAT3 diffAngles;
+    XMStoreFloat3(&diffAngles, vectDiffAngles);
+
+    if (diffAngles.x >= XM_PI / 6 || diffAngles.x <= -XM_PI / 6 || diffAngles.z >= XM_PI / 6 || diffAngles.z <= -XM_PI / 6)
+    {
+        if (m_isGrounded)
+        {
+            impulse.y += 0.5f;
+            transform->LookToWorld({ camForward.x, 0.0f, camForward.z });
+        }
     }
 
     PhysicComponent& physic = GetComponent<PhysicComponent>();

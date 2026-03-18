@@ -67,7 +67,6 @@ void Camera::OnController()
         transform.RotateAroundWorld(m_targetToFollow, { 0.f, 1.f, 0.f }, (float)delta.x * m_sensitivity);
         transform.RotateAroundWorld(m_targetToFollow, transform.GetWorldRight(), (float)delta.y * m_sensitivity);
 
-        //transform.LookAtWorld(m_targetToFollow);
     }
 
     XMFLOAT3 forward = transform.GetWorldForward();
