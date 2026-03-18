@@ -15,5 +15,8 @@ namespace nam
 		bool m_noIntersectionPush = false;
 		std::function<void(u32 self, u32 other, const CollisionInfo& collisionInfo)> OnCollision;
 		void UpdateSphereBox(TransformComponent& transform, const MeshRendererComponent& meshRenderer, u32 updateId);
+
+		size m_tag = (size)-1;
+		UnSet<size> m_shouldCollideWith;
 	};
 }
