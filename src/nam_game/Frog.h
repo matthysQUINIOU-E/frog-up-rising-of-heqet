@@ -2,6 +2,8 @@
 struct Frog1Tag {};
 struct Frog2Tag {};
 
+class FrogArrow;
+
 class Frog : public nam::GameObject
 {
 protected:
@@ -14,7 +16,7 @@ protected:
 	float m_chargeJumpRate = 5.f;
 	float m_slope = 0.f;
 
-	nam::GameObject* m_arrow;
+	FrogArrow* m_arrow;
 public:
 	void OnInit() override;
 	void OnUpdate() override;

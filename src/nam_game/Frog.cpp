@@ -19,14 +19,12 @@ void Frog::OnInit()
 
     AddComponent<PhysicComponent>(PhysicComponent());
 
-    SetBoxCollider();
-	SetBehavior();
-    SetController();
-
     Scene* scene = GetScene();
-    m_arrow = scene->CreateGameObject<FrogArrow>();
+    m_arrow = &scene->CreateGameObject<FrogArrow>();
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
-    arrowTransform.SetParent(&tc);
+
+    arrowTransform.SetParent(&GetComponent<TransformComponent>());  
+
 }
 
 void Frog::OnUpdate()
@@ -37,6 +35,11 @@ void Frog::OnUpdate()
 
 void Frog::OnController()
 {
+    float forward = 0.f;
+    float right = 0.f;
+
+    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+
     if (Input::IsKeyDown(VK_SPACE))
         m_isSpacePressed = true;
 
@@ -46,32 +49,24 @@ void Frog::OnController()
 
         if(m_isGrounded)
         {
-            Ecs& ecs = App::Get()->GetEcs();
-
-            TransformComponent* cameraTransform = nullptr;
-            ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
-                {
-                    cameraTransform = &transform;
-                });
-
-            if (cameraTransform == nullptr)
-            {
-                m_jumpImpulse = 0.f;
-                return;
-            }
-            XMFLOAT3 impulse = cameraTransform->GetWorldForward();
+            TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
+            XMFLOAT3 impulse = arrowTransform.GetWorldForward();
             Jump(impulse);
         }
     }
 
     if (m_isGrounded == false)
         return;
+
+
+    if (Input::IsKey(VK_SHIFT))
+        m_slope += dt * 0.5f;
+
+    if (Input::IsKey(VK_CONTROL))
+        m_slope -= dt * 0.5f;
+
+    m_arrow->UpdateSlope(m_slope);
     
-    float forward = 0.f;
-    float right = 0.f;
-
-    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
-
     if(Input::IsKey('Z') || Input::IsKey(VK_UP))
         forward += 1.f;
     
@@ -88,13 +83,6 @@ void Frog::OnController()
         return;
         
     Move(forward, right);
-
-
-    if(Input::IsKey(VK_SHIFT))
-        m_slope += dt;
-    if (Input::IsKey(VK_CONTROL))
-        m_slope -= dt;
-
 }
    
 
@@ -124,20 +112,8 @@ void Frog::ChargeJump()
     m_jumpImpulse = std::clamp(m_jumpImpulse, 0.f, m_maxImpulse);
     if (m_jumpImpulse == m_maxImpulse)
     {
-        Ecs& ecs = App::Get()->GetEcs();
-
-        TransformComponent* cameraTransform = nullptr;
-        ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
-            {
-                cameraTransform = &transform;
-            });
-
-        if (cameraTransform == nullptr)
-        {
-            m_jumpImpulse = 0.f;
-            return;
-        }
-        XMFLOAT3 impulse = cameraTransform->GetWorldForward();
+        TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
+        XMFLOAT3 impulse = arrowTransform.GetWorldForward();
         Jump(impulse);
     }
 }

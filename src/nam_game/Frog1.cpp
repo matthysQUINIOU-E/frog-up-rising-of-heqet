@@ -6,16 +6,14 @@ using namespace DirectX;
 
 void Frog1::OnInit()
 {
-    MeshRendererComponent mrc;
-    mrc.CreateMeshInstance();
-    mrc.mp_mesh->BuildBox({ 1.f,1.f, 1.f }, { 0.5f,0.0f,0.0f,1.f });
-    AddComponent<MeshRendererComponent>(mrc);
+    Frog::OnInit();
 
-    TransformComponent tc;
+    MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
+    mrc.mp_mesh->SetColor({ 0.5f, 0.0f, 0.0f, 1.f });
+        
+    TransformComponent& tc = GetComponent<TransformComponent>();
     tc.SetWorldPosition({ -1.f,2.f,0.f });
-    AddComponent<TransformComponent>(tc);
 
-    AddComponent<PhysicComponent>(PhysicComponent());
     AddComponent<Frog1Tag>({});
 
     SetBoxCollider();
