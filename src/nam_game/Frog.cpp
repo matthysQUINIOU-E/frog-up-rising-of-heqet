@@ -22,9 +22,8 @@ void Frog::OnInit()
     Scene* scene = GetScene();
     m_arrow = &scene->CreateGameObject<FrogArrow>();
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
-
+    arrowTransform.SetLocalPosition({ 0.f, 0.5f, 0.5f });
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
-
 }
 
 void Frog::OnUpdate()
@@ -51,6 +50,9 @@ void Frog::OnController()
         {
             TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
             XMFLOAT3 impulse = arrowTransform.GetWorldForward();
+
+            XMFLOAT3 fwd = m_arrow->GetComponent<TransformComponent>().GetWorldForward();
+            std::cout << "Forward: " + std::to_string(fwd.x) + " " + std::to_string(fwd.y) + " " + std::to_string(fwd.z) + "\n";
             Jump(impulse);
         }
     }
@@ -65,7 +67,9 @@ void Frog::OnController()
     if (Input::IsKey(VK_CONTROL))
         m_slope -= dt * 0.5f;
 
-    m_arrow->UpdateSlope(m_slope);
+    m_slope = std::clamp(m_slope, 0.f, XM_PIDIV2); 
+    m_arrow->SetSlope(m_slope);
+
     
     if(Input::IsKey('Z') || Input::IsKey(VK_UP))
         forward += 1.f;

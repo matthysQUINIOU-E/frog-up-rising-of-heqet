@@ -8,29 +8,20 @@ void FrogArrow::OnInit()
 {
     MeshRendererComponent arrowMesh;
     arrowMesh.CreateMeshInstance();
-    arrowMesh.mp_mesh->BuildCylinder(0.1f, 10, 2.f, { 1.f, 1.f, 1.f, 1.f });
+    arrowMesh.mp_mesh->BuildCone(0.1, 10, 1.f, { 1.f, 1.f, 1.f, 1.f });
     AddComponent<MeshRendererComponent>(arrowMesh);
 
     TransformComponent arrowTransform;
-    arrowTransform.SetWorldYPR(0.f, XM_PIDIV2, 0.f);
+    arrowTransform.SetLocalYPR(0.f, -XM_PIDIV2, 0.f);
     AddComponent<TransformComponent>(arrowTransform);
-
 }
-
-
 
 void FrogArrow::SetSlope(float slope)
 {
     m_slope = slope;
-}
-
-void FrogArrow::UpdateSlope(float slope)
-{
-    m_slope += slope;
-
     TransformComponent& tc = GetComponent<TransformComponent>();
+    tc.SetLocalYPR(0.f, -XM_PIDIV2 + m_slope, 0.f);
 
-    m_slope = std::clamp(m_slope, 0.f, m_maxSlope);
 
-   tc.RotateLocalYPR(0.f, m_slope, 0.f);
 }
+
