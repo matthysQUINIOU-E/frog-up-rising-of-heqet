@@ -20,9 +20,6 @@ private:
 	void ChargeJump();
 	void Jump(DirectX::XMFLOAT3 direction);
 
-	void MoveForward();
-	void MoveBack();
-	void MoveRight();
-	void MoveLeft();
+	void Move(float _forward, float _right);
 };
 
