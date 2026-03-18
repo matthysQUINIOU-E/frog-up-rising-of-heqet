@@ -50,9 +50,7 @@ void Frog::OnController()
         {
             TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
             XMFLOAT3 impulse = arrowTransform.GetWorldForward();
-
-            XMFLOAT3 fwd = m_arrow->GetComponent<TransformComponent>().GetWorldForward();
-            std::cout << "Forward: " + std::to_string(fwd.x) + " " + std::to_string(fwd.y) + " " + std::to_string(fwd.z) + "\n";
+            impulse.y += XM_PIDIV2;
             Jump(impulse);
         }
     }
@@ -61,13 +59,13 @@ void Frog::OnController()
         return;
 
 
-    if (Input::IsKey(VK_SHIFT))
+    if (Input::IsKey(VK_CONTROL))
         m_slope += dt * 0.5f;
 
-    if (Input::IsKey(VK_CONTROL))
+    if (Input::IsKey(VK_SHIFT))
         m_slope -= dt * 0.5f;
 
-    m_slope = std::clamp(m_slope, 0.f, XM_PIDIV2); 
+    m_slope = std::clamp(m_slope, -XM_PIDIV2, 0.f);
     m_arrow->SetSlope(m_slope);
 
     
@@ -118,6 +116,7 @@ void Frog::ChargeJump()
     {
         TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
         XMFLOAT3 impulse = arrowTransform.GetWorldForward();
+        impulse.y += XM_PIDIV2;
         Jump(impulse);
     }
 }

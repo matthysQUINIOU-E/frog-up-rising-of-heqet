@@ -6,7 +6,7 @@ public:
 
 	void SetSlope(float slope);
 private:
-	float m_slope = 0.f;
-	float m_maxSlope = DirectX::XM_PIDIV2;
+	float m_slope = -DirectX::XM_PIDIV2;
+	float m_maxSlope = 0.f;
 };
 

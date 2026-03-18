@@ -12,7 +12,7 @@ void FrogArrow::OnInit()
     AddComponent<MeshRendererComponent>(arrowMesh);
 
     TransformComponent arrowTransform;
-    arrowTransform.SetLocalYPR(0.f, -XM_PIDIV2, 0.f);
+    arrowTransform.SetLocalYPR(0.f, XM_PIDIV2, 0.f);
     AddComponent<TransformComponent>(arrowTransform);
 }
 
@@ -20,7 +20,7 @@ void FrogArrow::SetSlope(float slope)
 {
     m_slope = slope;
     TransformComponent& tc = GetComponent<TransformComponent>();
-    tc.SetLocalYPR(0.f, -XM_PIDIV2 + m_slope, 0.f);
+    tc.SetLocalYPR(0.f, XM_PIDIV2 + m_slope, 0.f);
 
 
 }
