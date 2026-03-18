@@ -120,8 +120,6 @@ namespace nam
 
 	App::~App()
 	{
-		mp_camera->Destroy();
-		delete mp_camera;
 		m_sceneManager.Destroy();
 
 		RenderManager::UnInit();
@@ -153,7 +151,6 @@ namespace nam
 		Render->InitDirectX3D();
 		Resize();
 
-		m_sceneManager.SetEcs(&m_ecs);
 		m_sceneManager.Start();
 
 		m_ecs.AddSystem<StateMachineSystem>();
@@ -168,12 +165,11 @@ namespace nam
 		m_ecs.AddSystem<RenderSystem>();
 
 		//Loading Screen first frame
-		Scene* p_loadingScene = m_sceneManager.CreateScene(size(-1));
+		Scene& loadingScene = m_sceneManager.CreateOrGetScene<Scene>(size(-1));
 
-		mp_loadingScreen = p_loadingScene->CreateGameObject<LoadingScreen>();
+		mp_loadingScreen = &loadingScene.CreateGameObject<LoadingScreen>();
 
-		p_loadingScene->Start();
-		AddCurrentScene(p_loadingScene);
+		loadingScene.Start();
 
 		Render->BuildMinimal();
 
@@ -265,168 +261,14 @@ namespace nam
 		}
 	}
 
-	void App::DestroyGameObject(GameObject* gameObject, Scene* scene)
-	{
-		scene->DestroyGameObject(gameObject);
-	}
-
-	void App::DestroyGameObject(GameObject* gameObject, u32 idScene)
-	{
-		m_sceneManager.GetScene(idScene)->DestroyGameObject(gameObject);
-	}
-
-	void App::SetActiveGameObject(Scene* scene, GameObject* gameObject, bool active)
-	{
-		scene->SetActiveEntity(*gameObject->GetEntity(), active);
-	}
-
-	void App::SetActiveGameObject(u32 idScene, GameObject* gameObject, bool active)
-	{
-		m_sceneManager.GetScene(idScene)->SetActiveEntity(*gameObject->GetEntity(), active);
-	}
-
-	void App::SetActiveEntity(Scene* scene, Entity& entity, bool active)
-	{
-		scene->SetActiveEntity(entity, active);
-	}
-
-	void App::SetActiveEntity(u32 idScene, Entity& entity, bool active)
-	{
-		m_sceneManager.GetScene(idScene)->SetActiveEntity(entity, active);
-	}
-
-	GameObject* App::GetGameObject(Scene* scene, u32 idEntity)
-	{
-		return scene->GetGameObject(idEntity);
-	}
-
-	GameObject* App::GetGameObject(Scene* scene, Entity& entity)
-	{
-		return scene->GetGameObject(entity);
-	}
-
-	GameObject* App::GetGameObject(u32 idScene, u32 idEntity)
-	{
-		return m_sceneManager.GetScene(idScene)->GetGameObject(idEntity);
-	}
-
-	GameObject* App::GetGameObject(u32 idScene, Entity& entity)
-	{
-		return m_sceneManager.GetScene(idScene)->GetGameObject(entity);
-	}
-
-	GameObject* App::GetGameObject(u32 idEntity)
-	{
-		return m_sceneManager.GetGameObjectInGame(idEntity);
-	}
-
-	GameObject* App::GetGameObject(Entity& entity)
-	{
-		return m_sceneManager.GetGameObjectInGame(entity);
-	}
-
-	Scene* App::CreateScene(size sceneTag)
-	{
-		return m_sceneManager.CreateScene(sceneTag);
-	}
-
-	void App::DestroyScene(Scene* scene)
-	{
-		m_sceneManager.DestroyScene(scene);
-	}
-
-	void App::AddCurrentScene(u32 idScene)
-	{
-		m_sceneManager.AddCurrentScene(idScene);
-	}
-
-	void App::AddCurrentScene(Scene* scene)
-	{
-		m_sceneManager.AddCurrentScene(scene);
-	}
-
-	void App::AddCurrentScene(size sceneTag)
-	{
-		m_sceneManager.AddCurrentScene(sceneTag);
-	}
-
-	void App::RemoveCurrentScene(Scene* scene)
-	{
-		m_sceneManager.RemoveCurrentScene(scene);
-	}
-
-	void App::RemoveCurrentScene(u32 idScene)
-	{
-		m_sceneManager.RemoveCurrentScene(idScene);
-	}
-
-	void App::RemoveCurrentScene(size sceneTag)
-	{
-		m_sceneManager.RemoveCurrentScene(sceneTag);
-	}
-
-	void App::SwitchCurrentScene(Scene* sceneClose, Scene* sceneOpen)
-	{
-		m_sceneManager.SwitchCurrentScene(sceneClose, sceneOpen);
-	}
-
-	void App::SwitchCurrentScene(u32 idSceneClose, u32 idSceneOpen)
-	{
-		m_sceneManager.SwitchCurrentScene(idSceneClose, idSceneOpen);
-	}
-
-	void App::SwitchCurrentScene(size sceneTag1, size sceneTag2)
-	{
-		m_sceneManager.SwitchCurrentScene(sceneTag1, sceneTag2);
-	}
-
-	Scene* App::GetScene(u32 idScene)
-	{
-		return m_sceneManager.GetScene(idScene);
-	}
-
-	Scene* App::GetScene(Entity& entity)
-	{
-		UnMap<u32, Scene*> allScene = m_sceneManager.GetAllScene();
-		for (auto it1 = allScene.begin(); it1 != allScene.end(); it1++)
-		{
-			Entity entityFind = it1->second->GetEntity(entity.m_id);
-			if (entityFind.m_id != -1)
-			{
-				return it1->second;
-			}
-		}
-		return nullptr;
-	}
-
 	Window& App::GetWindow()
 	{
 		return m_window;
 	}
 
-	GameObject* App::GetCamera()
-	{
-		return mp_camera;
-	}
-
 	Ecs& App::GetEcs()
 	{
 		return m_ecs;
-	}
-
-	Mesh* App::CreateEmptyMesh()
-	{
-		return Render->GetRenderItemManager().CreateRenderItem<Mesh>();
-	}
-
-	Sprite* App::CreateEmptySprite()
-	{
-		return Render->GetRenderItemManager().CreateRenderItem<Sprite>();;
-	}
-
-	Text* App::CreateEmptyText()
-	{
-		return Render->GetRenderItemManager().CreateRenderItem<Text>();;
 	}
 
 	LightManager& App::GetLightManager()
@@ -461,5 +303,11 @@ namespace nam
 		{
 			Render->LoadTexture(td.m_path, td.m_uniqueTag, td.m_usingTextureFolder);
 		}
+	}
+
+
+	void App::SetSceneActive(size scene, bool active)
+	{
+		m_sceneManager.SetActiveScene(scene, active);
 	}
 }

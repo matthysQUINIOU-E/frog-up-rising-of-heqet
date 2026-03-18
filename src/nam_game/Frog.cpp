@@ -66,19 +66,19 @@ void Frog::OnController()
     float forward = 0;
     float right = 0;
 
-    if(Input::IsKeyDown('Z') || Input::IsKeyDown(VK_UP))
+    if(Input::IsKey('Z') || Input::IsKey(VK_UP))
     {
         forward += 1.f;
     }
-    if (Input::IsKeyDown('S') || Input::IsKeyDown(VK_DOWN))
+    if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
     {
         forward -= 1.f;
     }
-    if (Input::IsKeyDown('Q') || Input::IsKeyDown(VK_LEFT))
+    if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
     {
         right -= 1.f;
     }
-    if (Input::IsKeyDown('D') || Input::IsKeyDown(VK_RIGHT))
+    if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
     {
         right += 1.f;
     }
