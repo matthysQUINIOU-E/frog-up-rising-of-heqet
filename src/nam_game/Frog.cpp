@@ -63,19 +63,19 @@ void Frog::OnController()
     if (m_isGrounded == false)
         return;
     
-    if(Input::IsKeyDown('Z') || Input::IsKeyDown(VK_UP))
+    if(Input::IsKey('Z') || Input::IsKey(VK_UP))
     {
         MoveForward();
     }
-    if (Input::IsKeyDown('S') || Input::IsKeyDown(VK_DOWN))
+    if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
     {
         MoveBack();
     }
-    if (Input::IsKeyDown('Q') || Input::IsKeyDown(VK_LEFT))
+    if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
     {
         MoveLeft();
     }
-    if (Input::IsKeyDown('D') || Input::IsKeyDown(VK_RIGHT))
+    if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
     {
         MoveRight();
     }
