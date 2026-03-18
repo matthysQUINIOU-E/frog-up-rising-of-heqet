@@ -16,6 +16,7 @@ namespace nam
 
 		GameObject();
 		void Init(Scene* scene, Entity entity);
+		void Destroy();
 		void Start();
 		void Update();
 		void Collider(u32 self, u32 other, const CollisionInfo& collisionInfo);
@@ -45,7 +46,6 @@ namespace nam
 		Entity GetEntity();
 		Scene* GetScene();
 	private:
-		void Destroy();
 
 		template<typename T>
 		void SetFunctionUpdate(T* owner, void (T::* Update)());

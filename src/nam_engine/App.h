@@ -28,7 +28,6 @@ namespace nam
 		Ecs m_ecs;
 		SceneManager m_sceneManager;
 
-		GameObject* mp_camera = nullptr;
 		AppChrono m_chrono;
 		RenderManager* mp_renderManager = nullptr;
 

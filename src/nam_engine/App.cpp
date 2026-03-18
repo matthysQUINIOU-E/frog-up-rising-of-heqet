@@ -120,8 +120,6 @@ namespace nam
 
 	App::~App()
 	{
-		mp_camera->Destroy();
-		delete mp_camera;
 		m_sceneManager.Destroy();
 
 		RenderManager::UnInit();

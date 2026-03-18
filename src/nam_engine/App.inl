@@ -19,6 +19,12 @@ namespace nam
 	template<typename T>
 	inline T& App::CreateGameObject(size scene, bool active)
 	{
-		m_sceneManager.CreateOrGetScene(scene).CreateGameObject(active);
+		return m_sceneManager.CreateOrGetScene<Scene>(scene).CreateGameObject<T>(active);
+	}
+
+	template<typename T>
+	inline T& App::CreateOrGetScene(size scene)
+	{
+		return m_sceneManager.CreateOrGetScene<T>(scene);
 	}
 }

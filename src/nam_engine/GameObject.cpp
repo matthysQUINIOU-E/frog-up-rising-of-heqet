@@ -42,6 +42,7 @@ namespace nam
 	void GameObject::Destroy()
 	{
 		OnDestroy();
+		mp_ecs->DestroyEntity(m_entity);
 		mp_scene->DestroyGameObject(*this);
 	}
 
