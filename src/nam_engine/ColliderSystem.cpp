@@ -45,7 +45,7 @@ namespace nam
             }
         );
 
-        ecs.ForEach<BoxColliderComponent>(
+        ecs.ForEach<BoxColliderComponent, TransformComponent>(
             [&](u32 e, BoxColliderComponent& b, TransformComponent& t) {
                 if (b.m_basedOnMesh)
                     return;
