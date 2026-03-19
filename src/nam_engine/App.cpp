@@ -153,7 +153,6 @@ namespace nam
 		Render->InitDirectX3D();
 		Resize();
 
-		m_sceneManager.SetEcs(&m_ecs);
 		m_sceneManager.Start();
 
 		m_ecs.AddSystem<StateMachineSystem>();
@@ -168,11 +167,11 @@ namespace nam
 		m_ecs.AddSystem<RenderSystem>();
 
 		//Loading Screen first frame
-		Scene* p_loadingScene = m_sceneManager.CreateScene(size(-1));
+		Scene& loadingScene = m_sceneManager.CreateOrGetScene<Scene>(size(-1));
 
-		mp_loadingScreen = p_loadingScene->CreateGameObject<LoadingScreen>();
+		mp_loadingScreen = &loadingScene.CreateGameObject<LoadingScreen>();
 
-		p_loadingScene->Start();
+		loadingScene.Start();
 
 
 		Render->BuildMinimal();
@@ -263,6 +262,16 @@ namespace nam
 		{
 			FreeConsole();
 		}
+	}
+
+	void App::ClearScene(size scene)
+	{
+		m_sceneManager.ClearScene(scene);
+	}
+
+	void App::SetSceneActive(size scene, bool active)
+	{
+		m_sceneManager.SetActiveScene(scene, active);
 	}
 
 	Window& App::GetWindow()

@@ -25,7 +25,7 @@ namespace nam
 		void Clear();
 
 		template<typename T>
-		Scene& CreateOrGetScene(size scene);
+		T& CreateOrGetScene(size scene);
 		void ClearScene(size scene);
 		void SetActiveScene(size scene, bool active);
 

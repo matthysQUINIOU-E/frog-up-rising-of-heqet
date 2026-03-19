@@ -5,13 +5,13 @@
 namespace nam
 {
 	template<typename System, typename... Args>
-	void App::AddSystem(Args&&... args)
+	inline void App::AddSystem(Args&&... args)
 	{
 		m_ecs.AddSystem<System>(std::forward<Args>(args)...);
 	}
 
 	template<typename System>
-	void App::SetSystemEnabled(const bool enabled)
+	inline void App::SetSystemEnabled(const bool enabled)
 	{
 		m_ecs.SetSystemEnabled(enabled);
 	}
@@ -19,6 +19,12 @@ namespace nam
 	template<typename T>
 	inline T& App::CreateGameObject(size scene, bool active)
 	{
-		m_sceneManager.CreateOrGetScene(scene).CreateGameObject(active);
+		return m_sceneManager.CreateOrGetScene<Scene>(scene).CreateGameObject<T>(active);
+	}
+
+	template<typename T>
+	inline T& App::CreateOrGetScene(size scene)
+	{
+		return m_sceneManager.CreateOrGetScene<T>(scene);
 	}
 }
