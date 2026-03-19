@@ -170,7 +170,7 @@ void Frog::Rotate()
         if (m_isGrounded)
         {
             impulse.y += 2.f;
-            transform->LookToWorld({ frogForward.x + XM_PI / 6, 0.0f, frogForward.z + XM_PI / 6 });
+            transform->LookToWorld({ frogForward.x + diffAngles.x , 0.0f, frogForward.z + diffAngles.z });
         }
     }
 
