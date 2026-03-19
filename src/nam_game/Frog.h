@@ -22,9 +22,6 @@ private:
 	void Jump(DirectX::XMFLOAT3 direction);
 
 	void Rotate();
-	void MoveForward();
-	void MoveBack();
-	void MoveRight();
-	void MoveLeft();
+	void Move(float _forward, float _right);
 };
 
