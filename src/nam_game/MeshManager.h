@@ -4,12 +4,10 @@
 class MeshManager
 {
 public:
-	MeshManager();
-	~MeshManager();
-	nam::Mesh* GetMesh(MeshTag meshTag);
+	static nam::Mesh* GetMesh(MeshTag meshTag);
 private:
-	nam::Mesh* InitMesh(MeshTag meshTag);
+	static nam::Mesh* InitMesh(MeshTag meshTag);
 private:
-	std::vector<bool> m_meshesInit;
+	static std::array<bool, (nam::size)MeshTag::Size> s_meshesInit;
 };
 

@@ -3,33 +3,26 @@
 #include <RenderManager.h>
 
 using namespace nam;
-using namespace DirectX;
 
-MeshManager::MeshManager()
-{
-    m_meshesInit.resize((size)MeshTag::Size);
-}
-
-MeshManager::~MeshManager()
-{
-}
+std::array<bool, (size)MeshTag::Size> s_meshesInit = {};
 
 Mesh* MeshManager::GetMesh(MeshTag meshTag)
 {
-	if (m_meshesInit[(size)meshTag] == false)
+	if (s_meshesInit[(size)meshTag] == false)
 		return InitMesh(meshTag);
 
-	return static_cast<Mesh*>(Render->GetRenderItemManager().GetRenderItemOfTag((size)meshTag));
+	MeshRendererComponent mrc;
+	mrc.SetMeshInstanceFromTag((size)meshTag);
+	return mrc.mp_mesh;
 }
 
 Mesh* MeshManager::InitMesh(MeshTag meshTag)
 {
-	m_meshesInit[(size)meshTag] = true;
+	s_meshesInit[(size)meshTag] = true;
 	MeshRendererComponent mrc;
 
-	RenderItemManager& renderItemManager = Render->GetRenderItemManager();
 	mrc.CreateMeshInstance();
-	renderItemManager.SetRenderItemTag(mrc.mp_mesh, (size)meshTag);
+	mrc.SetMeshTag((size)meshTag);
 
 	switch (meshTag)
 	{
@@ -38,8 +31,9 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 	case MeshTag::Frog2:
 		break;
 	default:
+		mrc.mp_mesh->BuildBox({ 1,1,1 }, { 1,1,1,1 });
 		break;
 	}
 
-	return nullptr;
+	return mrc.mp_mesh;
 }
