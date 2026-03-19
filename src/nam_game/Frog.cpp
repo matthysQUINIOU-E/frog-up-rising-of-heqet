@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Constant.h"
 #include "FrogArrow.h"
+#include "FrogTongue.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -25,6 +26,10 @@ void Frog::OnInit()
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
+
+    m_tongue = &scene->CreateGameObject<FrogTongue>(false);
+    TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
+    tongueTransform.SetParent(&GetComponent<TransformComponent>());
 }
 
 void Frog::OnUpdate()
@@ -99,6 +104,9 @@ void Frog::OnController()
     
     if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
         right += 1.f;
+
+    if (Input::IsKey('E'))
+        Fire();
 
     Rotate();
 
@@ -264,6 +272,11 @@ void Frog::Move(float _forward, float _right)
     XMFLOAT3 direction;
     XMStoreFloat3(&direction, vDirection);
     Jump(direction);
+}
+
+void Frog::Fire()
+{
+    
 }
 
 

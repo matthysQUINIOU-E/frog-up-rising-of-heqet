@@ -4,6 +4,7 @@ struct Frog2Tag {};
 
 class Timer;
 class FrogArrow;
+class FrogTongue;
 
 class Frog : public nam::GameObject
 {
@@ -20,6 +21,9 @@ protected:
 	float m_targetTime = 1.5f;
 	float m_slope = 0.f;
 	nam::Timer m_arrowTimer;
+
+	FrogTongue* m_tongue;
+
 public:
 	void OnInit() override;
 	void OnUpdate() override;
@@ -33,5 +37,7 @@ private:
 	void RotateUpdate();
 
 	void Move(float _forward, float _right);
+
+	void Fire();
 };
 
