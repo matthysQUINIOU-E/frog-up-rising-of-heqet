@@ -34,6 +34,7 @@
 #include "ParticleEmitersComponent.h"
 #include "ButtonComponent.h"
 #include "SpriteRendererComponent.h"
+#include "CollisionInfo.h"
 #include "SphereColliderComponent.h"
 #include "BoxColliderComponent.h"
 #include "PhysicComponent.h"

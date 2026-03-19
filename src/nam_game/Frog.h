@@ -2,6 +2,9 @@
 struct Frog1Tag {};
 struct Frog2Tag {};
 
+class Timer;
+class FrogArrow;
+
 class Frog : public nam::GameObject
 {
 protected:
@@ -12,6 +15,11 @@ protected:
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;
 	float m_chargeJumpRate = 5.f;
+
+	FrogArrow* m_arrow;
+	float m_targetTime = 1.5f;
+	float m_slope = 0.f;
+	nam::Timer m_arrowTimer;
 public:
 	void OnInit() override;
 	void OnUpdate() override;

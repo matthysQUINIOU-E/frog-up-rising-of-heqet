@@ -2,6 +2,7 @@
 #include "Frog.h"
 #include "Camera.h"
 #include "Constant.h"
+#include "FrogArrow.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -19,13 +20,24 @@ void Frog::OnInit()
 
     AddComponent<PhysicComponent>(PhysicComponent());
 
-    SetBoxCollider();
-	SetBehavior();
-    SetController();
+    Scene* scene = GetScene();
+    m_arrow = &scene->CreateGameObject<FrogArrow>(false);
+    TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
+    arrowTransform.SetParent(&GetComponent<TransformComponent>());  
+    m_arrowTimer.Init(m_targetTime);
 }
 
 void Frog::OnUpdate()
 {
+    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+    m_arrowTimer.Update(dt);
+
+    if (m_arrowTimer.IsTargetReached())
+    {
+        m_arrow->SetActive(false);
+        m_arrowTimer.ResetProgress();
+    }
+
     if (m_isSpacePressed && m_isGrounded)
         ChargeJump();
 
@@ -34,6 +46,11 @@ void Frog::OnUpdate()
 
 void Frog::OnController()
 {
+    float forward = 0.f;
+    float right = 0.f;
+
+    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+
     if (Input::IsKeyDown(VK_SPACE))
         m_isSpacePressed = true;
 
@@ -43,63 +60,72 @@ void Frog::OnController()
 
         if(m_isGrounded)
         {
-            Ecs& ecs = App::Get()->GetEcs();
-
-            TransformComponent* cameraTransform = nullptr;
-            ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
-                {
-                    cameraTransform = &transform;
-                });
-
-            if (cameraTransform == nullptr)
-            {
-                m_jumpImpulse = 0.f;
-                return;
-            }
-            XMFLOAT3 impulse = cameraTransform->GetWorldForward();
+            TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
+            XMFLOAT3 impulse = arrowTransform.GetWorldForward();
             Jump(impulse);
+            m_arrow->SetActive(false);
+            m_arrowTimer.ResetProgress();
         }
     }
 
     if (m_isGrounded == false)
         return;
-    
-    float forward = 0;
-    float right = 0;
 
+
+    if (Input::IsKey(VK_CONTROL))
+    {
+        m_slope += dt * 0.5f;
+        m_arrow->SetActive(true);
+    }
+
+    if (Input::IsKey(VK_SHIFT))
+    {
+        m_slope -= dt * 0.5f;
+        m_arrow->SetActive(true);
+    }
+
+    m_slope = std::clamp(m_slope, -XM_PIDIV2, 0.f);
+    m_arrow->SetSlope(m_slope);
+
+    
     if(Input::IsKey('Z') || Input::IsKey(VK_UP))
-    {
         forward += 1.f;
-    }
+    
     if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
-    {
         forward -= 1.f;
-    }
+    
     if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
-    {
         right -= 1.f;
-    }
+    
     if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
-    {
         right += 1.f;
-    }
 
     Rotate();
 
     if (forward == 0.f && right == 0.f)
         return;
-
+        
     Move(forward, right);
 }
+   
 
 void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
 {
-    // make this simple and bad for the proto
-    m_isGrounded = true;
-
     PhysicComponent& physic = GetComponent<PhysicComponent>();
-    physic.m_velocity = { 0.f,0.f,0.f };
-    physic.m_useGravity = false;
+
+    // make this simple and bad for the proto
+    // need tag to know when player collide on each other
+    if (collisionInfo.m_normal.y < 0.f)
+    {
+        m_isGrounded = false;
+        physic.m_velocity.y = 0.f;
+    }
+    else
+    {
+        m_isGrounded = true;
+        physic.m_useGravity = false;
+        physic.m_velocity = { 0.f,0.f,0.f };
+    }
 }
 
 void Frog::ChargeJump()
@@ -109,21 +135,11 @@ void Frog::ChargeJump()
     m_jumpImpulse = std::clamp(m_jumpImpulse, 0.f, m_maxImpulse);
     if (m_jumpImpulse == m_maxImpulse)
     {
-        Ecs& ecs = App::Get()->GetEcs();
-
-        TransformComponent* cameraTransform = nullptr;
-        ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
-        {
-            cameraTransform = &transform;
-        });
-
-        if (cameraTransform == nullptr)
-        {
-            m_jumpImpulse = 0.f;
-            return;
-        }
-        XMFLOAT3 impulse = cameraTransform->GetWorldForward();
+        TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
+        XMFLOAT3 impulse = arrowTransform.GetWorldForward();
         Jump(impulse);
+        m_arrow->SetActive(false);
+        m_arrowTimer.ResetProgress();
     }
 }
 
