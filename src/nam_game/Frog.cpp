@@ -190,7 +190,7 @@ void Frog::Rotate()
     XMFLOAT3 diffAngles;
     XMStoreFloat3(&diffAngles, vectDiffAngles);
 
-    if (diffAngles.x >= PI_DI6 || diffAngles.x <= -PI_DI6 || diffAngles.z >= PI_DI6 || diffAngles.z <= -PI_DI6)
+    if (diffAngles.x >= PI_DIV12 || diffAngles.x <= -PI_DIV12 || diffAngles.z >= PI_DIV12 || diffAngles.z <= -PI_DIV12)
     {
         if (m_isGrounded)
         {
