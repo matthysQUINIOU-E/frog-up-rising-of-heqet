@@ -20,14 +20,23 @@ void Frog::OnInit()
     AddComponent<PhysicComponent>(PhysicComponent());
 
     Scene* scene = GetScene();
-    m_arrow = &scene->CreateGameObject<FrogArrow>();
+    m_arrow = &scene->CreateGameObject<FrogArrow>(false);
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
-    arrowTransform.SetLocalPosition({ 0.f, 0.5f, 0.5f });
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
+    m_arrowTimer.Init(m_targetTime);
 }
 
 void Frog::OnUpdate()
 {
+    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+    m_arrowTimer.Update(dt);
+
+    if (m_arrowTimer.IsTargetReached())
+    {
+        m_arrow->SetActive(false);
+        m_arrowTimer.ResetProgress();
+    }
+
     if (m_isSpacePressed && m_isGrounded)
         ChargeJump();
 }
@@ -50,8 +59,9 @@ void Frog::OnController()
         {
             TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
             XMFLOAT3 impulse = arrowTransform.GetWorldForward();
-            impulse.y += XM_PIDIV2;
             Jump(impulse);
+            m_arrow->SetActive(false);
+            m_arrowTimer.ResetProgress();
         }
     }
 
@@ -60,10 +70,16 @@ void Frog::OnController()
 
 
     if (Input::IsKey(VK_CONTROL))
+    {
         m_slope += dt * 0.5f;
+        m_arrow->SetActive(true);
+    }
 
     if (Input::IsKey(VK_SHIFT))
+    {
         m_slope -= dt * 0.5f;
+        m_arrow->SetActive(true);
+    }
 
     m_slope = std::clamp(m_slope, -XM_PIDIV2, 0.f);
     m_arrow->SetSlope(m_slope);
@@ -116,8 +132,9 @@ void Frog::ChargeJump()
     {
         TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
         XMFLOAT3 impulse = arrowTransform.GetWorldForward();
-        impulse.y += XM_PIDIV2;
         Jump(impulse);
+        m_arrow->SetActive(false);
+        m_arrowTimer.ResetProgress();
     }
 }
 
