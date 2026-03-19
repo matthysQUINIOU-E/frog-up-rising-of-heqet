@@ -28,7 +28,6 @@
 #include "Input.h"
 #include "TransformComponent.h"
 #include "MeshRendererComponent.h"
-#include "Transform2DComponent.h"
 #include "StateMachineComponent.h"
 #include "BehaviorComponent.h"
 #include "ParticleEmitersComponent.h"

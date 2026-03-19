@@ -105,4 +105,43 @@ namespace nam
 		}
 		return GetComponent<ControllerComponent>();
 	}
+
+	template<typename T>
+	inline ButtonComponent& GameObject::SetButton(T* owner)
+	{
+		auto click = &GameObject::Click;
+		auto hover = &GameObject::Hovered;
+		auto left = &GameObject::Left;
+
+		if (HasComponent<ButtonComponent>() == false)
+		{
+			ButtonComponent button;
+
+			button.OnClick = [owner, click]() {
+				(owner->*click)();
+				};
+			button.OnHovered = [owner, hover]() {
+				(owner->*hover)();
+				};
+			button.OnLeft = [owner, left]() {
+				(owner->*left)();
+				};
+			AddComponent(button);
+		}
+		else
+		{
+			ButtonComponent button;
+
+			button.OnClick = [owner, click]() {
+				(owner->*click)();
+				};
+			button.OnHovered = [owner, hover]() {
+				(owner->*hover)();
+				};
+			button.OnLeft = [owner, left]() {
+				(owner->*left)();
+				};
+		}
+		return GetComponent<ButtonComponent>();
+	}
 }

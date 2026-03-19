@@ -4,7 +4,7 @@
 
 using namespace nam;
 
-std::array<bool, (size)MeshTag::Size> s_meshesInit = {};
+std::array<bool, (size)MeshTag::Size> MeshManager::s_meshesInit = {};
 
 Mesh* MeshManager::GetMesh(MeshTag meshTag)
 {

@@ -39,6 +39,21 @@ namespace nam
 		OnController();
 	}
 
+	void GameObject::Hovered()
+	{
+		OnHovered();
+	}
+
+	void GameObject::Click()
+	{
+		OnClick();
+	}
+
+	void GameObject::Left()
+	{
+		OnLeft();
+	}
+
 	void GameObject::Destroy()
 	{
 		OnDestroy();
@@ -62,6 +77,18 @@ namespace nam
 	}
 
 	void GameObject::OnController()
+	{
+	}
+
+	void GameObject::OnHovered()
+	{
+	}
+
+	void GameObject::OnClick()
+	{
+	}
+
+	void GameObject::OnLeft()
 	{
 	}
 
@@ -92,6 +119,11 @@ namespace nam
 	ControllerComponent& GameObject::SetController()
 	{
 		return SetController(this, &GameObject::Controller);
+	}
+
+	ButtonComponent& GameObject::SetButton()
+	{
+		return SetButton(this);
 	}
 
 	Entity GameObject::GetEntity()

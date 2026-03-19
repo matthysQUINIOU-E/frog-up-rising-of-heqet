@@ -4,7 +4,7 @@
 
 using namespace nam;
 
-std::array<bool, (size)SpriteTag::Size> s_spritesInit = {};
+std::array<bool, (size)SpriteTag::Size> SpriteManager::s_spritesInit = {};
 
 Sprite* SpriteManager::GetSprite(SpriteTag spriteTag)
 {
@@ -26,6 +26,9 @@ Sprite* SpriteManager::InitSprite(SpriteTag spriteTag)
 
 	switch (spriteTag)
 	{
+	case SpriteTag::Button:
+		mrc.mp_sprite->BuildRect({ 100,100 }, { 1,0,0,1 });
+		break;
 	default:
 		mrc.mp_sprite->BuildRect({50,50},{1,1,1,1});
 		break;

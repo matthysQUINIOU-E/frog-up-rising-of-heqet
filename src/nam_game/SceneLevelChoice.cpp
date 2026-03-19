@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SceneLevelChoice.h"
+#include "ButtonExemple.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -7,7 +8,7 @@ using namespace DirectX;
 void SceneLevelChoice::Init()
 {
 	{
-		SpriteRendererComponent src;
+		CreateGameObject<ButtonExemple>();
 	}
 }
 
