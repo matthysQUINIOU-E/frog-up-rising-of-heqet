@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Frog.h"
 #include "Camera.h"
+#include "Constant.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -28,6 +29,7 @@ void Frog::OnUpdate()
     if (m_isSpacePressed && m_isGrounded)
         ChargeJump();
 
+    RotateUpdate();
 }
 
 void Frog::OnController()
@@ -165,12 +167,11 @@ void Frog::Rotate()
     XMFLOAT3 diffAngles;
     XMStoreFloat3(&diffAngles, vectDiffAngles);
 
-    if (diffAngles.x >= XM_PI / 6 || diffAngles.x <= -XM_PI / 6 || diffAngles.z >= XM_PI / 6 || diffAngles.z <= -XM_PI / 6)
+    if (diffAngles.x >= PI_DI6 || diffAngles.x <= -PI_DI6 || diffAngles.z >= PI_DI6 || diffAngles.z <= -PI_DI6)
     {
         if (m_isGrounded)
         {
             impulse.y += 2.f;
-            transform->LookToWorld({ frogForward.x + diffAngles.x , 0.0f, frogForward.z + diffAngles.z });
         }
     }
 
@@ -178,6 +179,44 @@ void Frog::Rotate()
     physic.AddImpulse(impulse);
     physic.m_useGravity = true;
     m_isGrounded = false;
+}
+
+void Frog::RotateUpdate()
+{
+    Ecs* ecs = &App::Get()->GetEcs();
+
+    TransformComponent* transform = &GetComponent<TransformComponent>();
+    TransformComponent* cameraTransform = nullptr;
+    ecs->ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
+        {
+            cameraTransform = &transform;
+        });
+
+    if (cameraTransform == nullptr || transform == nullptr)
+    {
+        return;
+    }
+
+
+    XMFLOAT3 camForward = cameraTransform->GetWorldForward();
+    XMFLOAT3 frogForward = transform->GetWorldForward();
+
+    XMVECTOR camForwardVect = XMLoadFloat3(&camForward);
+    camForwardVect = XMVector3Normalize(camForwardVect);
+    XMVECTOR frogForwardVect = XMLoadFloat3(&frogForward);
+    frogForwardVect = XMVector3Normalize(frogForwardVect);
+
+    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(camForwardVect, frogForwardVect);
+    XMFLOAT3 diffAngles;
+    XMStoreFloat3(&diffAngles, vectDiffAngles);
+
+    if (diffAngles.x >= frogForward.x || diffAngles.x <= frogForward.x || diffAngles.z >= frogForward.z || diffAngles.z <= frogForward.z)
+    {
+        if (!m_isGrounded)
+        {
+            transform->LookToWorld({ frogForward.x + diffAngles.x / 12, 0.0f, frogForward.z + diffAngles.z / 12 });
+        }
+    }
 }
 
 void Frog::MoveForward()
