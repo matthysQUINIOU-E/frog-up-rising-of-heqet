@@ -10,13 +10,12 @@ namespace nam
 	private:
 		Entity m_entity;
 		Scene* mp_scene;
-		Ecs* mp_ecs;
+		int m_tag;
 
 	public:
 
 		GameObject();
 		void Init(Scene* scene, Entity entity);
-		void Destroy();
 		void Start();
 		void Update();
 		void Collider(u32 self, u32 other, const CollisionInfo& collisionInfo);
@@ -29,7 +28,8 @@ namespace nam
 		virtual void OnController();
 		virtual void OnDestroy();
 
-		void SetActive(bool active);
+		void SetActiveEntity(bool active);
+		void DestroyGameObject();
 
 		template<typename Component>
 		void AddComponent(const Component& data);
@@ -43,9 +43,10 @@ namespace nam
 		SphereColliderComponent& SetSphereCollider();
 		ControllerComponent& SetController();
 
-		Entity GetEntity();
+		Entity* GetEntity();
 		Scene* GetScene();
 	private:
+		void Destroy();
 
 		template<typename T>
 		BehaviorComponent& SetFunctionUpdate(T* owner, void (T::* Update)());

@@ -25,10 +25,9 @@ void Frog::OnInit()
 
 void Frog::OnUpdate()
 {
-
-
     if (m_isSpacePressed && m_isGrounded)
         ChargeJump();
+
 }
 
 void Frog::OnController()
@@ -80,6 +79,8 @@ void Frog::OnController()
         MoveRight();
     }
 
+    Rotate();
+
 }
 
 void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
@@ -129,6 +130,52 @@ void Frog::Jump(XMFLOAT3 direction)
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     physic.AddImpulse(impulse);
 
+    physic.m_useGravity = true;
+    m_isGrounded = false;
+}
+
+void Frog::Rotate()
+{
+    Ecs* ecs = &App::Get()->GetEcs();
+
+    XMFLOAT3 impulse = { 0.f,0.f,0.f };
+
+    TransformComponent* transform = &GetComponent<TransformComponent>();
+    TransformComponent* cameraTransform = nullptr;
+    ecs->ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
+        {
+            cameraTransform = &transform;
+        });
+
+    if (cameraTransform == nullptr || transform == nullptr)
+    {
+        return;
+    }
+
+
+    XMFLOAT3 camForward = cameraTransform->GetWorldForward();
+    XMFLOAT3 frogForward = transform->GetWorldForward();
+    
+    XMVECTOR camForwardVect = XMLoadFloat3(&camForward);
+    camForwardVect = XMVector3Normalize(camForwardVect);    
+    XMVECTOR frogForwardVect = XMLoadFloat3(&frogForward);
+    frogForwardVect = XMVector3Normalize(frogForwardVect);
+
+    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(camForwardVect, frogForwardVect);
+    XMFLOAT3 diffAngles;
+    XMStoreFloat3(&diffAngles, vectDiffAngles);
+
+    if (diffAngles.x >= XM_PI / 6 || diffAngles.x <= -XM_PI / 6 || diffAngles.z >= XM_PI / 6 || diffAngles.z <= -XM_PI / 6)
+    {
+        if (m_isGrounded)
+        {
+            impulse.y += 2.f;
+            transform->LookToWorld({ frogForward.x + diffAngles.x , 0.0f, frogForward.z + diffAngles.z });
+        }
+    }
+
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    physic.AddImpulse(impulse);
     physic.m_useGravity = true;
     m_isGrounded = false;
 }

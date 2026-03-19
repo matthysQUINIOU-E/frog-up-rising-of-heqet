@@ -8,6 +8,7 @@ protected:
 	bool m_isFrogActive = false;
 	bool m_isSpacePressed = false;
 	bool m_isGrounded = false;
+	bool m_isRotate = false;
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;
 	float m_chargeJumpRate = 5.f;
@@ -20,6 +21,7 @@ private:
 	void ChargeJump();
 	void Jump(DirectX::XMFLOAT3 direction);
 
+	void Rotate();
 	void MoveForward();
 	void MoveBack();
 	void MoveRight();

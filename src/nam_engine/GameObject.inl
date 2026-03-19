@@ -67,7 +67,7 @@ namespace nam
 	template<typename T>
 	inline SphereColliderComponent& GameObject::SetSphereCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo))
 	{
-		if (HasComponent<SphereColliderComponent>() == false)
+		if (HasComponent<BoxColliderComponent>() == false)
 		{
 			SphereColliderComponent sphereCollider;
 			sphereCollider.OnCollision = [owner, Collide](u32 self, u32 other, const CollisionInfo& collisionInfo) {
