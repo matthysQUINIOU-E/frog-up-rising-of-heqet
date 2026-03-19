@@ -16,21 +16,59 @@ namespace nam
         Vector<CollisionInfo> collisions;
 
         m_spatialHash.Clear();
+
+        ecs.ForEach<SphereColliderComponent, TransformComponent, MeshRendererComponent>(
+            [&](u32 e, SphereColliderComponent& s, TransformComponent& t, MeshRendererComponent& m) {
+                if (!s.m_basedOnMesh)
+                    return;
+                t.UpdateWorldData();
+                s.UpdateSphereBox(t, m, m_updateId);
+            }
+        );
+
         ecs.ForEach<BoxColliderComponent, TransformComponent, MeshRendererComponent>(
             [&](u32 e, BoxColliderComponent& b, TransformComponent& t, MeshRendererComponent& m) {
+                if (!b.m_basedOnMesh)
+                    return;
                 t.UpdateWorldData();
                 b.UpdateObbBox(t, m, m_updateId);
+            }
+        );
+
+
+        ecs.ForEach<SphereColliderComponent, TransformComponent>(
+            [&](u32 e, SphereColliderComponent& s, TransformComponent& t) {
+                if (s.m_basedOnMesh)
+                    return;
+                t.UpdateWorldData();
+                s.UpdateSphereBox(t, m_updateId);
+            }
+        );
+
+        ecs.ForEach<BoxColliderComponent>(
+            [&](u32 e, BoxColliderComponent& b, TransformComponent& t) {
+                if (b.m_basedOnMesh)
+                    return;
+                t.UpdateWorldData();
+                b.UpdateObbBox(t, m_updateId);
+            }
+        );
+
+        ecs.ForEach<SphereColliderComponent>(
+            [&](u32 e, SphereColliderComponent& s) {
+                if (s.m_dirty)
+                    return;
+                m_spatialHash.Insert(e, s.m_box);
+            }
+        );
+        ecs.ForEach<BoxColliderComponent>(
+            [&](u32 e, BoxColliderComponent& b) {
+                if (b.m_dirty)
+                    return;
                 m_spatialHash.Insert(e, b.m_box);
             }
         );
 
-        ecs.ForEach<SphereColliderComponent, TransformComponent, MeshRendererComponent>(
-            [&](u32 e, SphereColliderComponent& s, TransformComponent& t, MeshRendererComponent& m) {
-                t.UpdateWorldData();
-                s.UpdateSphereBox(t, m, m_updateId);
-                m_spatialHash.Insert(e, s.m_box);
-            }
-        );
 
         ecs.ForEach<BoxColliderComponent, TransformComponent, MeshRendererComponent>(
             [&](u32 e1, BoxColliderComponent& b1, TransformComponent& t1, MeshRendererComponent& m) {
@@ -387,7 +425,24 @@ namespace nam
                     XMStoreFloat3(&physic2.m_velocity, vel2);
                 }
             }
-            // No repulse if both no physics
+            else 
+            {
+                float halfDepth = depth * 0.5f;
+
+                XMVECTOR sep = XMVectorMultiply(normal, XMVectorReplicate(halfDepth));
+
+                XMVECTOR pos1 = XMLoadFloat3(&currentPosition1);
+                XMVECTOR pos2 = XMLoadFloat3(&currentPosition2);
+
+                XMVECTOR newPosVec1 = XMVectorSubtract(pos1, sep);
+                XMVECTOR newPosVec2 = XMVectorAdd(pos2, sep);
+
+                XMStoreFloat3(&newPos1, newPosVec1);
+                XMStoreFloat3(&newPos2, newPosVec2);
+
+                transform1->SetWorldPosition(newPos1);
+                transform2->SetWorldPosition(newPos2);
+            }
         }
 	}
 
