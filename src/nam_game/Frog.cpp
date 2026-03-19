@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Constant.h"
 #include "FrogArrow.h"
+#include "ColliderTag.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -113,18 +114,20 @@ void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
-    // make this simple and bad for the proto
-    // need tag to know when player collide on each other
-    if (collisionInfo.m_normal.y < 0.f)
-    {
-        m_isGrounded = false;
-        physic.m_velocity.y = 0.f;
-    }
-    else
+    bool onPlateform = (collisionInfo.m_tag1 == (size)ColliderTag::Plateform) && collisionInfo.m_normal.y > 0.f;
+    bool onFloor = collisionInfo.m_tag1 == (size)ColliderTag::Ground;
+
+    if (onPlateform || onFloor)
     {
         m_isGrounded = true;
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
+    }
+
+    if (collisionInfo.m_normal.y < 0.f)
+    {
+        m_isGrounded = false;
+        physic.m_velocity.y = 0.f;
     }
 }
 

@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Frog1.h"
 #include "Frog2.h"
+#include "ColliderTag.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -19,10 +20,7 @@ enum class SceneTag : size
     _Main
 };
 
-enum class ColliderType : size
-{
-    _Ground
-};
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, int cmdShow)
 {
@@ -39,6 +37,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         lc.CreateLightInstance();
         lc.mp_light->SetToDirectionalLight(0.8f, { 0.f,-1.f,0.f }, { 1.f,0.99f,0.88f });
         go.AddComponent<LightComponent>(lc);
+        
     }
 
     //camera
@@ -56,7 +55,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         go.AddComponent<MeshRendererComponent>(mrc);
         go.AddComponent<TransformComponent>(TransformComponent());
         BoxColliderComponent& box = go.SetBoxCollider();
-        box.m_tag = (size)ColliderType::_Ground;
+        box.m_tag = (size)ColliderTag::Ground;
     }
 
     //platforms
@@ -70,7 +69,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         TransformComponent tc;
         tc.SetWorldPosition({0,10,15});
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Plateform;
     }
 
     {
@@ -83,7 +83,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         TransformComponent tc;
         tc.SetWorldPosition({ 0,10,30 });
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Plateform;
     }
 
     {
@@ -96,7 +97,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         TransformComponent tc;
         tc.SetWorldPosition({ 0,20,45 });
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Plateform;
     }
 
     {
@@ -109,7 +111,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         TransformComponent tc;
         tc.SetWorldPosition({ 10,20,45 });
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Plateform;
     }
 
     {
@@ -121,8 +124,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
         go.AddComponent<MeshRendererComponent>(mrc);
         TransformComponent tc;
         tc.SetWorldPosition({ 0,5,-15 });
+        tc.SetWorldYPR(0.f, XM_PIDIV4, 0.f);
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Plateform;
+    }
+
+    {
+        GameObject& go = scene.CreateGameObject<GameObject>();
+        MeshRendererComponent mrc;
+        mrc.CreateMeshInstance();
+        mrc.mp_mesh->BuildBox({ 10,10,10 }, { 1,1,1,1 });
+        mrc.mp_mesh->SetTexture((size)TextureTag::_Dirt);
+        go.AddComponent<MeshRendererComponent>(mrc);
+        TransformComponent tc;
+        tc.SetWorldPosition({ -20,5, 0 });
+        go.AddComponent<TransformComponent>(tc);
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Plateform;
     }
 
     //player1
