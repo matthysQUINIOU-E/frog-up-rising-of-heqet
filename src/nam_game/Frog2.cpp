@@ -43,13 +43,13 @@ void Frog2::OnController()
         Frog::OnController();
 }
 
-void Frog2::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
+void Frog2::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
-    Frog::OnCollision(self, other, collisionInfo);
+    Frog::OnCollision(self, other);
 
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
-    bool onFrog = (collisionInfo.m_tag1 == (size)ColliderTag::FrogJoel) && collisionInfo.m_normal.y > 0.f;
+    bool onFrog = (other.m_tag == (size)ColliderTag::FrogJoel) && other.m_normal.y > 0.f;
 
     if(onFrog)
     {

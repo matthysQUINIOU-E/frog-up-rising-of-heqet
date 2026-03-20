@@ -67,16 +67,15 @@ void Frog1::OnController()
     MoveWall(forward, right);
 }
 
-void Frog1::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
+void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
-    Frog::OnCollision(self, other, collisionInfo);
-
+        Frog::OnCollision(self, other);
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     TransformComponent& transform = GetComponent<TransformComponent>();
 
 
-    bool onFrog = (collisionInfo.m_tag2 == (size)ColliderTag::FrogEllie) && collisionInfo.m_normal.y < 0.f;
-    m_isOnWall = collisionInfo.m_normal.y == 0.f;
+    bool onFrog = (other.m_tag == (size)ColliderTag::FrogEllie) && other.m_normal.y < 0.f;
+    m_isOnWall = other.m_normal.y == 0.f;
 
     if (onFrog)
     {

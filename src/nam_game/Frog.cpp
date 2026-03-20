@@ -111,12 +111,12 @@ void Frog::OnController()
 }
    
 
-void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
+void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
-    bool onPlateform = (collisionInfo.m_tag1 == (size)ColliderTag::Plateform) && collisionInfo.m_normal.y > 0.f;
-    bool onFloor = collisionInfo.m_tag1 == (size)ColliderTag::Ground;
+    bool onPlateform = (other.m_tag == (size)ColliderTag::Plateform) && other.m_normal.y > 0.f;
+    bool onFloor = other.m_tag == (size)ColliderTag::Ground;
 
     if (onPlateform || onFloor)
     {
@@ -126,7 +126,7 @@ void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
         physic.m_velocity = { 0.f,0.f,0.f };
     }
 
-    if (collisionInfo.m_normal.y < 0.f)
+    if (other.m_normal.y < 0.f)
     {
         m_isGrounded = false;
         physic.m_velocity.y = 0.f;
@@ -197,7 +197,7 @@ void Frog::Rotate()
     XMFLOAT3 diffAngles;
     XMStoreFloat3(&diffAngles, vectDiffAngles);
 
-    if (diffAngles.x >= PI_DI6 || diffAngles.x <= -PI_DI6 || diffAngles.z >= PI_DI6 || diffAngles.z <= -PI_DI6)
+    if (diffAngles.x >= PI_DIV12 || diffAngles.x <= -PI_DIV12 || diffAngles.z >= PI_DIV12 || diffAngles.z <= -PI_DIV12)
     {
         if (m_isGrounded)
         {

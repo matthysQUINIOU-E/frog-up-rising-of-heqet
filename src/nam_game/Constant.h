@@ -1,4 +1,4 @@
 #include "pch.h"
 
-constexpr float PI_DI6 = DirectX::XM_PI / 6;
+constexpr float PI_DIV12 = DirectX::XM_PI / 12;
 

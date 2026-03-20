@@ -206,7 +206,7 @@ namespace nam
 
             if (penetration < -1e-4f) 
             {
-                info.penetrationDepth = 0;
+                info.m_penetrationDepth = 0;
                 return info;
             }
 
@@ -223,7 +223,7 @@ namespace nam
             }
         }
 
-        info.penetrationDepth = minPenetration;
+        info.m_penetrationDepth = minPenetration;
         XMStoreFloat3(&info.m_normal, XMVector3Normalize(bestAxis));
 
         XMVECTOR contact = XMVectorLerp(center1, center2, 0.5f);
@@ -267,7 +267,7 @@ namespace nam
             XMStoreFloat3(&info.m_normal, XMVectorSet(0, 1, 0, 0));
         }
 
-        info.penetrationDepth = sphere.Radius - distance;
+        info.m_penetrationDepth = sphere.Radius - distance;
 
         if (distance > 0) {
             XMVECTOR contact = XMVectorAdd(worldClosest,
@@ -302,12 +302,12 @@ namespace nam
             XMStoreFloat3(&info.m_normal, XMVectorSet(1, 0, 0, 0));
         
 
-        info.penetrationDepth = radiusSum - distance;
+        info.m_penetrationDepth = radiusSum - distance;
 
         XMVECTOR contact = XMVectorAdd(center1,
             XMVectorMultiply(
                 XMLoadFloat3(&info.m_normal),
-                XMVectorReplicate(sphere1.Radius - info.penetrationDepth * 0.5f)
+                XMVectorReplicate(sphere1.Radius - info.m_penetrationDepth * 0.5f)
             )
         );
         XMStoreFloat3(&info.m_contactPoint, contact);
@@ -336,7 +336,7 @@ namespace nam
             bool hasPhysics2 = ecs.HasComponent<PhysicComponent>(entity2);
 
             XMVECTOR normal = XMLoadFloat3(&collision.m_normal);
-            float depth = collision.penetrationDepth;
+            float depth = collision.m_penetrationDepth;
 
             XMFLOAT3 newPos1;
             XMFLOAT3 newPos2;
@@ -452,14 +452,14 @@ namespace nam
         {
             CollisionInfo& collision = collisions[i];
 
-            u32 entity1 = collision.m_entity1;
-            u32 entity2 = collision.m_entity2;
+            SingleCollisionInfo entity1Sci = collision.GetSingleInfo(collision.m_entity1);
+            SingleCollisionInfo entity2Sci = collision.GetSingleInfo(collision.m_entity2);
 
             if (collision.OnCollision1)
-                collision.OnCollision1(entity1, entity2, collision);
+                collision.OnCollision1(entity1Sci, entity2Sci);
 
             if (collision.OnCollision2)
-                collision.OnCollision2(entity2, entity1, collision);
+                collision.OnCollision2(entity2Sci, entity1Sci);
         }
 	}
 }
