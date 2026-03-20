@@ -18,6 +18,8 @@ void FrogTongue::OnInit()
 
 void FrogTongue::OnUpdate()
 {
+	float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+
 	if (!m_isFiring)
 		return;
 
@@ -26,7 +28,7 @@ void FrogTongue::OnUpdate()
 
 	if (!m_arrived)
 	{
-		m_move += m_speed;
+		m_move += m_speed * dt;
 		if (m_move >= m_maxDistance)
 		{
 			m_move = m_maxDistance;
@@ -35,7 +37,7 @@ void FrogTongue::OnUpdate()
 	}
 	else
 	{
-		m_move -= m_speed;
+		m_move -= m_speed * dt;
 		if (m_move <= 0.0f)
 		{
 			m_move = 0.0f;
@@ -73,9 +75,8 @@ void FrogTongue::SetFire(bool _fire)
 
 		m_pos = GetComponent<TransformComponent>().GetWorldPosition();
 	}
-	else
+	else if (!_fire && m_isFiring)
 	{
 		m_arrived = true;
-		std::cout << "yes" << std::endl;
 	}
 }
