@@ -15,7 +15,7 @@ namespace nam
 		Vector<u32> m_gameObjectToDelete;
 		bool m_active;
 
-	private:
+	protected:
 		Scene();
 		virtual ~Scene();
 
@@ -24,7 +24,7 @@ namespace nam
 		virtual void Start();
 		virtual void Destroy();
 
-		virtual void CleanUpdate();
+		void CleanUpdate();
 
 		void SetActive(bool isActive);
 

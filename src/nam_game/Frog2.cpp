@@ -40,7 +40,7 @@ void Frog2::OnController()
         Frog::OnController();
 }
 
-void Frog2::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
+void Frog2::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
-    Frog::OnCollision(self, other, collisionInfo);
+    Frog::OnCollision(self, other);
 }

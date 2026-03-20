@@ -121,13 +121,13 @@ void Frog::OnController()
 }
    
 
-void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
+void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
     // make this simple and bad for the proto
     // need tag to know when player collide on each other
-    if (collisionInfo.m_normal.y < 0.f)
+    if (other.m_normal.y < 0.f)
     {
         m_isGrounded = false;
         physic.m_velocity.y = 0.f;
@@ -201,7 +201,7 @@ void Frog::Rotate()
     XMFLOAT3 diffAngles;
     XMStoreFloat3(&diffAngles, vectDiffAngles);
 
-    if (diffAngles.x >= PI_DIV6 || diffAngles.x <= -PI_DIV6 || diffAngles.z >= PI_DIV6 || diffAngles.z <= -PI_DIV6)
+    if (diffAngles.x >= PI_DIV12 || diffAngles.x <= -PI_DIV12 || diffAngles.z >= PI_DIV12 || diffAngles.z <= -PI_DIV12)
     {
         if (m_isGrounded)
         {

@@ -30,7 +30,7 @@ public:
 	void OnInit() override;
 	void OnUpdate() override;
 	void OnController() override;
-	void OnCollision(nam::u32 self, nam::u32 other, const nam::CollisionInfo& collisionInfo) override;
+	void OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other) override;
 private:
 	void ChargeJump();
 	void Jump(DirectX::XMFLOAT3 direction);
