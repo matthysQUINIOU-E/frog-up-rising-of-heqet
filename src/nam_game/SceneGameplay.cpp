@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "SceneGameplay.h"
-#include <TextureTag.h>
-#include <ColliderTag.cpp>
-#include <Camera.h>
-#include <Frog1.h>
-#include <Frog2.h>
+#include "TextureTag.h"
+#include "ColliderTag.cpp"
+#include "Camera.h"
+#include "Frog1.h"
+#include "Frog2.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -48,7 +48,8 @@ void SceneGameplay::Init()
         TransformComponent tc;
         tc.SetWorldPosition({ 0,10,15 });
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     {
@@ -61,7 +62,8 @@ void SceneGameplay::Init()
         TransformComponent tc;
         tc.SetWorldPosition({ 0,10,30 });
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     {
@@ -74,7 +76,8 @@ void SceneGameplay::Init()
         TransformComponent tc;
         tc.SetWorldPosition({ 0,20,45 });
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     {
@@ -87,7 +90,8 @@ void SceneGameplay::Init()
         TransformComponent tc;
         tc.SetWorldPosition({ 10,20,45 });
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     {
@@ -99,8 +103,25 @@ void SceneGameplay::Init()
         go.AddComponent<MeshRendererComponent>(mrc);
         TransformComponent tc;
         tc.SetWorldPosition({ 0,5,-15 });
+        tc.SetWorldYPR(0.f, XM_PIDIV4, 0.f);
         go.AddComponent<TransformComponent>(tc);
-        go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
+    }
+
+
+    {
+        GameObject& go = CreateGameObject<GameObject>();
+        MeshRendererComponent mrc;
+        mrc.CreateMeshInstance();
+        mrc.mp_mesh->BuildBox({ 10,10,10 }, { 1,1,1,1 });
+        mrc.mp_mesh->SetTexture((size)TextureTag::Dirt);
+        go.AddComponent<MeshRendererComponent>(mrc);
+        TransformComponent tc;
+        tc.SetWorldPosition({ -20,6,0 });
+        go.AddComponent<TransformComponent>(tc);
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     //player1

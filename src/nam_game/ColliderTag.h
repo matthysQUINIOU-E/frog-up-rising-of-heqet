@@ -3,7 +3,7 @@
 enum class ColliderTag : nam::size
 {
     Ground,
-    Plateform,
+    Platform,
     FrogJoel,
     FrogEllie,
 	Size

@@ -10,6 +10,7 @@ public:
 	void OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other) override;
 private:
 	void MoveWall(int _forward, int _right);
+	void JumpWall(DirectX::XMFLOAT3 direction);
 };
 
 
