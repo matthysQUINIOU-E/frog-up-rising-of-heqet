@@ -118,7 +118,7 @@ void SceneGameplay::Init()
         mrc.mp_mesh->SetTexture((size)TextureTag::Dirt);
         go.AddComponent<MeshRendererComponent>(mrc);
         TransformComponent tc;
-        tc.SetWorldPosition({ -20,6,0 });
+        tc.SetWorldPosition({ -20,5,0 });
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;

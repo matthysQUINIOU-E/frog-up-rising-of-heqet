@@ -87,7 +87,7 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     else if (m_isOnWall)
     {
         m_isGrounded = false;
-        physic.m_useGravity = false;
+        physic.m_dirGravity = self.m_normal;
         physic.m_velocity = { 0.f,0.f,0.f };
         transform.SetWorldYPR(0.f, -XM_PIDIV2, -XM_PIDIV2);
     }
@@ -95,42 +95,6 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
 
 void Frog1::MoveWall(float _forward, float _right)
 {
-    m_jumpImpulse = 10.f;
-
-    XMVECTOR vDirection = { 0.f, 1.f, 0.f };
-
-    TransformComponent& transform = GetComponent<TransformComponent>();
-    XMFLOAT3 forward = transform.GetWorldForward();
-    XMVECTOR vForward = XMLoadFloat3(&forward);
-    vForward = XMVectorScale(vForward, _forward);
-    vDirection += vForward;
-
-    XMFLOAT3 right = transform.GetWorldRight();
-    XMVECTOR vRight = XMLoadFloat3(&right);
-    vRight = XMVectorScale(vRight, _right);
-    vDirection += vRight;
-
-    vDirection = XMVector3Normalize(vDirection);
-
-    XMFLOAT3 direction;
-    XMStoreFloat3(&direction, vDirection);
-    JumpWall(direction);
+    Frog::Move(_forward, _right);
 }
 
-void Frog1::JumpWall(DirectX::XMFLOAT3 direction)
-{
-    XMVECTOR vimpulse = XMLoadFloat3(&direction);
-    vimpulse = XMVectorScale(vimpulse, m_jumpImpulse);
-
-    XMFLOAT3 impulse;
-    XMStoreFloat3(&impulse, vimpulse);
-    m_jumpImpulse = 0.f;
-
-    PhysicComponent& physic = GetComponent<PhysicComponent>();
-    physic.AddImpulse(impulse);
-
-
-    physic.m_useGravity = true;
-    m_isGrounded = false;
-    m_isOnWall = false;
-}
