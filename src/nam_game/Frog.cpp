@@ -21,8 +21,8 @@ void Frog::OnInit()
 
     AddComponent<PhysicComponent>(PhysicComponent());
 
-    Scene* scene = GetScene();
-    m_arrow = &scene->CreateGameObject<FrogArrow>(false);
+    Scene& scene = GetScene();
+    m_arrow = &scene.CreateGameObject<FrogArrow>(false);
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
@@ -43,7 +43,12 @@ void Frog::OnUpdate()
         ChargeJump();
 
     if (m_isOnWall == false)
+    {
         RotateUpdate();
+        Rotate();
+    }
+
+
 }
 
 void Frog::OnController()
@@ -101,8 +106,6 @@ void Frog::OnController()
             right += 1.f;
     }
 
-    if(m_isOnWall == false)
-        Rotate();
 
     if (forward == 0.f && right == 0.f)
         return;
@@ -114,8 +117,9 @@ void Frog::OnController()
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
+    TransformComponent& transform = GetComponent<TransformComponent>();
 
-    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) && other.m_normal.y > 0.f;
+    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) && self.m_normal.y < 0.f;
     bool onFloor = other.m_tag == (size)ColliderTag::Ground;
 
     if (onPlateform || onFloor)
@@ -124,9 +128,10 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         m_isOnWall = false;
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
+        transform.SetWorldUp(other.m_normal);
     }
 
-    if (other.m_normal.y < 0.f)
+    if (self.m_normal.y > 0.f)
     {
         m_isGrounded = false;
         physic.m_velocity.y = 0.f;
@@ -168,13 +173,13 @@ void Frog::Jump(XMFLOAT3 direction)
 
 void Frog::Rotate()
 {
-    Ecs* ecs = &App::Get()->GetEcs();
+    Ecs& ecs = GetEcs();
 
     XMFLOAT3 impulse = { 0.f,0.f,0.f };
 
     TransformComponent* transform = &GetComponent<TransformComponent>();
     TransformComponent* cameraTransform = nullptr;
-    ecs->ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
+    ecs.ForEach<CameraTag, TransformComponent>([&](uint32_t entity, CameraTag& tag, TransformComponent& transform)
         {
             cameraTransform = &transform;
         });
@@ -186,6 +191,7 @@ void Frog::Rotate()
 
 
     XMFLOAT3 camForward = cameraTransform->GetWorldForward();
+    camForward.y = 0.f;
     XMFLOAT3 frogForward = transform->GetWorldForward();
 
     XMVECTOR camForwardVect = XMLoadFloat3(&camForward);
@@ -202,13 +208,13 @@ void Frog::Rotate()
         if (m_isGrounded)
         {
             impulse.y += 2.f;
+
+            PhysicComponent& physic = GetComponent<PhysicComponent>();
+            physic.AddImpulse(impulse);
+            physic.m_useGravity = true;
+            m_isGrounded = false;
         }
     }
-
-    PhysicComponent& physic = GetComponent<PhysicComponent>();
-    physic.AddImpulse(impulse);
-    physic.m_useGravity = true;
-    m_isGrounded = false;
 }
 
 
@@ -242,7 +248,7 @@ void Frog::RotateUpdate()
 
     if (diffAngles.x >= frogForward.x || diffAngles.x <= frogForward.x || diffAngles.z >= frogForward.z || diffAngles.z <= frogForward.z)
     {
-        if (!m_isGrounded)
+        if (m_isGrounded == false)
         {
             transform->LookToWorld({ frogForward.x + diffAngles.x / 12, 0.0f, frogForward.z + diffAngles.z / 12 });
         }

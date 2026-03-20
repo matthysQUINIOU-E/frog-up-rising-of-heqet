@@ -131,8 +131,13 @@ namespace nam
 		return m_entity;
 	}
 
-	Scene* GameObject::GetScene()
+	Scene& GameObject::GetScene()
 	{
-		return mp_scene;
+		return *mp_scene;
+	}
+
+	Ecs& GameObject::GetEcs()
+	{
+		return *mp_ecs;
 	}
 }

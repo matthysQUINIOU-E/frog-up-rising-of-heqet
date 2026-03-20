@@ -49,7 +49,7 @@ void Frog2::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
 
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
-    bool onFrog = (other.m_tag == (size)ColliderTag::FrogJoel) && other.m_normal.y > 0.f;
+    bool onFrog = (other.m_tag == (size)ColliderTag::FrogJoel) && self.m_normal.y < 0.f;
 
     if(onFrog)
     {

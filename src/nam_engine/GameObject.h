@@ -58,7 +58,8 @@ namespace nam
 		ButtonComponent& SetButton();
 
 		Entity GetEntity();
-		Scene* GetScene();
+		Scene& GetScene();
+		Ecs& GetEcs();
 	private:
 		void Destroy();
 

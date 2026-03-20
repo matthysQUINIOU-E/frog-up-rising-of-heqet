@@ -17,7 +17,7 @@ protected:
 	float m_maxImpulse = 15.f;
 	float m_chargeJumpRate = 5.f;
 
-	FrogArrow* m_arrow;
+	FrogArrow* m_arrow = nullptr;
 	float m_targetTime = 1.5f;
 	float m_slope = 0.f;
 	nam::Timer m_arrowTimer;

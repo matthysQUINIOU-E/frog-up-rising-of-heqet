@@ -69,13 +69,13 @@ void Frog1::OnController()
 
 void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
-        Frog::OnCollision(self, other);
+    Frog::OnCollision(self, other);
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     TransformComponent& transform = GetComponent<TransformComponent>();
 
 
-    bool onFrog = (other.m_tag == (size)ColliderTag::FrogEllie) && other.m_normal.y < 0.f;
-    m_isOnWall = other.m_normal.y == 0.f;
+    bool onFrog = (other.m_tag == (size)ColliderTag::FrogEllie) && self.m_normal.y < 0.f;
+    m_isOnWall = self.m_normal.y == 0.f;
 
     if (onFrog)
     {
@@ -91,10 +91,9 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
         physic.m_velocity = { 0.f,0.f,0.f };
         transform.SetWorldYPR(0.f, -XM_PIDIV2, -XM_PIDIV2);
     }
-   
 }
 
-void Frog1::MoveWall(int _forward, int _right)
+void Frog1::MoveWall(float _forward, float _right)
 {
     m_jumpImpulse = 10.f;
 
