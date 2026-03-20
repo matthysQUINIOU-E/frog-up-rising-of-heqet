@@ -42,6 +42,29 @@ void Frog1::OnController()
 
     if (m_isFrogActive)
         Frog::OnController();
+
+    float forward = 0.f;
+    float right = 0.f;
+
+    if(m_isOnWall)
+    {
+        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
+            forward += 1.f;
+
+        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
+            forward -= 1.f;
+
+        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
+            right -= 1.f;
+
+        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
+            right += 1.f;
+    }
+
+    if (forward == 0.f && right == 0.f)
+        return;
+
+    MoveWall(forward, right);
 }
 
 void Frog1::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
@@ -49,15 +72,30 @@ void Frog1::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
     Frog::OnCollision(self, other, collisionInfo);
 
     PhysicComponent& physic = GetComponent<PhysicComponent>();
+    TransformComponent& transform = GetComponent<TransformComponent>();
+
 
     bool onFrog = (collisionInfo.m_tag2 == (size)ColliderTag::FrogEllie) && collisionInfo.m_normal.y < 0.f;
-    
+    m_isOnWall = collisionInfo.m_normal.y == 0.f;
+
     if (onFrog)
     {
         m_isGrounded = true;
+        m_isOnWall = false;
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
     }
-
+    else if (m_isOnWall)
+    {
+        m_isGrounded = false;
+        physic.m_useGravity = false;
+        physic.m_velocity = { 0.f,0.f,0.f };
+        transform.SetWorldYPR(0.f, -XM_PIDIV2, -XM_PIDIV2);
+    }
    
+}
+
+void Frog1::MoveWall(int _forward, int _right)
+{
+    Frog::Move(_forward, _right);
 }

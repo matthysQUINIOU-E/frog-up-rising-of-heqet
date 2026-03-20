@@ -8,6 +8,8 @@ public:
 	void OnUpdate() override;
 	void OnController() override;
 	void OnCollision(nam::u32 self, nam::u32 other, const nam::CollisionInfo& collisionInfo) override;
+private:
+	void MoveWall(int _forward, int _right);
 };
 
 

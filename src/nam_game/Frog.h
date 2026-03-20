@@ -11,6 +11,7 @@ protected:
 	bool m_isFrogActive = false;
 	bool m_isSpacePressed = false;
 	bool m_isGrounded = false;
+	bool m_isOnWall = false;
 	bool m_isRotate = false;
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;
@@ -20,6 +21,8 @@ protected:
 	float m_targetTime = 1.5f;
 	float m_slope = 0.f;
 	nam::Timer m_arrowTimer;
+
+	void Move(float _forward, float _right);
 public:
 	void OnInit() override;
 	void OnUpdate() override;
@@ -32,6 +35,6 @@ private:
 	void Rotate();
 	void RotateUpdate();
 
-	void Move(float _forward, float _right);
+	
 };
 

@@ -39,10 +39,11 @@ void Frog::OnUpdate()
         m_arrowTimer.ResetProgress();
     }
 
-    if (m_isSpacePressed && m_isGrounded)
+    if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
 
-    RotateUpdate();
+    if (m_isOnWall == false)
+        RotateUpdate();
 }
 
 void Frog::OnController()
@@ -59,7 +60,7 @@ void Frog::OnController()
     {
         m_isSpacePressed = false;
 
-        if(m_isGrounded)
+        if(m_isGrounded || m_isOnWall)
         {
             TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
             XMFLOAT3 impulse = arrowTransform.GetWorldForward();
@@ -68,9 +69,6 @@ void Frog::OnController()
             m_arrowTimer.ResetProgress();
         }
     }
-
-    if (m_isGrounded == false)
-        return;
 
 
     if (Input::IsKey(VK_CONTROL))
@@ -88,20 +86,23 @@ void Frog::OnController()
     m_slope = std::clamp(m_slope, -XM_PIDIV2, 0.f);
     m_arrow->SetSlope(m_slope);
 
-    
-    if(Input::IsKey('Z') || Input::IsKey(VK_UP))
-        forward += 1.f;
-    
-    if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
-        forward -= 1.f;
-    
-    if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
-        right -= 1.f;
-    
-    if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
-        right += 1.f;
+    if (m_isGrounded)
+    {
+        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
+            forward += 1.f;
 
-    Rotate();
+        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
+            forward -= 1.f;
+
+        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
+            right -= 1.f;
+
+        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
+            right += 1.f;
+    }
+
+    if(m_isOnWall == false)
+        Rotate();
 
     if (forward == 0.f && right == 0.f)
         return;
@@ -120,6 +121,7 @@ void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
     if (onPlateform || onFloor)
     {
         m_isGrounded = true;
+        m_isOnWall = false;
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
     }
@@ -158,8 +160,10 @@ void Frog::Jump(XMFLOAT3 direction)
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     physic.AddImpulse(impulse);
 
+
     physic.m_useGravity = true;
     m_isGrounded = false;
+    m_isOnWall = false;
 }
 
 void Frog::Rotate()
