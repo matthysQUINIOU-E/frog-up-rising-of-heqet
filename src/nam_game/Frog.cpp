@@ -27,7 +27,7 @@ void Frog::OnInit()
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
 
-    m_tongue = &scene->CreateGameObject<FrogTongue>(false);
+    m_tongue = &scene->CreateGameObject<FrogTongue>(true);
     TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
     tongueTransform.SetParent(&GetComponent<TransformComponent>());
 }
@@ -36,6 +36,8 @@ void Frog::OnUpdate()
 {
     float dt = App::Get()->GetChrono().GetScaledDeltaTime();
     m_arrowTimer.Update(dt);
+
+    m_tongue->OnUpdate();
 
     if (m_arrowTimer.IsTargetReached())
     {
@@ -105,8 +107,10 @@ void Frog::OnController()
     if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
         right += 1.f;
 
-    if (Input::IsKey('E'))
-        Fire();
+    if (Input::IsKeyDown('E'))
+    {
+        m_tongue->SetFire(true);
+    }
 
     Rotate();
 
@@ -185,7 +189,6 @@ void Frog::Rotate()
         return;
     }
 
-
     XMFLOAT3 camForward = cameraTransform->GetWorldForward();
     XMFLOAT3 frogForward = transform->GetWorldForward();
 
@@ -198,7 +201,7 @@ void Frog::Rotate()
     XMFLOAT3 diffAngles;
     XMStoreFloat3(&diffAngles, vectDiffAngles);
 
-    if (diffAngles.x >= PI_DI6 || diffAngles.x <= -PI_DI6 || diffAngles.z >= PI_DI6 || diffAngles.z <= -PI_DI6)
+    if (diffAngles.x >= PI_DIV6 || diffAngles.x <= -PI_DIV6 || diffAngles.z >= PI_DIV6 || diffAngles.z <= -PI_DIV6)
     {
         if (m_isGrounded)
         {
@@ -211,7 +214,6 @@ void Frog::Rotate()
     physic.m_useGravity = true;
     m_isGrounded = false;
 }
-
 
 void Frog::RotateUpdate()
 {
@@ -273,10 +275,3 @@ void Frog::Move(float _forward, float _right)
     XMStoreFloat3(&direction, vDirection);
     Jump(direction);
 }
-
-void Frog::Fire()
-{
-    
-}
-
-

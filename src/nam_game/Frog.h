@@ -13,6 +13,8 @@ protected:
 	bool m_isSpacePressed = false;
 	bool m_isGrounded = false;
 	bool m_isRotate = false;
+	bool m_isFiring = false;
+
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;
 	float m_chargeJumpRate = 5.f;
@@ -37,7 +39,5 @@ private:
 	void RotateUpdate();
 
 	void Move(float _forward, float _right);
-
-	void Fire();
 };
 

@@ -4,6 +4,14 @@ class FrogTongue : public nam::GameObject
 public:
 	void OnInit() override;
 	void OnUpdate() override;
+	
+	void SetFire(bool _fire);
 private:
+	bool m_isFiring = false;
+	bool m_arrived = false;
+	float m_move = 0.0f;
+	float m_speed = 2.f;
+	float m_maxDistance = 30.f;
+	DirectX::XMFLOAT3 m_pos;
 };
 

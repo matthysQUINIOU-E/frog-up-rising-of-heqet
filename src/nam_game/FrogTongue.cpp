@@ -8,7 +8,7 @@ void FrogTongue::OnInit()
 {
 	MeshRendererComponent tongueMesh;
 	tongueMesh.CreateMeshInstance();
-	tongueMesh.mp_mesh->BuildBox({ 0.1f, 0.1f, 2.5f }, { 255.f, 105.f, 180.f, 1.0f });
+	tongueMesh.mp_mesh->BuildBox({ 0.1f, 0.1f, 0.99f }, { 1.0f, 0.411f, 0.705f, 1.0f });
 	AddComponent<MeshRendererComponent>(tongueMesh);
 
 	TransformComponent tongueTransform;
@@ -18,5 +18,64 @@ void FrogTongue::OnInit()
 
 void FrogTongue::OnUpdate()
 {
+	if (!m_isFiring)
+		return;
+
 	TransformComponent& tc = GetComponent<TransformComponent>();
+	XMFLOAT3 fwd = tc.GetWorldForward();
+
+	if (!m_arrived)
+	{
+		m_move += m_speed;
+		if (m_move >= m_maxDistance)
+		{
+			m_move = m_maxDistance;
+			m_arrived = true;
+		}
+	}
+	else
+	{
+		m_move -= m_speed;
+		if (m_move <= 0.0f)
+		{
+			m_move = 0.0f;
+			m_arrived = false;
+			m_isFiring = false;
+		}
+	}
+
+	float scaleZ;
+
+	if (m_move > 0.01f)
+	{
+		scaleZ = m_move;
+	}
+	else
+	{
+		scaleZ = 0.01f;
+	}
+	tc.SetWorldScale({ 1.0f, 1.0f, scaleZ });
+
+	float offset = m_move / 2.0f;
+
+	XMFLOAT3 newPos = { m_pos.x + (fwd.x * offset), m_pos.y + (fwd.y * offset), m_pos.z + (fwd.z * offset) };
+
+	tc.SetWorldPosition(newPos);
+}
+
+void FrogTongue::SetFire(bool _fire)
+{
+	if (_fire && !m_isFiring)
+	{
+		m_isFiring = true;
+		m_arrived = false;
+		m_move = 0.0f;
+
+		m_pos = GetComponent<TransformComponent>().GetWorldPosition();
+	}
+	else
+	{
+		m_arrived = true;
+		std::cout << "yes" << std::endl;
+	}
 }
