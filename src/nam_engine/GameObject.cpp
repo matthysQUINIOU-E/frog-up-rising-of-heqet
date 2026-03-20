@@ -29,9 +29,9 @@ namespace nam
 		OnUpdate();
 	}
 
-	void GameObject::Collider(u32 self, u32 other, const CollisionInfo& collisionInfo)
+	void GameObject::Collider(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 	{
-		OnCollision(self, other, collisionInfo);
+		OnCollision(self, other);
 	}
 
 	void GameObject::Controller()
@@ -72,7 +72,7 @@ namespace nam
 	{
 	}
 
-	void GameObject::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
+	void GameObject::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 	{
 	}
 

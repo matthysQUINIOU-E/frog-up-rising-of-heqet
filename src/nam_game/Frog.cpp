@@ -109,13 +109,13 @@ void Frog::OnController()
 }
    
 
-void Frog::OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo)
+void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
     // make this simple and bad for the proto
     // need tag to know when player collide on each other
-    if (collisionInfo.m_normal.y < 0.f)
+    if (other.m_normal.y < 0.f)
     {
         m_isGrounded = false;
         physic.m_velocity.y = 0.f;

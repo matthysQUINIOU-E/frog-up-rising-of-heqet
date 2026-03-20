@@ -6,13 +6,13 @@ namespace nam
 {
 	struct TransformComponent;
 	struct MeshRendererComponent;
-	struct CollisionInfo;
+	struct SingleCollisionInfo;
 
 	struct SphereColliderComponent
 	{
 		u32 m_updateId = 0;
 		DirectX::BoundingSphere m_box;
-		std::function<void(u32 self, u32 other, const CollisionInfo& collisionInfo)> OnCollision;
+		std::function<void(const SingleCollisionInfo& self, const SingleCollisionInfo& other)> OnCollision;
 		bool m_noIntersectionPush = false;
 
 		bool m_basedOnMesh = true;

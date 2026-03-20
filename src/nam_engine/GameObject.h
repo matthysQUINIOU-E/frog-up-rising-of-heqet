@@ -20,7 +20,7 @@ namespace nam
 
 		void Update();// behaviorComponent
 
-		void Collider(u32 self, u32 other, const CollisionInfo& collisionInfo); // colliderComponent
+		void Collider(const SingleCollisionInfo& self, const SingleCollisionInfo& other); // colliderComponent
 
 		void Controller();// controllerComponent
 
@@ -34,7 +34,7 @@ namespace nam
 		virtual void OnDestroy();
 
 		virtual void OnUpdate(); // behaviorComponent
-		virtual void OnCollision(u32 self, u32 other, const CollisionInfo& collisionInfo); // colliderComponent
+		virtual void OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other); // colliderComponent
 		virtual void OnController(); // controllerComponent
 
 		// buttonComponent
@@ -65,9 +65,9 @@ namespace nam
 		template<typename T>
 		BehaviorComponent& SetFunctionUpdate(T* owner, void (T::* Update)());
 		template<typename T>
-		BoxColliderComponent& SetBoxCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo));
+		BoxColliderComponent& SetBoxCollider(T* owner, void(T::* Collide)(const SingleCollisionInfo& self, const SingleCollisionInfo& other));
 		template<typename T>
-		SphereColliderComponent& SetSphereCollider(T* owner, void(T::* Collide)(u32 self, u32 other, const CollisionInfo& collisionInfo));
+		SphereColliderComponent& SetSphereCollider(T* owner, void(T::* Collide)(const SingleCollisionInfo& self, const SingleCollisionInfo& other));
 		template<typename T>
 		ControllerComponent& SetController(T* owner, void(T::* Controller)());
 		template<typename T>
