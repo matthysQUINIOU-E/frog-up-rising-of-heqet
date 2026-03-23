@@ -98,14 +98,12 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
         m_wallNormal = other.m_normal;
         physic.m_dirGravity = self.m_normal;
         physic.m_velocity = { 0.f,0.f,0.f };
-        //transform.SetWorldYPR(0.f, -XM_PIDIV2, -XM_PIDIV2); // temporaire pour test
 
         XMVECTOR vNormal = XMLoadFloat3(&m_wallNormal);
 
         XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
         XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
 
-        // forward = cross(normal, right) — perpendiculaire au mur et à right
         XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
 
         XMFLOAT3 newForward;
