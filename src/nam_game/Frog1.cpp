@@ -40,6 +40,13 @@ void Frog1::OnController()
     if (Input::IsKeyDown('2'))
         m_isFrogActive = false;
 
+    if (m_isOnWall && !m_isSpacePressed && Input::IsKeyUp(VK_SPACE))
+    {
+        PhysicComponent& physic = GetComponent<PhysicComponent>();
+        physic.m_dirGravity = m_gravity; 
+        m_isOnWall = false;
+    }
+
     if (m_isFrogActive)
         Frog::OnController();
 
@@ -87,6 +94,7 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     else if (m_isOnWall)
     {
         m_isGrounded = false;
+        m_wallNormal = self.m_normal;
         physic.m_dirGravity = self.m_normal;
         physic.m_velocity = { 0.f,0.f,0.f };
         transform.SetWorldYPR(0.f, -XM_PIDIV2, -XM_PIDIV2);
@@ -95,6 +103,26 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
 
 void Frog1::MoveWall(float _forward, float _right)
 {
-    Frog::Move(_forward, _right);
+    m_jumpImpulse = 2.f;
+
+    TransformComponent& transform = GetComponent<TransformComponent>();
+
+    XMVECTOR vDirection = XMLoadFloat3(&m_wallNormal);
+
+    XMFLOAT3 forward = transform.GetWorldForward();
+    XMVECTOR vForward = XMLoadFloat3(&forward);
+    vForward = XMVectorScale(vForward, _forward);
+    vDirection = XMVectorAdd(vDirection, vForward);
+
+    XMFLOAT3 right = transform.GetWorldRight();
+    XMVECTOR vRight = XMLoadFloat3(&right);
+    vRight = XMVectorScale(vRight, _right);
+    vDirection = XMVectorAdd(vDirection, vRight);
+
+    vDirection = XMVector3Normalize(vDirection);
+
+    XMFLOAT3 direction;
+    XMStoreFloat3(&direction, vDirection);
+    Frog::Jump(direction);
 }
 

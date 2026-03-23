@@ -22,7 +22,8 @@ protected:
 	float m_slope = 0.f;
 	nam::Timer m_arrowTimer;
 
-	void Move(float _forward, float _right);
+	void Jump(DirectX::XMFLOAT3 direction);
+
 public:
 	void OnInit() override;
 	void OnUpdate() override;
@@ -30,7 +31,7 @@ public:
 	void OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other) override;
 private:
 	void ChargeJump();
-	void Jump(DirectX::XMFLOAT3 direction);
+	void Move(float _forward, float _right);
 
 	void Rotate();
 	void RotateUpdate();
