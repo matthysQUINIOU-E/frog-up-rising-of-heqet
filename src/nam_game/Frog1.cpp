@@ -40,7 +40,8 @@ void Frog1::OnController()
     if (Input::IsKeyDown('2'))
         m_isFrogActive = false;
 
-    if (m_isOnWall && !m_isSpacePressed && Input::IsKeyUp(VK_SPACE))
+    
+    if (m_isSpacePressed) // SI POSSIBLE NE PAS LE FAIRE CONSTAMMENT
     {
         PhysicComponent& physic = GetComponent<PhysicComponent>();
         physic.m_dirGravity = m_gravity; 
@@ -82,7 +83,7 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
 
 
     bool onFrog = (other.m_tag == (size)ColliderTag::FrogEllie) && self.m_normal.y < 0.f;
-    m_isOnWall = self.m_normal.y == 0.f;
+    m_isOnWall = self.m_normal.y == 0.f && (other.m_tag != (size)ColliderTag::FrogEllie);
 
     if (onFrog)
     {
@@ -94,10 +95,24 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     else if (m_isOnWall)
     {
         m_isGrounded = false;
-        m_wallNormal = self.m_normal;
+        m_wallNormal = other.m_normal;
         physic.m_dirGravity = self.m_normal;
         physic.m_velocity = { 0.f,0.f,0.f };
-        transform.SetWorldYPR(0.f, -XM_PIDIV2, -XM_PIDIV2);
+        //transform.SetWorldYPR(0.f, -XM_PIDIV2, -XM_PIDIV2); // temporaire pour test
+
+        XMVECTOR vNormal = XMLoadFloat3(&m_wallNormal);
+
+        XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+        XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
+
+        // forward = cross(normal, right) — perpendiculaire au mur et à right
+        XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+
+        XMFLOAT3 newForward;
+        XMStoreFloat3(&newForward, vForward);
+
+        transform.LookToWorld(newForward, m_wallNormal);
+
     }
 }
 

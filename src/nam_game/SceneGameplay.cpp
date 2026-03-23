@@ -42,7 +42,7 @@ void SceneGameplay::Init()
         GameObject& go = CreateGameObject<GameObject>();
         MeshRendererComponent mrc;
         mrc.CreateMeshInstance();
-        mrc.mp_mesh->BuildBox({ 10,2,10 }, { 1,1,1,1 });
+        mrc.mp_mesh->BuildBox({ 10,20,10 }, { 1,1,1,1 });
         mrc.mp_mesh->SetTexture((size)TextureTag::Dirt);
         go.AddComponent<MeshRendererComponent>(mrc);
         TransformComponent tc;

@@ -10,6 +10,7 @@ public:
 	void OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other) override;
 private:
 	void MoveWall(float _forward, float _right);
+
 	DirectX::XMFLOAT3 m_gravity = { 0.f, -1.f, 0.f };
 	DirectX::XMFLOAT3 m_wallNormal = { 0.f, 0.f, 0.f };
 };
