@@ -109,7 +109,15 @@ void Frog::OnController()
 
     if (Input::IsKeyDown('E'))
     {
-        m_tongue->SetFire(true);
+        if(m_isFiring)
+        {
+            m_isFiring = false;
+        }
+        else
+        {
+            m_isFiring = true;
+		}
+        m_tongue->SetFire(m_isFiring);
     }
 
     Rotate();
