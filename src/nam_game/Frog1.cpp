@@ -94,6 +94,7 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     }
     else if (m_isOnWall)
     {
+        m_isOrientedWall = true;
         m_isGrounded = false;
         m_wallNormal = other.m_normal;
         physic.m_dirGravity = self.m_normal;

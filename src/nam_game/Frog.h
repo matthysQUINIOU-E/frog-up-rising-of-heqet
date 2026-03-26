@@ -12,6 +12,7 @@ protected:
 	bool m_isSpacePressed = false;
 	bool m_isGrounded = false;
 	bool m_isOnWall = false;
+	bool m_isOrientedWall = false;
 	bool m_isRotate = false;
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;

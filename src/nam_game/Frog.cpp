@@ -42,7 +42,7 @@ void Frog::OnUpdate()
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
 
-    if (m_isOnWall == false)
+    if (m_isOrientedWall == false)
     {
         RotateUpdate();
         Rotate();
@@ -126,6 +126,7 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
     {
         m_isGrounded = true;
         m_isOnWall = false;
+        m_isOrientedWall = false;
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
         transform.SetWorldUp(other.m_normal);
