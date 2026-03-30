@@ -14,6 +14,12 @@ void FrogTongue::OnInit()
 	TransformComponent tongueTransform;
 	tongueTransform.SetWorldScale({ 1.0f, 1.0f, 1.0f });
 	AddComponent<TransformComponent>(tongueTransform);
+
+	AddComponent<PhysicComponent>(PhysicComponent());
+
+	SetBoxCollider();
+	BoxColliderComponent tongueCollider;
+	//tongueCollider.m_shouldCollideWith.insert();
 }
 
 void FrogTongue::OnUpdate()
@@ -63,6 +69,12 @@ void FrogTongue::OnUpdate()
 	XMFLOAT3 newPos = { m_pos.x + (fwd.x * offset), m_pos.y + (fwd.y * offset), m_pos.z + (fwd.z * offset) };
 
 	tc.SetWorldPosition(newPos);
+}
+
+void FrogTongue::OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other)
+{
+	std::cout << "little wolf" << std::endl;
+	m_arrived = true;
 }
 
 void FrogTongue::SetFire(bool _fire)

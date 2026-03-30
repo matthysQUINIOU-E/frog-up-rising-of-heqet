@@ -37,12 +37,17 @@ void Frog::OnUpdate()
     float dt = App::Get()->GetChrono().GetScaledDeltaTime();
     m_arrowTimer.Update(dt);
 
-    m_tongue->OnUpdate();
-
     if (m_arrowTimer.IsTargetReached())
     {
         m_arrow->SetActive(false);
         m_arrowTimer.ResetProgress();
+    }
+
+    m_tongue->OnUpdate();
+
+    if (m_isFiring && m_tongue->IsArrived())
+    {
+        m_isFiring = false;
     }
 
     if (m_isSpacePressed && m_isGrounded)
@@ -116,7 +121,8 @@ void Frog::OnController()
         else
         {
             m_isFiring = true;
-		}
+        }
+        
         m_tongue->SetFire(m_isFiring);
     }
 
@@ -127,7 +133,7 @@ void Frog::OnController()
         
     Move(forward, right);
 }
-   
+
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {

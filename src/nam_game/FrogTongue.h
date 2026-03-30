@@ -4,8 +4,10 @@ class FrogTongue : public nam::GameObject
 public:
 	void OnInit() override;
 	void OnUpdate() override;
+	void OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other) override;
 	
 	void SetFire(bool _fire);
+	bool IsArrived() { return m_arrived; }
 private:
 	bool m_isFiring = false;
 	bool m_arrived = false;
