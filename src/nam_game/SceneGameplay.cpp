@@ -126,7 +126,7 @@ void SceneGameplay::Init()
 
     //player1
     {
-        Frog1& frog = CreateGameObject<Frog1>();
+       Frog1& frog = CreateGameObject<Frog1>();
     }
 
     //player2

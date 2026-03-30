@@ -124,10 +124,19 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
 
     if (onPlateform || onFloor)
     {
+        XMFLOAT3 up = transform.GetWorldUp();
+        XMFLOAT3 normal = other.m_normal;
+
+        if( up.x == normal.x && up.y == normal.y && up.z == normal.z)
+            physic.m_useGravity = false;
+        else
+            physic.m_useGravity = true;
+
+
         m_isGrounded = true;
         m_isOnWall = false;
         m_isOrientedWall = false;
-        physic.m_useGravity = false;
+        physic.m_dirGravity = m_gravity;
         physic.m_velocity = { 0.f,0.f,0.f };
         transform.SetWorldUp(other.m_normal);
     }
@@ -189,7 +198,6 @@ void Frog::Rotate()
     {
         return;
     }
-
 
     XMFLOAT3 camForward = cameraTransform->GetWorldForward();
     camForward.y = 0.f;

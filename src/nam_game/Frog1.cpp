@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Frog1.h"
 #include "ColliderTag.h"
+#include "Camera.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -8,6 +9,9 @@ using namespace DirectX;
 void Frog1::OnInit()
 {
     Frog::OnInit();
+
+    m_gravityTimerTarget = 0.5f;
+    m_gravityTimer.Init(m_gravityTimerTarget);
 
     MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
     mrc.mp_mesh->SetColor({ 0.5f, 0.0f, 0.0f, 1.f });
@@ -28,8 +32,26 @@ void Frog1::OnInit()
 
 void Frog1::OnUpdate()
 {
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+
     if (m_isFrogActive)
         Frog::OnUpdate();
+
+    Print(m_isOrientedWall);
+    if(m_isOrientedWall)
+    {
+        float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+        m_gravityTimer.Update(dt);
+    }
+
+    if (m_gravityTimer.IsTargetReached())
+    {
+        m_isOnWall = false;
+        m_isOrientedWall = false;
+        physic.m_useGravity = true;
+        physic.m_dirGravity = m_gravity;
+        return;
+    }
 }
 
 void Frog1::OnController()
@@ -41,7 +63,7 @@ void Frog1::OnController()
         m_isFrogActive = false;
 
     
-    if (m_isSpacePressed) // SI POSSIBLE NE PAS LE FAIRE CONSTAMMENT
+    if (m_isSpacePressed) 
     {
         PhysicComponent& physic = GetComponent<PhysicComponent>();
         physic.m_dirGravity = m_gravity; 
@@ -81,7 +103,6 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     TransformComponent& transform = GetComponent<TransformComponent>();
 
-
     bool onFrog = (other.m_tag == (size)ColliderTag::FrogEllie) && self.m_normal.y < 0.f;
     m_isOnWall = self.m_normal.y == 0.f && (other.m_tag != (size)ColliderTag::FrogEllie);
 
@@ -94,24 +115,7 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     }
     else if (m_isOnWall)
     {
-        m_isOrientedWall = true;
-        m_isGrounded = false;
-        m_wallNormal = other.m_normal;
-        physic.m_dirGravity = self.m_normal;
-        physic.m_velocity = { 0.f,0.f,0.f };
-
-        XMVECTOR vNormal = XMLoadFloat3(&m_wallNormal);
-
-        XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-        XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
-
-        XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
-
-        XMFLOAT3 newForward;
-        XMStoreFloat3(&newForward, vForward);
-
-        transform.LookToWorld(newForward, m_wallNormal);
-
+        CollisionOnWall(self, other);
     }
 }
 
@@ -138,5 +142,30 @@ void Frog1::MoveWall(float _forward, float _right)
     XMFLOAT3 direction;
     XMStoreFloat3(&direction, vDirection);
     Frog::Jump(direction);
+}
+
+void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
+{
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    TransformComponent& transform = GetComponent<TransformComponent>();
+
+    m_gravityTimer.ResetProgress();
+    m_isOrientedWall = true;
+    m_isGrounded = false;
+    m_wallNormal = other.m_normal;
+    physic.m_dirGravity = self.m_normal;
+    physic.m_velocity = { 0.f,0.f,0.f };
+
+    XMVECTOR vNormal = XMLoadFloat3(&m_wallNormal);
+
+    XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+    XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
+
+    XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+
+    XMFLOAT3 newForward;
+    XMStoreFloat3(&newForward, vForward);
+
+    transform.LookToWorld(newForward, m_wallNormal);
 }
 

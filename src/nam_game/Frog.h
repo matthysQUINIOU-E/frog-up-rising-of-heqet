@@ -14,6 +14,7 @@ protected:
 	bool m_isOnWall = false;
 	bool m_isOrientedWall = false;
 	bool m_isRotate = false;
+
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;
 	float m_chargeJumpRate = 5.f;
@@ -22,6 +23,8 @@ protected:
 	float m_targetTime = 1.5f;
 	float m_slope = 0.f;
 	nam::Timer m_arrowTimer;
+
+	DirectX::XMFLOAT3 m_gravity = { 0.f, -1.f, 0.f };
 
 	void Jump(DirectX::XMFLOAT3 direction);
 
