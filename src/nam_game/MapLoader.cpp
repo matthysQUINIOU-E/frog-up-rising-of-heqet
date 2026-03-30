@@ -24,78 +24,54 @@ void MapLoader::Load(std::string file, nam::Scene* scene)
         return;
     }
 
-    std::regex patternPhysic("^[^_]*P");
-    std::regex patternCollider("^[^_]*C");
-    std::regex patternDestructible("^[^_]*D");
-    std::regex patternNavMesh("^[^_]*NM");
-    std::regex patternSpawnerHeal("^[^_]*SH");
-    std::regex patternSpawnerGuHuoNiao("^[^_]*SG");
-    std::regex patternSpawnerJiangshi("^[^_]*SJ");
-    std::regex patternSpawnerMogwai("^[^_]*SM");
-
-    Vector<Vertex> navmeshVertices;
-    Vector<u32> navmeshIndices;
+    UnMap<u32, GameObject*> sceneObjects;
 
     for (auto& obj : data)
     {
-        std::string type = obj.value("t", "NONE");
-        if (type != "MESH")
-            continue;
-
-        std::string name = obj.value("n", "Unnamed");
-        bool hasPhysic = std::regex_search(name, patternPhysic);
-        bool hasCollider = std::regex_search(name, patternCollider);
-        bool isDestructible = std::regex_search(name, patternDestructible);
-        bool isNavMesh = std::regex_search(name, patternNavMesh);
-        bool isSpawnerHeal = std::regex_search(name, patternSpawnerHeal);
-        bool isSpawnerGuHuoNiao = std::regex_search(name, patternSpawnerGuHuoNiao);
-        bool isSpawnerJiangshi = std::regex_search(name, patternSpawnerJiangshi);
-        bool isSpawnerMogwai = std::regex_search(name, patternSpawnerMogwai);
-        bool isobstacle = !isNavMesh && hasCollider;
-
-        XMFLOAT3 position;
-        XMFLOAT4 rotation;
-        XMFLOAT3 scale;
-
-        if (obj.contains("p"))
-        {
-            position.x = obj["p"][0];
-            position.y = obj["p"][2];
-            position.z = obj["p"][1];
-        }
-
-        if (obj.contains("r"))
-            rotation = { obj["r"][0], obj["r"][2], obj["r"][1], obj["r"][3] };
-        else
-            rotation = { 0.f, 0.f, 0.f, 0.f };
-
-        if (obj.contains("s"))
-            scale = { obj["s"][0], obj["s"][2], obj["s"][1] };
-        else
-            scale = { 1.f, 1.f, 1.f };
-
-        GameObject gameObject = scene->CreateGameObject<GameObject>(); // TODO :: change 
-        
-        if (gameObject.HasComponent<TransformComponent>())
-        {
-            TransformComponent& tc = gameObject.GetComponent<TransformComponent>();
-            tc.SetWorldPosition(position);
-            tc.SetWorldRotation(rotation);
-            tc.SetWorldScale(scale);
-        }
-
-
-
-        if (hasCollider)
-        {
-            gameObject.SetBoxCollider();
-        }
-
-        if (hasCollider)
-            gameObject.SetBoxCollider();
-
-        if (hasPhysic)
-            gameObject.AddComponent<PhysicComponent>({});
-
+        GameObjectFactory(scene, obj, sceneObjects);
     }
+}
+
+GameObject* MapLoader::GameObjectFactory(nam::Scene* scene, nlohmann::json_abi_v3_12_0::json& obj, UnMap<u32, GameObject*>& sceneObjects)
+{
+    GameObject* go = nullptr;
+
+    MapLoaderFlag gameObjectFlag = MapLoaderFlagConvertor::StringToEnum(obj["gameobject"]);
+
+    switch (gameObjectFlag)
+    {
+    case MapLoaderFlag::TEST1:
+        break;
+    default:
+        go = &scene->CreateGameObject<GameObject>();
+    }
+
+    XMFLOAT3 position;
+    XMFLOAT4 rotation;
+    XMFLOAT3 scale;
+
+    position.x = obj["position"][0];
+    position.y = obj["position"][2];
+    position.z = obj["position"][1];
+
+    rotation.x = obj["rotation"][0];
+    rotation.y = obj["rotation"][1];
+    rotation.z = obj["rotation"][2];
+    rotation.w = obj["rotation"][3];
+
+    scale.x = obj["scale"][0];
+    scale.y = obj["scale"][1];
+    scale.z = obj["scale"][2];
+
+    if (!go->HasComponent<TransformComponent>())
+        go->AddComponent<TransformComponent>({});
+    TransformComponent& transform = go->GetComponent<TransformComponent>();
+    transform.SetWorldPosition(position);
+    transform.SetWorldRotation(rotation);
+    transform.SetWorldScale(scale);
+
+    if (obj["id"].is_number())
+        sceneObjects[obj["id"]] = go;
+
+    return go;
 }
