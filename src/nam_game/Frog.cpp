@@ -90,6 +90,7 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         m_isOrientedWall = false;
         physic.m_dirGravity = m_gravity;
         physic.m_velocity = { 0.f,0.f,0.f };
+        m_normal = other.m_normal;
         transform.SetWorldUp(other.m_normal);
     }
 
