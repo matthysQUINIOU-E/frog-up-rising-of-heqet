@@ -47,70 +47,15 @@ void Frog::OnUpdate()
         RotateUpdate();
         Rotate();
     }
-
-
 }
 
 void Frog::OnController()
 {
-    float forward = 0.f;
-    float right = 0.f;
+    ControllerJump();
 
-    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+    InclineArrow();
 
-    if (Input::IsKeyDown(VK_SPACE))
-        m_isSpacePressed = true;
-
-    if (Input::IsKeyUp(VK_SPACE) )
-    {
-        m_isSpacePressed = false;
-
-        if(m_isGrounded || m_isOnWall)
-        {
-            TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
-            XMFLOAT3 impulse = arrowTransform.GetWorldForward();
-            Jump(impulse);
-            m_arrow->SetActive(false);
-            m_arrowTimer.ResetProgress();
-        }
-    }
-
-
-    if (Input::IsKey(VK_CONTROL))
-    {
-        m_slope += dt * 0.5f;
-        m_arrow->SetActive(true);
-    }
-
-    if (Input::IsKey(VK_SHIFT))
-    {
-        m_slope -= dt * 0.5f;
-        m_arrow->SetActive(true);
-    }
-
-    m_slope = std::clamp(m_slope, -XM_PIDIV2, 0.f);
-    m_arrow->SetSlope(m_slope);
-
-    if (m_isGrounded)
-    {
-        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
-            forward += 1.f;
-
-        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
-            forward -= 1.f;
-
-        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
-            right -= 1.f;
-
-        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
-            right += 1.f;
-    }
-
-
-    if (forward == 0.f && right == 0.f)
-        return;
-        
-    Move(forward, right);
+    ControllerMove();
 }
    
 
@@ -127,12 +72,19 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         XMFLOAT3 up = transform.GetWorldUp();
         XMFLOAT3 normal = other.m_normal;
 
-        if( up.x == normal.x && up.y == normal.y && up.z == normal.z)
+        XMVECTOR vUp = XMLoadFloat3(&up);
+        XMVECTOR vNormal = XMLoadFloat3(&normal);
+
+        XMVECTOR vSub = vUp - vNormal;
+        XMFLOAT3 sub;
+        XMStoreFloat3(&sub, vSub);
+
+        if( abs(sub.x) <= EPSILON && abs(sub.y) <= EPSILON && abs(sub.z) <= EPSILON)
             physic.m_useGravity = false;
         else
             physic.m_useGravity = true;
 
-
+        
         m_isGrounded = true;
         m_isOnWall = false;
         m_isOrientedWall = false;
@@ -141,11 +93,7 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         transform.SetWorldUp(other.m_normal);
     }
 
-    if (self.m_normal.y > 0.f)
-    {
-        m_isGrounded = false;
-        physic.m_velocity.y = 0.f;
-    }
+
 }
 
 void Frog::ChargeJump()
@@ -255,11 +203,77 @@ void Frog::RotateUpdate()
     XMFLOAT3 diffAngles;
     XMStoreFloat3(&diffAngles, vectDiffAngles);
 
-    if (diffAngles.x >= frogForward.x || diffAngles.x <= frogForward.x || diffAngles.z >= frogForward.z || diffAngles.z <= frogForward.z)
+    if (abs(diffAngles.x) >= EPSILON || abs(diffAngles.z) >= EPSILON)
     {
         if (m_isGrounded == false)
         {
             transform->LookToWorld({ frogForward.x + diffAngles.x / 12, 0.0f, frogForward.z + diffAngles.z / 12 });
+        }
+    }
+}
+
+void Frog::InclineArrow()
+{
+    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+
+    if (Input::IsKey(VK_CONTROL))
+    {
+        m_slope += dt * 0.5f;
+        m_arrow->SetActive(true);
+    }
+
+    if (Input::IsKey(VK_SHIFT))
+    {
+        m_slope -= dt * 0.5f;
+        m_arrow->SetActive(true);
+    }
+
+    m_slope = std::clamp(m_slope, -XM_PIDIV2, 0.f);
+    m_arrow->SetSlope(m_slope);
+}
+
+void Frog::ControllerMove()
+{
+    float forward = 0.f;
+    float right = 0.f;
+
+    if (m_isGrounded)
+    {
+        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
+            forward += 1.f;
+
+        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
+            forward -= 1.f;
+
+        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
+            right -= 1.f;
+
+        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
+            right += 1.f;
+    }
+
+    if (forward == 0.f && right == 0.f)
+        return;
+
+    Move(forward, right);
+}
+
+void Frog::ControllerJump()
+{
+    if (Input::IsKeyDown(VK_SPACE))
+        m_isSpacePressed = true;
+
+    if (Input::IsKeyUp(VK_SPACE))
+    {
+        m_isSpacePressed = false;
+
+        if (m_isGrounded || m_isOnWall)
+        {
+            TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
+            XMFLOAT3 impulse = arrowTransform.GetWorldForward();
+            Jump(impulse);
+            m_arrow->SetActive(false);
+            m_arrowTimer.ResetProgress();
         }
     }
 }

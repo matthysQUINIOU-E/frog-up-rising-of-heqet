@@ -50,7 +50,7 @@ void Frog1::OnUpdate()
         m_isOrientedWall = false;
         physic.m_useGravity = true;
         physic.m_dirGravity = m_gravity;
-        return;
+        m_gravityTimer.ResetProgress();
     }
 }
 
@@ -62,7 +62,6 @@ void Frog1::OnController()
     if (Input::IsKeyDown('2'))
         m_isFrogActive = false;
 
-    
     if (m_isSpacePressed) 
     {
         PhysicComponent& physic = GetComponent<PhysicComponent>();
@@ -73,28 +72,7 @@ void Frog1::OnController()
     if (m_isFrogActive)
         Frog::OnController();
 
-    float forward = 0.f;
-    float right = 0.f;
-
-    if(m_isOnWall)
-    {
-        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
-            forward += 1.f;
-
-        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
-            forward -= 1.f;
-
-        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
-            right -= 1.f;
-
-        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
-            right += 1.f;
-    }
-
-    if (forward == 0.f && right == 0.f)
-        return;
-
-    MoveWall(forward, right);
+    ControllerMoveWall();
 }
 
 void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
@@ -142,6 +120,32 @@ void Frog1::MoveWall(float _forward, float _right)
     XMFLOAT3 direction;
     XMStoreFloat3(&direction, vDirection);
     Frog::Jump(direction);
+}
+
+void Frog1::ControllerMoveWall()
+{
+    float forward = 0.f;
+    float right = 0.f;
+
+    if (m_isOnWall)
+    {
+        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
+            forward += 1.f;
+
+        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
+            forward -= 1.f;
+
+        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
+            right -= 1.f;
+
+        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
+            right += 1.f;
+    }
+
+    if (forward == 0.f && right == 0.f)
+        return;
+
+    MoveWall(forward, right);
 }
 
 void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
