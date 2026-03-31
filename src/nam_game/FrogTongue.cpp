@@ -17,15 +17,13 @@ void FrogTongue::OnInit()
 	AddComponent<TransformComponent>(tongueTransform);
 
 	AddComponent<PhysicComponent>(PhysicComponent());
-
+	PhysicComponent& physic = GetComponent<PhysicComponent>();
+	physic.m_useGravity = false;
 
 	BoxColliderComponent& tongueCollider = SetBoxCollider();
 	tongueCollider.m_tag = (size)ColliderTag::Tongue;
 	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Platform);
 
-
-	PhysicComponent& physic = GetComponent<PhysicComponent>();
-	physic.m_useGravity = false;
 }
 
 void FrogTongue::OnUpdate()
@@ -80,7 +78,8 @@ void FrogTongue::OnUpdate()
 void FrogTongue::OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other)
 {
 	std::cout << "little wolf" << std::endl;
-	m_arrived = true;
+	if(other.m_tag == (size)ColliderTag::Platform)
+		m_arrived = true;
 }
 
 void FrogTongue::SetFire(bool _fire)
