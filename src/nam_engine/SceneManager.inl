@@ -15,7 +15,7 @@ namespace nam
 			T* p_scene = new T();
 			p_scene->Init();
 			m_scenes.emplace(scene, p_scene);
-			return *p_scene;
+			return *static_cast<T*>(p_scene);
 		}
 		else
 		{

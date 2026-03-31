@@ -17,7 +17,7 @@ namespace nam
 
 		u32 idEntity = entity.m_id;
 		mp_gameObjects->Add(idEntity, gameObject);
-		return *gameObject;
+		return *static_cast<T*>(gameObject);
 	}
 
 }
