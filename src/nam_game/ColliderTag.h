@@ -2,6 +2,7 @@
 enum class ColliderTag : nam::size
 {
 	Platform,
+	Tongue,
 	Size
 };
 

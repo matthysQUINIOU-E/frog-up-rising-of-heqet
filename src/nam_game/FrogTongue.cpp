@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "FrogTongue.h"
+#include "ColliderTag.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -17,9 +18,14 @@ void FrogTongue::OnInit()
 
 	AddComponent<PhysicComponent>(PhysicComponent());
 
-	SetBoxCollider();
-	BoxColliderComponent tongueCollider;
-	//tongueCollider.m_shouldCollideWith.insert();
+
+	BoxColliderComponent& tongueCollider = SetBoxCollider();
+	tongueCollider.m_tag = (size)ColliderTag::Tongue;
+	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+
+
+	PhysicComponent& physic = GetComponent<PhysicComponent>();
+	physic.m_useGravity = false;
 }
 
 void FrogTongue::OnUpdate()
