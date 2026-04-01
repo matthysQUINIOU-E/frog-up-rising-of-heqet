@@ -35,6 +35,8 @@ void SceneGameplay::Init()
         go.AddComponent<TransformComponent>(TransformComponent());
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
 
     //platforms
@@ -50,6 +52,8 @@ void SceneGameplay::Init()
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
 
     {
@@ -64,6 +68,8 @@ void SceneGameplay::Init()
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
 
     {
@@ -78,6 +84,8 @@ void SceneGameplay::Init()
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
 
     {
@@ -92,6 +100,8 @@ void SceneGameplay::Init()
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
 
     {
@@ -107,6 +117,8 @@ void SceneGameplay::Init()
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
 
 
@@ -122,6 +134,8 @@ void SceneGameplay::Init()
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+        box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
 
     //player1

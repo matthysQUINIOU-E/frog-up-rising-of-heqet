@@ -24,14 +24,11 @@ protected:
 	float m_slope = 0.f;
 	nam::Timer m_arrowTimer;
 
-
-
 	DirectX::XMFLOAT3 m_gravity = { 0.f, -1.f, 0.f };
 	DirectX::XMFLOAT3 m_normal = { 0.f, 0.f, 0.f };
 
 protected:
 	void Jump(DirectX::XMFLOAT3 direction);
-
 public:
 	void OnInit() override;
 	void OnUpdate() override;

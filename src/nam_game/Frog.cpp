@@ -45,7 +45,7 @@ void Frog::OnUpdate()
     if (m_isOrientedWall == false)
     {
         RotateUpdate();
-        Rotate();
+        //Rotate();
     }
 }
 
@@ -73,9 +73,9 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         XMFLOAT3 normal = other.m_normal;
 
         XMVECTOR vUp = XMLoadFloat3(&up);
-        XMVECTOR vNormal = XMLoadFloat3(&normal);
+        XMVECTOR vOtherNormal = XMLoadFloat3(&normal);
 
-        XMVECTOR vSub = vUp - vNormal;
+        XMVECTOR vSub = vUp - vOtherNormal;
         XMFLOAT3 sub;
         XMStoreFloat3(&sub, vSub);
 
@@ -88,13 +88,32 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         m_isGrounded = true;
         m_isOnWall = false;
         m_isOrientedWall = false;
-        physic.m_dirGravity = m_gravity;
+        physic.m_dirGravity = self.m_normal;
         physic.m_velocity = { 0.f,0.f,0.f };
         m_normal = other.m_normal;
-        transform.SetWorldUp(other.m_normal);
+
+        if (m_normal.y == 1)
+        {
+            transform.SetWorldUp(m_normal);
+            Print("FORWARD : ", transform.GetWorldForward().x, " / ", transform.GetWorldForward().y, " / ", transform.GetWorldForward().z);
+        }
+        else
+        {
+            XMVECTOR vNormal = XMLoadFloat3(&m_normal);
+
+            XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+            XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
+
+            XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+
+            XMFLOAT3 newForward;
+            XMStoreFloat3(&newForward, vForward);
+
+            transform.LookToWorld(newForward, m_normal);
+
+            Print("FORWARD : ", transform.GetWorldForward().x, " / ", transform.GetWorldForward().y, " / ", transform.GetWorldForward().z);
+        }
     }
-
-
 }
 
 void Frog::ChargeJump()
@@ -124,7 +143,6 @@ void Frog::Jump(XMFLOAT3 direction)
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     physic.AddImpulse(impulse);
 
-
     physic.m_useGravity = true;
     m_isGrounded = false;
     m_isOnWall = false;
@@ -134,7 +152,7 @@ void Frog::Rotate()
 {
     Ecs& ecs = GetEcs();
 
-    XMFLOAT3 impulse = { 0.f,0.f,0.f };
+    XMFLOAT3 impulse = { 0.f, 0.0f, 0.f };
 
     TransformComponent* transform = &GetComponent<TransformComponent>();
     TransformComponent* cameraTransform = nullptr;
@@ -283,18 +301,18 @@ void Frog::Move(float _forward, float _right)
 {
     m_jumpImpulse = 2.f;
 
-    XMVECTOR vDirection = { 0.f, 1.f, 0.f };
+    XMVECTOR vDirection = XMLoadFloat3(&m_normal);
 
     TransformComponent& transform = GetComponent<TransformComponent>();
     XMFLOAT3 forward = transform.GetWorldForward();
     XMVECTOR vForward = XMLoadFloat3(&forward);
     vForward = XMVectorScale(vForward, _forward);
-    vDirection += vForward;
+    vDirection = XMVectorAdd(vDirection, vForward);
 
     XMFLOAT3 right = transform.GetWorldRight();
     XMVECTOR vRight = XMLoadFloat3(&right);
     vRight = XMVectorScale(vRight, _right);
-    vDirection += vRight;
+    vDirection = XMVectorAdd(vDirection, vRight);
 
     vDirection = XMVector3Normalize(vDirection);
 
