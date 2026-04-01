@@ -31,7 +31,9 @@ void Frog::OnInit()
 void Frog::OnUpdate()
 {
     float dt = App::Get()->GetChrono().GetScaledDeltaTime();
-    m_arrowTimer.Update(dt);
+
+    if(GetEcs().IsEntityActive(m_arrow->GetEntity().m_id))
+        m_arrowTimer.Update(dt);
 
     if (m_arrowTimer.IsTargetReached())
     {
@@ -95,7 +97,6 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         if (m_normal.y == 1)
         {
             transform.SetWorldUp(m_normal);
-            Print("FORWARD : ", transform.GetWorldForward().x, " / ", transform.GetWorldForward().y, " / ", transform.GetWorldForward().z);
         }
         else
         {
@@ -111,7 +112,6 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
 
             transform.LookToWorld(newForward, m_normal);
 
-            Print("FORWARD : ", transform.GetWorldForward().x, " / ", transform.GetWorldForward().y, " / ", transform.GetWorldForward().z);
         }
     }
 }

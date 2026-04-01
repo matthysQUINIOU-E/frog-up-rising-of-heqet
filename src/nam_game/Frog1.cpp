@@ -23,6 +23,8 @@ void Frog1::OnInit()
 
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::FrogJoel;
+    box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+    box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
 
     SetBehavior();
     SetController();
@@ -37,7 +39,6 @@ void Frog1::OnUpdate()
     if (m_isFrogActive)
         Frog::OnUpdate();
 
-    Print(m_isOrientedWall);
     if(m_isOrientedWall)
     {
         float dt = App::Get()->GetChrono().GetScaledDeltaTime();
