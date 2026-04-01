@@ -18,7 +18,11 @@ namespace nam
 			transform.UpdateWorldData();
 
 			if (physic.m_useGravity) {
-				physic.m_velocity.y -= gravity * physic.m_gravityScale;
+				XMVECTOR vDir = XMLoadFloat3(&physic.m_dirGravity);
+				vDir = XMVectorScale(vDir, gravity);
+				XMFLOAT3 dir;
+				XMStoreFloat3(&dir, vDir);
+				physic.AddImpulse(dir);
 			}
 
 			if (physic.m_velocity.x != 0 || physic.m_velocity.y != 0 || physic.m_velocity.z != 0) {

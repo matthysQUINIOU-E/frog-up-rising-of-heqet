@@ -64,7 +64,7 @@ void Camera::OnController()
         XMFLOAT2 delta = Input::GetMouseDelta();
         Input::SetMousePosition(centerSize);
 
-        transform.RotateAroundWorld(m_targetToFollow, { 0.f, 1.f, 0.f }, (float)delta.x * m_sensitivity);
+        transform.RotateAroundWorld(m_targetToFollow, transform.GetWorldUp(), (float)delta.x * m_sensitivity);
         transform.RotateAroundWorld(m_targetToFollow, transform.GetWorldRight(), (float)delta.y * m_sensitivity);
 
     }
