@@ -4,6 +4,7 @@ struct Frog2Tag {};
 
 class Timer;
 class FrogArrow;
+class FrogTongue;
 
 class Frog : public nam::GameObject
 {
@@ -14,6 +15,7 @@ protected:
 	bool m_isOnWall = false;
 	bool m_isOrientedWall = false;
 	bool m_isRotate = false;
+	bool m_isFiring = false;
 
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;
@@ -26,9 +28,12 @@ protected:
 
 	DirectX::XMFLOAT3 m_gravity = { 0.f, -1.f, 0.f };
 	DirectX::XMFLOAT3 m_normal = { 0.f, 0.f, 0.f };
+	
+	FrogTongue* m_tongue;
 
 protected:
 	void Jump(DirectX::XMFLOAT3 direction);
+
 public:
 	void OnInit() override;
 	void OnUpdate() override;
