@@ -10,8 +10,7 @@ void Frog1::OnInit()
 {
     Frog::OnInit();
 
-    m_gravityTimerTarget = 0.5f;
-    m_gravityTimer.Init(m_gravityTimerTarget);
+
 
     MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
     mrc.mp_mesh->SetColor({ 0.5f, 0.0f, 0.0f, 1.f });
@@ -39,20 +38,9 @@ void Frog1::OnUpdate()
     if (m_isFrogActive)
         Frog::OnUpdate();
 
-    if(m_isOrientedWall)
-    {
-        float dt = App::Get()->GetChrono().GetScaledDeltaTime();
-        m_gravityTimer.Update(dt);
-    }
 
-    if (m_gravityTimer.IsTargetReached())
-    {
-        m_isOnWall = false;
-        m_isOrientedWall = false;
-        physic.m_useGravity = true;
-        physic.m_dirGravity = m_gravity;
-        m_gravityTimer.ResetProgress();
-    }
+
+
 }
 
 void Frog1::OnController()

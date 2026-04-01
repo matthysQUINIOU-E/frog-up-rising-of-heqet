@@ -26,6 +26,9 @@ void Frog::OnInit()
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
+
+    m_gravityTimerTarget = 0.5f;
+    m_gravityTimer.Init(m_gravityTimerTarget);
 }
 
 void Frog::OnUpdate()
@@ -41,12 +44,27 @@ void Frog::OnUpdate()
         m_arrowTimer.ResetProgress();
     }
 
+    m_gravityTimer.Update(dt);
+    
+    if (m_gravityTimer.IsTargetReached())
+    {
+        PhysicComponent& physic = GetComponent<PhysicComponent>();
+        m_isOnWall = false;
+        m_isOrientedWall = false;
+        physic.m_useGravity = true;
+        physic.m_dirGravity = m_gravity;
+        m_gravityTimer.ResetProgress();
+    }
+
+
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
 
-
+    if (!m_isOrientedWall)
+    {
         RotateUpdate();
         Rotate();
+    }
     
 }
 
@@ -70,6 +88,8 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
 
     if (onPlateform || onFloor)
     {
+        m_gravityTimer.ResetProgress();
+
         XMFLOAT3 up = transform.GetWorldUp();
         XMFLOAT3 normal = other.m_normal;
 
@@ -259,20 +279,6 @@ void Frog::RotateUpdate()
     XMFLOAT3 upToUse;
     XMStoreFloat3(&upToUse, vUp);
     transform->LookToWorld(newFwd, upToUse);
-
-
-
-    //XMVECTOR vectDiffAngles = XMVectorSubtractAngles(camForwardVect, frogForwardVect);
-    //XMFLOAT3 diffAngles;
-    //XMStoreFloat3(&diffAngles, vectDiffAngles);
-
-    //if (abs(diffAngles.x) >= EPSILON || abs(diffAngles.z) >= EPSILON)
-    //{
-    //    if (m_isGrounded == false)
-    //    {
-    //        transform->LookToWorld({ frogForward.x + diffAngles.x / 12, 0.0f, frogForward.z + diffAngles.z / 12 });
-    //    }
-    //}
 }
 
 void Frog::InclineArrow()
