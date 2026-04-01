@@ -9,16 +9,17 @@ void FrogTongue::OnInit()
 {
 	MeshRendererComponent tongueMesh;
 	tongueMesh.CreateMeshInstance();
-	tongueMesh.mp_mesh->BuildBox({ 0.1f, 0.1f, 0.99f }, { 1.0f, 0.411f, 0.705f, 1.0f });
+	tongueMesh.mp_mesh->BuildBox({ 0.1f, 0.1f, 1.f }, { 1.0f, 0.411f, 0.705f, 1.0f });
 	AddComponent<MeshRendererComponent>(tongueMesh);
 
 	TransformComponent tongueTransform;
-	tongueTransform.SetWorldScale({ 1.0f, 1.0f, 1.0f });
 	AddComponent<TransformComponent>(tongueTransform);
 
 	BoxColliderComponent& tongueCollider = SetBoxCollider();
 	tongueCollider.m_tag = (size)ColliderTag::Tongue;
 	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+
+	SetBehavior();
 }
 
 void FrogTongue::OnUpdate()
@@ -72,7 +73,6 @@ void FrogTongue::OnUpdate()
 
 void FrogTongue::OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other)
 {
-	std::cout << "little wolf" << std::endl;
 	if(other.m_tag == (size)ColliderTag::Platform)
 		m_arrived = true;
 }

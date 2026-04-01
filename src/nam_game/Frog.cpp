@@ -28,10 +28,10 @@ void Frog::OnInit()
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
 
-    m_tongue = &scene->CreateGameObject<FrogTongue>(false);
+    m_tongue = &scene.CreateGameObject<FrogTongue>(false);
     TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
     tongueTransform.SetParent(&GetComponent<TransformComponent>());
-
+    tongueTransform.SetWorldPosition({-1,4,0});
 }
 
 void Frog::OnUpdate()
@@ -45,7 +45,6 @@ void Frog::OnUpdate()
         m_arrowTimer.ResetProgress();
     }
 
-    m_tongue->OnUpdate();
 
     if (m_isFiring && m_tongue->IsArrived())
     {
@@ -57,8 +56,8 @@ void Frog::OnUpdate()
 
     if (m_isOrientedWall == false)
     {
-        RotateUpdate();
-        //Rotate();
+        // RotateUpdate();
+        // Rotate();
     }
 }
 
@@ -122,7 +121,6 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         if (m_normal.y == 1)
         {
             transform.SetWorldUp(m_normal);
-            Print("FORWARD : ", transform.GetWorldForward().x, " / ", transform.GetWorldForward().y, " / ", transform.GetWorldForward().z);
         }
         else
         {
@@ -138,7 +136,6 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
 
             transform.LookToWorld(newForward, m_normal);
 
-            Print("FORWARD : ", transform.GetWorldForward().x, " / ", transform.GetWorldForward().y, " / ", transform.GetWorldForward().z);
         }
     }
 }
@@ -210,7 +207,6 @@ void Frog::Rotate()
     {
         if (m_isGrounded)
         {
-            std::cout << "just a man" << std::endl;
             impulse.y += 2.f;
 
             PhysicComponent& physic = GetComponent<PhysicComponent>();
@@ -253,7 +249,6 @@ void Frog::RotateUpdate()
     {
         if (m_isGrounded == false)
         {
-            std::cout << "full speed ahead" << std::endl;
             transform->LookToWorld({ frogForward.x + diffAngles.x / 12, 0.0f, frogForward.z + diffAngles.z / 12 });
         }
     }
