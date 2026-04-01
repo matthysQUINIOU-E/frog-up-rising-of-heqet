@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Frog2.h"
+#include "FrogTongue.h"
+
 
 using namespace nam;
 using namespace DirectX;
@@ -24,6 +26,11 @@ void Frog2::OnInit()
 
 void Frog2::OnUpdate()
 {
+    TransformComponent* transform = &GetComponent<TransformComponent>();
+    XMFLOAT3 frogForward = transform->GetWorldForward();
+
+    transform->LookToWorld({ frogForward.x, 0.0f, frogForward.z });
+
     if (m_isFrogActive)
         Frog::OnUpdate();
 }

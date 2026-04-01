@@ -16,14 +16,9 @@ void FrogTongue::OnInit()
 	tongueTransform.SetWorldScale({ 1.0f, 1.0f, 1.0f });
 	AddComponent<TransformComponent>(tongueTransform);
 
-	AddComponent<PhysicComponent>(PhysicComponent());
-	PhysicComponent& physic = GetComponent<PhysicComponent>();
-	physic.m_useGravity = false;
-
 	BoxColliderComponent& tongueCollider = SetBoxCollider();
 	tongueCollider.m_tag = (size)ColliderTag::Tongue;
 	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Platform);
-
 }
 
 void FrogTongue::OnUpdate()

@@ -49,6 +49,8 @@ void SceneGameplay::Init()
         tc.SetWorldPosition({ 0,10,15 });
         go.AddComponent<TransformComponent>(tc);
         go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     {
@@ -62,6 +64,8 @@ void SceneGameplay::Init()
         tc.SetWorldPosition({ 0,10,30 });
         go.AddComponent<TransformComponent>(tc);
         go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     {
@@ -75,6 +79,8 @@ void SceneGameplay::Init()
         tc.SetWorldPosition({ 0,20,45 });
         go.AddComponent<TransformComponent>(tc);
         go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     {
@@ -88,6 +94,8 @@ void SceneGameplay::Init()
         tc.SetWorldPosition({ 10,20,45 });
         go.AddComponent<TransformComponent>(tc);
         go.SetBoxCollider();
+        BoxColliderComponent& box = go.SetBoxCollider();
+        box.m_tag = (size)ColliderTag::Platform;
     }
 
     {

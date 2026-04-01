@@ -2,6 +2,7 @@
 #include "Frog.h"
 #include "Camera.h"
 #include "Constant.h"
+#include "ColliderTag.h"
 #include "FrogArrow.h"
 #include "FrogTongue.h"
 
@@ -27,9 +28,10 @@ void Frog::OnInit()
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
 
-    m_tongue = &scene->CreateGameObject<FrogTongue>(true);
+    m_tongue = &scene->CreateGameObject<FrogTongue>(false);
     TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
     tongueTransform.SetParent(&GetComponent<TransformComponent>());
+
 }
 
 void Frog::OnUpdate()
@@ -139,6 +141,9 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
+    if (other.m_tag != (size)ColliderTag::Platform)
+        return;
+
     // make this simple and bad for the proto
     // need tag to know when player collide on each other
     if (other.m_normal.y < 0.f)
@@ -219,6 +224,7 @@ void Frog::Rotate()
     {
         if (m_isGrounded)
         {
+            std::cout << "just a man" << std::endl;
             impulse.y += 2.f;
         }
     }
@@ -261,6 +267,7 @@ void Frog::RotateUpdate()
     {
         if (!m_isGrounded)
         {
+            std::cout << "full speed ahead" << std::endl;
             transform->LookToWorld({ frogForward.x + diffAngles.x / 12, 0.0f, frogForward.z + diffAngles.z / 12 });
         }
     }
