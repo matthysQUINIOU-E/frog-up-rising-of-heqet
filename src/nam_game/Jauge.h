@@ -1,7 +1,7 @@
 #pragma once
 #include "SpriteRendererComponent.h"
 
-enum class Type : nam::size
+enum class JaugeType : nam::size
 {
 	Jauge0,
 	Jauge1, 
@@ -16,11 +16,11 @@ class Jauge : public nam::GameObject
 {
 public:
 	void OnInit() override;
-	void SetJauge(Type type);
+	void SetJauge(JaugeType type);
 	void Update();
 private:
-	SpriteRendererComponent m_src;
-	Type m_type;
-	Type m_previousType;
+	nam::SpriteRendererComponent m_src;
+	JaugeType m_type;
+	JaugeType m_previousType;
 };
 

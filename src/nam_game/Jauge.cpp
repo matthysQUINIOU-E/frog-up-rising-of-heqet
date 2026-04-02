@@ -13,7 +13,7 @@ void Jauge::OnInit()
     AddComponent(transform);
 }
 
-void Jauge::SetJauge(Type type)
+void Jauge::SetJauge(JaugeType type)
 {
     m_type = type;
 }
@@ -25,22 +25,22 @@ void Jauge::Update()
 
     switch (m_type)
     {
-    case Type::Jauge5:
+    case JaugeType::Jauge5:
         m_src.mp_sprite = SpriteManager::GetSprite(SpriteTag::Jauge5);
         break;
-    case Type::Jauge4:
+    case JaugeType::Jauge4:
         m_src.mp_sprite = SpriteManager::GetSprite(SpriteTag::Jauge4);
         break;
-    case Type::Jauge3:
+    case JaugeType::Jauge3:
         m_src.mp_sprite = SpriteManager::GetSprite(SpriteTag::Jauge3);
         break;
-    case Type::Jauge2:
+    case JaugeType::Jauge2:
         m_src.mp_sprite = SpriteManager::GetSprite(SpriteTag::Jauge2);
         break;
-    case Type::Jauge1:
+    case JaugeType::Jauge1:
         m_src.mp_sprite = SpriteManager::GetSprite(SpriteTag::Jauge1);
         break;
-    case Type::Jauge0:
+    case JaugeType::Jauge0:
         m_src.mp_sprite = SpriteManager::GetSprite(SpriteTag::Jauge0);
         break;
     default:
