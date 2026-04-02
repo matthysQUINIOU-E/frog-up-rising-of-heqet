@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Frog2.h"
+#include "ColliderTag.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -16,7 +17,11 @@ void Frog2::OnInit()
 
     AddComponent<Frog2Tag>({});
 
-    SetBoxCollider();
+    BoxColliderComponent& box = SetBoxCollider();
+    box.m_tag = (size)ColliderTag::FrogEllie;
+    box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+    box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+
     SetBehavior();
     SetController();
 
@@ -43,4 +48,15 @@ void Frog2::OnController()
 void Frog2::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
     Frog::OnCollision(self, other);
+
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+
+    bool onFrog = (other.m_tag == (size)ColliderTag::FrogJoel) && self.m_normal.y < 0.f;
+
+    if(onFrog)
+    {
+        m_isGrounded = true;
+        physic.m_useGravity = false;
+        physic.m_velocity = { 0.f,0.f,0.f };
+    }
 }

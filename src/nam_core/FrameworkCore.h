@@ -31,6 +31,7 @@
 #include "AppChrono.h"
 #include "BaseTypes.h"
 #include "DebugLog.h"
+#include "Benchmark.h"
 #include "Timer.h"
 #include "Rng.h"
 
