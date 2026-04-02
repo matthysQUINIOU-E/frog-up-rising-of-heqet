@@ -5,6 +5,7 @@
 #include <Camera.h>
 #include <Frog1.h>
 #include <Frog2.h>
+#include <Collectible.h>
 
 using namespace nam;
 using namespace DirectX;
@@ -111,6 +112,12 @@ void SceneGameplay::Init()
     //player2
     {
         Frog2& frog = CreateGameObject<Frog2>();
+    }
+
+    //collectible
+    {
+        Collectible& collectible = CreateGameObject<Collectible>();
+        collectible.SetPosition({ 0.0f, 0.5f, 10.0f });
     }
 }
 
