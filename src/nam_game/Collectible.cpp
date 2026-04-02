@@ -5,6 +5,12 @@
 using namespace nam;
 using namespace DirectX;
 
+void Collectible::SetColor(const DirectX::XMFLOAT4& color)
+{
+    MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
+	mrc.mp_mesh->SetColor(color);
+}
+
 void Collectible::OnInit()
 {
     MeshRendererComponent mrc;
@@ -16,6 +22,10 @@ void Collectible::OnInit()
     AddComponent<TransformComponent>(tc);
 
 	SetBehavior();
+	BoxColliderComponent& box = SetBoxCollider();
+	box.m_tag = (size)ColliderTag::Collectible;
+	box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+	box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
 }
 
 void Collectible::OnUpdate()
@@ -26,10 +36,7 @@ void Collectible::OnUpdate()
 
 void Collectible::OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other)
 {
-    //if (other.m_tag == (size)ColliderTag::Player)
-    {
-        SetActive(false);
-	}
+    SetActive(false);
 }
 
 void Collectible::SetPosition(XMFLOAT3 pos)

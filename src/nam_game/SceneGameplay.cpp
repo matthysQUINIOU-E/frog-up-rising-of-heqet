@@ -5,7 +5,10 @@
 #include "Camera.h"
 #include "Frog1.h"
 #include "Frog2.h"
-#include "Collecible.h"
+#include "Dragonfly.h"
+#include "Spider.h"
+#include "Grasshopper.h"
+
 
 using namespace nam;
 using namespace DirectX;
@@ -151,8 +154,14 @@ void SceneGameplay::Init()
 
     //collectible
     {
-        Collectible& collectible = CreateGameObject<Collectible>();
-        collectible.SetPosition({ 0.0f, 0.5f, 10.0f });
+        Dragonfly& collectible = CreateGameObject<Dragonfly>();
+        collectible.SetPosition({ 0.0f, 0.6f, 5.0f });
+
+		Spider& collectible2 = CreateGameObject<Spider>();
+		collectible2.SetPosition({ -5.0f, 0.6f, 5.0f });
+
+		Grasshopper& collectible3 = CreateGameObject<Grasshopper>();
+		collectible3.SetPosition({ -5.0f, 0.6f, 0.0f });
     }
 }
 

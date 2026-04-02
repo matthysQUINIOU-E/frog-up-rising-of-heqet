@@ -1,16 +1,11 @@
 #pragma once
+#include "Collectible.h"
 
-class Collectible : public nam::GameObject
+class Dragonfly : public Collectible
 {
-protected:
-	void SetColor(const DirectX::XMFLOAT4& color);
 public:
 	void OnInit() override;
 	void OnUpdate() override;
 	void OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other) override;
-
-	void SetPosition(DirectX::XMFLOAT3 position);
-private:
-	
 };
 
