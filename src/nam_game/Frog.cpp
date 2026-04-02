@@ -60,11 +60,16 @@ void Frog::OnUpdate()
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
 
-    if (!m_isOrientedWall)
-    {
-        RotateUpdate();
-        Rotate();
-    }
+    
+    RotateUpdate();
+    Rotate();
+
+    //if(!m_isOrientedWall)
+    //{
+    //    RotateUpdate();
+    //    Rotate();
+    //}
+    
     
 }
 
@@ -76,7 +81,6 @@ void Frog::OnController()
 
     ControllerMove();
 }
-   
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
@@ -267,7 +271,9 @@ void Frog::RotateUpdate()
     vfrogForward = XMVector3Normalize(vfrogForward);
 
     XMVECTOR vDot = XMVector3Dot(vfrogForward, vTargetFwd);
+
     float dot = XMVectorGetX(vDot);
+
     if (dot >= 1.f - EPSILON)
         return;
 

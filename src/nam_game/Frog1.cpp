@@ -2,6 +2,8 @@
 #include "Frog1.h"
 #include "ColliderTag.h"
 #include "Camera.h"
+#include "Constant.h"
+
 
 using namespace nam;
 using namespace DirectX;
@@ -37,10 +39,6 @@ void Frog1::OnUpdate()
 
     if (m_isFrogActive)
         Frog::OnUpdate();
-
-
-
-
 }
 
 void Frog1::OnController()
@@ -61,7 +59,8 @@ void Frog1::OnController()
     if (m_isFrogActive)
         Frog::OnController();
 
-    ControllerMoveWall();
+    if(m_isOnWall)
+        ControllerMoveWall();
 }
 
 void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
@@ -92,7 +91,7 @@ void Frog1::MoveWall(float _forward, float _right)
 
     TransformComponent& transform = GetComponent<TransformComponent>();
 
-    XMVECTOR vDirection = XMLoadFloat3(&m_wallNormal);
+    XMVECTOR vDirection = XMLoadFloat3(&m_normal);
 
     XMFLOAT3 forward = transform.GetWorldForward();
     XMVECTOR vForward = XMLoadFloat3(&forward);
@@ -145,20 +144,33 @@ void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisi
     m_gravityTimer.ResetProgress();
     m_isOrientedWall = true;
     m_isGrounded = false;
-    m_wallNormal = other.m_normal;
+    m_normal = other.m_normal;
     physic.m_dirGravity = self.m_normal;
     physic.m_velocity = { 0.f,0.f,0.f };
 
-    XMVECTOR vNormal = XMLoadFloat3(&m_wallNormal);
+    XMVECTOR vNormal = XMLoadFloat3(&m_normal);
 
-    XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-    XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
+    XMFLOAT3 currentFwd = transform.GetWorldForward();
+    XMVECTOR vCurrentFwd = XMLoadFloat3(&currentFwd);
+    XMVECTOR vProjFwd = vCurrentFwd - XMVectorScale(vNormal, XMVectorGetX(XMVector3Dot(vCurrentFwd, vNormal)));
 
-    XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+    float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
+
+    XMVECTOR vForward = {0.f, 0.f, 0.f};
+    if (projLen > EPSILON)
+    {
+        vForward = XMVector3Normalize(vProjFwd);
+    }
+    else
+    {
+        XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+        XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
+
+        XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+    }
 
     XMFLOAT3 newForward;
     XMStoreFloat3(&newForward, vForward);
-
-    transform.LookToWorld(newForward, m_wallNormal);
+    transform.LookToWorld(newForward, m_normal);
 }
 

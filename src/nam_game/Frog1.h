@@ -13,9 +13,6 @@ private:
 	void ControllerMoveWall();
 	void CollisionOnWall(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other);
 private:
-	DirectX::XMFLOAT3 m_wallNormal = { 0.f, 0.f, 0.f };
-
-
 
 };
 
