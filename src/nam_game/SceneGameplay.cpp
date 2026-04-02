@@ -151,19 +151,6 @@ void SceneGameplay::Init()
         Frog2& frog = CreateGameObject<Frog2>();
     }
 
-    // UI
-
-    {
-        Button& button = CreateGameObject<Button>();
-        button.SetButtonType(ButtonType::Cog);
-        button.SetPosition({ 860, 540 });
-        button.SetOnClick(
-            []() {
-                App::Get()->CreateOrGetScene<SceneLevelChoice>((size)SceneTag::LevelChoice).SetActive(true);
-                App::Get()->CreateOrGetScene<Scene>((size)SceneTag::Gameplay).SetActive(false);
-            }
-        );
-    }
 }
 
 void SceneGameplay::Destroy()
