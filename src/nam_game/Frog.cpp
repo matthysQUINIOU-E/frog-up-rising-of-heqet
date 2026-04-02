@@ -258,7 +258,7 @@ void Frog::RotateUpdate()
     {
         return;
     }
-
+     
 
     XMVECTOR vUp = XMLoadFloat3(&m_normal);
 
