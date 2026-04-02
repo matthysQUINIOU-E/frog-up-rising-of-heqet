@@ -3,6 +3,8 @@
 #include "ColliderTag.h"
 #include "Camera.h"
 #include "Constant.h"
+#include "SpriteManager.h"
+#include "Jauge.h"
 
 
 using namespace nam;
@@ -11,8 +13,6 @@ using namespace DirectX;
 void Frog1::OnInit()
 {
     Frog::OnInit();
-
-
 
     MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
     mrc.mp_mesh->SetColor({ 0.5f, 0.0f, 0.0f, 1.f });
@@ -26,6 +26,9 @@ void Frog1::OnInit()
     box.m_tag = (size)ColliderTag::FrogJoel;
     box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+
+    Scene& scene = GetScene();
+    scene.CreateGameObject<Jauge>();
 
     SetBehavior();
     SetController();

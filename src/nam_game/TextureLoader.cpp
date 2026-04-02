@@ -35,4 +35,13 @@ void TextureLoader::LoadAllTexture(nam::App* app)
     app->LoadTexture(L"../../res/Textures/Buttons/buttonValid1.dds", (size)TextureTag::ButtonValid1);
     app->LoadTexture(L"../../res/Textures/Buttons/buttonX0.dds", (size)TextureTag::ButtonX0);
     app->LoadTexture(L"../../res/Textures/Buttons/buttonX1.dds", (size)TextureTag::ButtonX1);
+
+    app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge0.dds", (size)TextureTag::Jauge0);
+    app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge1.dds", (size)TextureTag::Jauge1);
+    app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge2.dds", (size)TextureTag::Jauge2);
+    app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge3.dds", (size)TextureTag::Jauge3);
+    app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge4.dds", (size)TextureTag::Jauge4);
+    app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge5.dds", (size)TextureTag::Jauge5);
+
+
 }

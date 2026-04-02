@@ -62,14 +62,7 @@ void Frog::OnUpdate()
 
     
     RotateUpdate();
-    Rotate();
-
-    //if(!m_isOrientedWall)
-    //{
-    //    RotateUpdate();
-    //    Rotate();
-    //}
-    
+    Rotate();  
     
 }
 
