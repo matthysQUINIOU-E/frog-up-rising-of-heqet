@@ -2,8 +2,9 @@
 #include "Frog.h"
 #include "Camera.h"
 #include "Constant.h"
-#include "FrogArrow.h"
 #include "ColliderTag.h"
+#include "FrogArrow.h"
+#include "FrogTongue.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -24,8 +25,12 @@ void Frog::OnInit()
     Scene& scene = GetScene();
     m_arrow = &scene.CreateGameObject<FrogArrow>(false);
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
-    arrowTransform.SetParent(&GetComponent<TransformComponent>());  
+    arrowTransform.SetParent(&GetComponent<TransformComponent>());
     m_arrowTimer.Init(m_targetTime);
+
+    m_tongue = &scene.CreateGameObject<FrogTongue>(false);
+    TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
+    tongueTransform.SetParent(&GetComponent<TransformComponent>());
 
     m_gravityTimerTarget = 0.5f;
     m_gravityTimer.Init(m_gravityTimerTarget);
@@ -35,7 +40,7 @@ void Frog::OnUpdate()
 {
     float dt = App::Get()->GetChrono().GetScaledDeltaTime();
 
-    if(GetEcs().IsEntityActive(m_arrow->GetEntity().m_id))
+    if (GetEcs().IsEntityActive(m_arrow->GetEntity().m_id))
         m_arrowTimer.Update(dt);
 
     if (m_arrowTimer.IsTargetReached())
@@ -45,7 +50,7 @@ void Frog::OnUpdate()
     }
 
     m_gravityTimer.Update(dt);
-    
+
     if (m_gravityTimer.IsTargetReached())
     {
         PhysicComponent& physic = GetComponent<PhysicComponent>();
@@ -60,17 +65,10 @@ void Frog::OnUpdate()
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
 
-    
     RotateUpdate();
     Rotate();
 
-    //if(!m_isOrientedWall)
-    //{
-    //    RotateUpdate();
-    //    Rotate();
-    //}
-    
-    
+
 }
 
 void Frog::OnController()
@@ -80,6 +78,8 @@ void Frog::OnController()
     InclineArrow();
 
     ControllerMove();
+
+    FireController();
 }
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
@@ -169,7 +169,7 @@ void Frog::ChargeJump()
 }
 
 void Frog::Jump(XMFLOAT3 direction)
-{   
+{
     XMVECTOR vimpulse = XMLoadFloat3(&direction);
     vimpulse = XMVectorScale(vimpulse, m_jumpImpulse);
 
@@ -187,7 +187,6 @@ void Frog::Jump(XMFLOAT3 direction)
 
 void Frog::Rotate()
 {
-
     Ecs& ecs = GetEcs();
 
     XMFLOAT3 impulse = { 0.f, 0.0f, 0.f };
@@ -201,7 +200,7 @@ void Frog::Rotate()
 
     if (cameraTransform == nullptr || transform == nullptr)
         return;
-    
+
     XMVECTOR vUp = XMLoadFloat3(&m_normal);
 
     XMFLOAT3 camForward = cameraTransform->GetWorldForward();
@@ -239,7 +238,6 @@ void Frog::Rotate()
     }
 }
 
-
 void Frog::RotateUpdate()
 {
     if (m_isGrounded)
@@ -258,7 +256,7 @@ void Frog::RotateUpdate()
     {
         return;
     }
-     
+
 
     XMVECTOR vUp = XMLoadFloat3(&m_normal);
 
@@ -353,6 +351,24 @@ void Frog::ControllerJump()
     }
 }
 
+void Frog::FireController()
+{
+    if (Input::IsKeyDown('E'))
+    {
+        if (m_isFiring)
+        {
+            m_isFiring = false;
+        }
+        else
+        {
+            m_isFiring = true;
+        }
+
+        m_tongue->SetFire(m_isFiring, *this);
+        m_isFiring = false;
+    }
+}
+
 void Frog::Move(float _forward, float _right)
 {
     m_jumpImpulse = 2.f;
@@ -376,5 +392,3 @@ void Frog::Move(float _forward, float _right)
     XMStoreFloat3(&direction, vDirection);
     Jump(direction);
 }
-
-
