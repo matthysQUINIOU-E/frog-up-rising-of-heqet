@@ -25,23 +25,18 @@ void Frog::OnInit()
     Scene& scene = GetScene();
     m_arrow = &scene.CreateGameObject<FrogArrow>(false);
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
-    arrowTransform.SetParent(&GetComponent<TransformComponent>());
+    arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
 
     m_tongue = &scene.CreateGameObject<FrogTongue>(false);
     TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
     tongueTransform.SetParent(&GetComponent<TransformComponent>());
-
-    m_gravityTimerTarget = 0.5f;
-    m_gravityTimer.Init(m_gravityTimerTarget);
 }
 
 void Frog::OnUpdate()
 {
     float dt = App::Get()->GetChrono().GetScaledDeltaTime();
-
-    if (GetEcs().IsEntityActive(m_arrow->GetEntity().m_id))
-        m_arrowTimer.Update(dt);
+    m_arrowTimer.Update(dt);
 
     if (m_arrowTimer.IsTargetReached())
     {
@@ -49,26 +44,20 @@ void Frog::OnUpdate()
         m_arrowTimer.ResetProgress();
     }
 
-    m_gravityTimer.Update(dt);
 
-    if (m_gravityTimer.IsTargetReached())
+    if (m_isFiring && m_tongue->IsArrived())
     {
-        PhysicComponent& physic = GetComponent<PhysicComponent>();
-        m_isOnWall = false;
-        m_isOrientedWall = false;
-        physic.m_useGravity = true;
-        physic.m_dirGravity = m_gravity;
-        m_gravityTimer.ResetProgress();
+        m_isFiring = false;
     }
-
 
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
 
-    RotateUpdate();
-    Rotate();
-
-
+    if (m_isOrientedWall == false)
+    {
+        RotateUpdate();
+        Rotate();
+    }
 }
 
 void Frog::OnController()
@@ -79,8 +68,21 @@ void Frog::OnController()
 
     ControllerMove();
 
-    FireController();
+    if (Input::IsKeyDown('E'))
+    {
+        if(m_isFiring)
+        {
+            m_isFiring = false;
+        }
+        else
+        {
+            m_isFiring = true;
+        }
+        
+        m_tongue->SetFire(m_isFiring);
+    }
 }
+
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
@@ -92,8 +94,6 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
 
     if (onPlateform || onFloor)
     {
-        m_gravityTimer.ResetProgress();
-
         XMFLOAT3 up = transform.GetWorldUp();
         XMFLOAT3 normal = other.m_normal;
 
@@ -104,12 +104,12 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         XMFLOAT3 sub;
         XMStoreFloat3(&sub, vSub);
 
-        if (abs(sub.x) <= EPSILON && abs(sub.y) <= EPSILON && abs(sub.z) <= EPSILON)
+        if( abs(sub.x) <= EPSILON && abs(sub.y) <= EPSILON && abs(sub.z) <= EPSILON)
             physic.m_useGravity = false;
         else
             physic.m_useGravity = true;
 
-
+        
         m_isGrounded = true;
         m_isOnWall = false;
         m_isOrientedWall = false;
@@ -125,30 +125,16 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         {
             XMVECTOR vNormal = XMLoadFloat3(&m_normal);
 
-            XMFLOAT3 currentFwd = transform.GetWorldForward();
-            XMVECTOR vCurrentFwd = XMLoadFloat3(&currentFwd);
-            XMVECTOR vProjFwd = vCurrentFwd - XMVectorScale(vNormal, XMVectorGetX(XMVector3Dot(vCurrentFwd, vNormal)));
+            XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+            XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
 
-            float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
-
-            XMVECTOR vForward;
-            if (projLen > EPSILON)
-            {
-                vForward = XMVector3Normalize(vProjFwd);
-            }
-            else
-            {
-                float dotY = abs(XMVectorGetX(XMVector3Dot(vNormal, XMVectorSet(0.f, 1.f, 0.f, 0.f))));
-                XMVECTOR vRef = (dotY < 0.9f)
-                    ? XMVectorSet(0.f, 1.f, 0.f, 0.f)
-                    : XMVectorSet(0.f, 0.f, 1.f, 0.f);
-                XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vRef, vNormal));
-                vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
-            }
+            XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
 
             XMFLOAT3 newForward;
             XMStoreFloat3(&newForward, vForward);
+
             transform.LookToWorld(newForward, m_normal);
+
         }
     }
 }
@@ -169,7 +155,7 @@ void Frog::ChargeJump()
 }
 
 void Frog::Jump(XMFLOAT3 direction)
-{
+{   
     XMVECTOR vimpulse = XMLoadFloat3(&direction);
     vimpulse = XMVectorScale(vimpulse, m_jumpImpulse);
 
@@ -199,50 +185,39 @@ void Frog::Rotate()
         });
 
     if (cameraTransform == nullptr || transform == nullptr)
+    {
         return;
-
-    XMVECTOR vUp = XMLoadFloat3(&m_normal);
+    }
 
     XMFLOAT3 camForward = cameraTransform->GetWorldForward();
-    XMVECTOR vcamForward = XMLoadFloat3(&camForward);
-    XMVECTOR vCamFwdProj = vcamForward - XMVectorScale(vUp, XMVectorGetX(XMVector3Dot(vcamForward, vUp)));
-
-    float projLen = XMVectorGetX(XMVector3Length(vCamFwdProj));
-    if (projLen < EPSILON)
-        return;
-
-    vCamFwdProj = XMVector3Normalize(vCamFwdProj);
-
+    camForward.y = 0.f;
     XMFLOAT3 frogForward = transform->GetWorldForward();
-    XMVECTOR vfrogForward = XMLoadFloat3(&frogForward);
-    vfrogForward = XMVector3Normalize(vfrogForward);
 
-    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(vCamFwdProj, vfrogForward);
+    XMVECTOR camForwardVect = XMLoadFloat3(&camForward);
+    camForwardVect = XMVector3Normalize(camForwardVect);
+    XMVECTOR frogForwardVect = XMLoadFloat3(&frogForward);
+    frogForwardVect = XMVector3Normalize(frogForwardVect);
+
+    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(camForwardVect, frogForwardVect);
     XMFLOAT3 diffAngles;
     XMStoreFloat3(&diffAngles, vectDiffAngles);
 
     if (diffAngles.x >= PI_DIV12 || diffAngles.x <= -PI_DIV12 || diffAngles.z >= PI_DIV12 || diffAngles.z <= -PI_DIV12)
     {
-        if (m_isGrounded || m_isOnWall)
+        if (m_isGrounded)
         {
-            XMFLOAT3 impulse;
-            XMStoreFloat3(&impulse, XMVectorScale(vUp, 2.f));
+            impulse.y += 2.f;
 
             PhysicComponent& physic = GetComponent<PhysicComponent>();
             physic.AddImpulse(impulse);
             physic.m_useGravity = true;
             m_isGrounded = false;
-            m_isOnWall = false;
-
         }
     }
 }
 
 void Frog::RotateUpdate()
 {
-    if (m_isGrounded)
-        return;
-
     Ecs* ecs = &App::Get()->GetEcs();
 
     TransformComponent* transform = &GetComponent<TransformComponent>();
@@ -257,32 +232,25 @@ void Frog::RotateUpdate()
         return;
     }
 
-
-    XMVECTOR vUp = XMLoadFloat3(&m_normal);
-
     XMFLOAT3 camForward = cameraTransform->GetWorldForward();
-    XMVECTOR vcamForward = XMLoadFloat3(&camForward);
-    XMVECTOR vTargetFwd = XMVector3Normalize(vcamForward - XMVectorScale(vUp, XMVectorGetX(XMVector3Dot(vcamForward, vUp))));
-
     XMFLOAT3 frogForward = transform->GetWorldForward();
-    XMVECTOR vfrogForward = XMLoadFloat3(&frogForward);
-    vfrogForward = XMVector3Normalize(vfrogForward);
 
-    XMVECTOR vDot = XMVector3Dot(vfrogForward, vTargetFwd);
+    XMVECTOR camForwardVect = XMLoadFloat3(&camForward);
+    camForwardVect = XMVector3Normalize(camForwardVect);
+    XMVECTOR frogForwardVect = XMLoadFloat3(&frogForward);
+    frogForwardVect = XMVector3Normalize(frogForwardVect);
 
-    float dot = XMVectorGetX(vDot);
+    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(camForwardVect, frogForwardVect);
+    XMFLOAT3 diffAngles;
+    XMStoreFloat3(&diffAngles, vectDiffAngles);
 
-    if (dot >= 1.f - EPSILON)
-        return;
-
-    XMVECTOR vNewFwd = XMVector3Normalize(XMVectorLerp(vfrogForward, vTargetFwd, 0.15f));
-
-    XMFLOAT3 newFwd;
-    XMStoreFloat3(&newFwd, vNewFwd);
-
-    XMFLOAT3 upToUse;
-    XMStoreFloat3(&upToUse, vUp);
-    transform->LookToWorld(newFwd, upToUse);
+    if (abs(diffAngles.x) >= EPSILON || abs(diffAngles.z) >= EPSILON)
+    {
+        if (m_isGrounded == false)
+        {
+            transform->LookToWorld({ frogForward.x + diffAngles.x / 12, 0.0f, frogForward.z + diffAngles.z / 12 });
+        }
+    }
 }
 
 void Frog::InclineArrow()
@@ -348,24 +316,6 @@ void Frog::ControllerJump()
             m_arrow->SetActive(false);
             m_arrowTimer.ResetProgress();
         }
-    }
-}
-
-void Frog::FireController()
-{
-    if (Input::IsKeyDown('E'))
-    {
-        if (m_isFiring)
-        {
-            m_isFiring = false;
-        }
-        else
-        {
-            m_isFiring = true;
-        }
-
-        m_tongue->SetFire(m_isFiring, *this);
-        m_isFiring = false;
     }
 }
 
