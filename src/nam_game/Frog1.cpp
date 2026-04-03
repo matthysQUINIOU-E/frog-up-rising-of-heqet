@@ -28,7 +28,8 @@ void Frog1::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
 
     Scene& scene = GetScene();
-    scene.CreateGameObject<Jauge>();
+    m_jauge = &scene.CreateGameObject<Jauge>();
+    m_jaugeTimer.Init(m_jaugeTimerTarget, true);
 
     SetBehavior();
     SetController();
@@ -38,10 +39,56 @@ void Frog1::OnInit()
 
 void Frog1::OnUpdate()
 {
-    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+    PhysicComponent& pc = GetComponent<PhysicComponent>();
 
     if (m_isFrogActive)
         Frog::OnUpdate();
+
+    if (m_isOrientedWall)
+    {
+        m_jaugeTimer.Update(dt);
+        m_jauge->SetActive(true);
+
+        float time = m_jaugeTimer.GetProgress();
+
+        float baseInterval = m_jaugeTimerTarget * 0.2f;
+        float interval1 = baseInterval * 4.f;
+        float interval2 = baseInterval * 3.f;
+        float interval3 = baseInterval * 2.f;
+        float interval4 = baseInterval;
+
+        bool jauge5 = time >= interval1 && time < m_jaugeTimerTarget;
+        bool jauge4 = time >= interval2 && time < interval1;
+        bool jauge3 = time >= interval3 && time < interval2;
+        bool jauge2 = time >= interval4 && time < interval3;
+        bool jauge1 = time > 0.f && time < interval4;
+
+        if (jauge5)
+            m_jauge->SetJauge(JaugeType::Jauge5);
+        else if (jauge4)
+            m_jauge->SetJauge(JaugeType::Jauge4);
+        else if (jauge3)
+            m_jauge->SetJauge(JaugeType::Jauge3);
+        else if (jauge2)
+            m_jauge->SetJauge(JaugeType::Jauge2);
+        else if (jauge1)
+            m_jauge->SetJauge(JaugeType::Jauge1);
+        else if (m_jaugeTimer.IsTargetReached())
+        {
+            m_jauge->SetJauge(JaugeType::Jauge0);
+            pc.m_dirGravity = m_gravity;
+        }
+        
+
+        // faire des verif avec GetProgress
+    }
+    else
+    {
+        m_jauge->SetActive(false);
+        m_jaugeTimer.ResetProgress();
+        m_jauge->SetJauge(JaugeType::Jauge5);
+    }
 }
 
 void Frog1::OnController()

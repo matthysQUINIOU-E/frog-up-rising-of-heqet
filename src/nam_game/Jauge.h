@@ -19,8 +19,7 @@ public:
 	void SetJauge(JaugeType type);
 	void Update();
 private:
-	nam::SpriteRendererComponent m_src;
 	JaugeType m_type;
-	JaugeType m_previousType;
+	JaugeType m_previousType = JaugeType::Jauge5;
 };
 

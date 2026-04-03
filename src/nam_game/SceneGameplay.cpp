@@ -116,7 +116,7 @@ void SceneGameplay::Init()
         go.AddComponent<MeshRendererComponent>(mrc);
         TransformComponent tc;
         tc.SetWorldPosition({ 0,5,-15 });
-        tc.SetWorldYPR(0.f, XM_PIDIV4, 0.f);
+        tc.SetWorldYPR(0.f, XM_PIDIV4, XM_PIDIV4);
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;

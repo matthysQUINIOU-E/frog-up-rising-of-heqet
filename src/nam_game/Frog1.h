@@ -1,6 +1,8 @@
 #pragma once
 #include "Frog.h"
 
+class Jauge;
+
 class Frog1 : public Frog
 {
 public:
@@ -13,7 +15,9 @@ private:
 	void ControllerMoveWall();
 	void CollisionOnWall(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other);
 private:
-
+	Jauge* m_jauge = nullptr;
+	nam::Timer m_jaugeTimer;
+	float m_jaugeTimerTarget = 15.f;
 };
 
 
