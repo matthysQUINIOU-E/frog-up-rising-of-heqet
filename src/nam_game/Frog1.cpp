@@ -40,21 +40,6 @@ void Frog1::OnUpdate()
 
     if (m_isFrogActive)
         Frog::OnUpdate();
-
-    if(m_isOrientedWall)
-    {
-        float dt = App::Get()->GetChrono().GetScaledDeltaTime();
-        m_gravityTimer.Update(dt);
-    }
-
-    if (m_gravityTimer.IsTargetReached())
-    {
-        m_isOnWall = false;
-        m_isOrientedWall = false;
-        physic.m_useGravity = true;
-        physic.m_dirGravity = m_gravity;
-        m_gravityTimer.ResetProgress();
-    }
 }
 
 void Frog1::OnController()

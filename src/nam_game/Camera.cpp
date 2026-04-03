@@ -21,6 +21,7 @@ void Camera::OnUpdate()
     {
         ecs.ForEach<Frog1Tag, TransformComponent>([&](uint32_t entity, Frog1Tag& tag, TransformComponent& transform)
         {
+            transform.UpdateWorldData();
             m_targetToFollow = transform.GetWorldPosition();
         });
     }
@@ -28,6 +29,7 @@ void Camera::OnUpdate()
     {
         ecs.ForEach<Frog2Tag, TransformComponent>([&](uint32_t entity, Frog2Tag& tag, TransformComponent& transform)
         {
+            transform.UpdateWorldData();
             m_targetToFollow = transform.GetWorldPosition();
         });
     }

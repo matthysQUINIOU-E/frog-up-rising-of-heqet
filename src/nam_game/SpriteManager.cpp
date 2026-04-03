@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "SpriteManager.h"
 #include <RenderManager.h>
-#include "TextureTag.h"
 
 using namespace nam;
 
@@ -24,137 +23,11 @@ Sprite* SpriteManager::InitSprite(SpriteTag spriteTag)
 
 	mrc.CreateSpriteInstance();
 	mrc.SetSpriteTag((size)spriteTag);
+
 	switch (spriteTag)
 	{
-	case SpriteTag::ButtonCog0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonCog0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonLeft0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonLeft0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonRight0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonRight0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonReturnLeft0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonReturnLeft0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonReturnRight0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonReturnRight0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonTrash0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonTrash0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonUser0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonUser0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonValid0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonValid0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonX0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonX0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonQuestion0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonQuestion0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonPlay0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonPlay0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonList0:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonList0);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonCog1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonCog1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonLeft1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonLeft1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonRight1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonRight1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonReturnLeft1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonReturnLeft1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonReturnRight1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonReturnRight1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonTrash1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonTrash1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonUser1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonUser1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonValid1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonValid1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonX1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonX1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonQuestion1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonQuestion1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonPlay1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonPlay1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::ButtonList1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonList1);
-		mrc.mp_sprite->m_drawLayer = 7;
-		break;
-	case SpriteTag::BackgroundGreen:
-		mrc.mp_sprite->BuildRect({ 1920,1080 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::BackgroundGreen);
-		mrc.mp_sprite->m_drawLayer = 9;
-		break;
-	case SpriteTag::PlateWood:
-		mrc.mp_sprite->BuildRect({ 1280,720 }, { 1,1,1,1 });
-		mrc.mp_sprite->SetTexture((size)TextureTag::PlateWood);
-		mrc.mp_sprite->m_drawLayer = 8;
+	case SpriteTag::Button:
+		mrc.mp_sprite->BuildRect({ 100,100 }, { 1,0,0,1 });
 		break;
 	default:
 		mrc.mp_sprite->BuildRect({50,50},{1,1,1,1});
