@@ -18,6 +18,7 @@ void FrogTongue::OnInit()
 	BoxColliderComponent& tongueCollider = SetBoxCollider();
 	tongueCollider.m_tag = (size)ColliderTag::Tongue;
 	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+	tongueCollider.m_noIntersectionPush = true;
 
 	SetBehavior();
 }

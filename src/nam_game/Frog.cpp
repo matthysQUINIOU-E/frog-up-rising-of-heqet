@@ -31,7 +31,6 @@ void Frog::OnInit()
     m_tongue = &scene.CreateGameObject<FrogTongue>(false);
     TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
     tongueTransform.SetParent(&GetComponent<TransformComponent>());
-    tongueTransform.SetWorldPosition({-1,4,0});
 }
 
 void Frog::OnUpdate()
@@ -56,8 +55,8 @@ void Frog::OnUpdate()
 
     if (m_isOrientedWall == false)
     {
-        // RotateUpdate();
-        // Rotate();
+        RotateUpdate();
+        Rotate();
     }
 }
 

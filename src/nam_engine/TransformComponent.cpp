@@ -696,6 +696,10 @@ namespace nam
         if (!m_worldDirty)
             return;
 
+        if (m_parent) {
+            m_parent->UpdateWorldData();
+        }
+
         UpdateMatrices();
 
         XMMATRIX world = XMLoadFloat4x4(&m_worldMatrix);
