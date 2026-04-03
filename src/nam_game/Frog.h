@@ -31,6 +31,9 @@ protected:
 	
 	FrogTongue* m_tongue;
 
+	float m_gravityTimerTarget;
+	nam::Timer m_gravityTimer;
+
 protected:
 	void Jump(DirectX::XMFLOAT3 direction);
 

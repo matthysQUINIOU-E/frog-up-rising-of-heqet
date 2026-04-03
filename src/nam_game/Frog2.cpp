@@ -21,6 +21,8 @@ void Frog2::OnInit()
 
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::FrogEllie;
+    box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+    box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
 
     SetBehavior();
     SetController();
