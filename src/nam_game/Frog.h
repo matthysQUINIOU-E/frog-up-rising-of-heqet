@@ -49,4 +49,6 @@ private:
 	void InclineArrow();
 	void ControllerMove();
 	void ControllerJump();
+	void ControllerTongue();
+	void ControllerGroundPound();
 };

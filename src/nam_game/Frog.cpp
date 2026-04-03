@@ -5,6 +5,7 @@
 #include "ColliderTag.h"
 #include "FrogArrow.h"
 #include "FrogTongue.h"
+#include "Controller.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -63,24 +64,10 @@ void Frog::OnUpdate()
 void Frog::OnController()
 {
     ControllerJump();
-
-    InclineArrow();
-
     ControllerMove();
-
-    if (Input::IsKeyDown('E'))
-    {
-        if(m_isFiring)
-        {
-            m_isFiring = false;
-        }
-        else
-        {
-            m_isFiring = true;
-        }
-        
-        m_tongue->SetFire(m_isFiring);
-    }
+    ControllerTongue();
+    ControllerGroundPound();
+    InclineArrow();
 }
 
 
@@ -257,13 +244,13 @@ void Frog::InclineArrow()
 {
     float dt = App::Get()->GetChrono().GetScaledDeltaTime();
 
-    if (Input::IsKey(VK_CONTROL))
+    if (Controller::Get(ControlType::MoveArrowDown))
     {
         m_slope += dt * 0.5f;
         m_arrow->SetActive(true);
     }
 
-    if (Input::IsKey(VK_SHIFT))
+    if (Controller::Get(ControlType::MoveArrowUp))
     {
         m_slope -= dt * 0.5f;
         m_arrow->SetActive(true);
@@ -280,16 +267,16 @@ void Frog::ControllerMove()
 
     if (m_isGrounded)
     {
-        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
+        if (Controller::Get(ControlType::Up))
             forward += 1.f;
 
-        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
+        if (Controller::Get(ControlType::Down))
             forward -= 1.f;
 
-        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
+        if (Controller::Get(ControlType::Left))
             right -= 1.f;
 
-        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
+        if (Controller::Get(ControlType::Right))
             right += 1.f;
     }
 
@@ -301,10 +288,10 @@ void Frog::ControllerMove()
 
 void Frog::ControllerJump()
 {
-    if (Input::IsKeyDown(VK_SPACE))
+    if (Controller::Get(ControlType::JumpCharge))
         m_isSpacePressed = true;
 
-    if (Input::IsKeyUp(VK_SPACE))
+    if (Controller::Get(ControlType::JumpRelease))
     {
         m_isSpacePressed = false;
 
@@ -317,6 +304,43 @@ void Frog::ControllerJump()
             m_arrowTimer.ResetProgress();
         }
     }
+}
+
+void Frog::ControllerTongue()
+{
+    if (Controller::Get(ControlType::FireTongue))
+    {
+        if (m_isFiring)
+        {
+            m_isFiring = false;
+        }
+        else
+        {
+            m_isFiring = true;
+        }
+
+        m_tongue->SetFire(m_isFiring);
+    }
+}
+
+void Frog::ControllerGroundPound()
+{
+    if (m_isGrounded)
+        return;
+    
+    if (!Controller::Get(ControlType::GroundPound))
+        return;
+
+    PhysicComponent& pc = GetComponent<PhysicComponent>();
+
+    pc.m_velocity = {0,0,0};
+
+    if (m_isOnWall)
+    {
+        TransformComponent& t = GetComponent<TransformComponent>();
+        pc.AddImpulse(t.GetWorldUp());
+    }
+    pc.AddImpulse({ 0,-20,0 });
 }
 
 void Frog::Move(float _forward, float _right)

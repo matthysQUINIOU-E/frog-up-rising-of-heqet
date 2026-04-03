@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Camera.h"
+#include "Controller.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -37,13 +38,13 @@ void Camera::OnController()
 {
     App* app = App::Get();
 
-    if (Input::IsKeyDown('1'))
+    if (Controller::Get(ControlType::SwitchFrog1))
         m_frogToFollow = 0;
 
-    if (Input::IsKeyDown('2'))
+    if (Controller::Get(ControlType::SwitchFrog2))
         m_frogToFollow = 1;
 
-    if (Input::IsKeyDown(VK_ESCAPE))
+    if (Controller::Get(ControlType::UnlockCamera))
         m_cursorUse = !m_cursorUse;
 
     if (m_cursorUse)

@@ -2,6 +2,7 @@
 #include "Frog1.h"
 #include "ColliderTag.h"
 #include "Camera.h"
+#include "Controller.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -23,7 +24,6 @@ void Frog1::OnInit()
 
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::FrogJoel;
-    box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
 
     SetBehavior();
     SetController();
@@ -56,10 +56,10 @@ void Frog1::OnUpdate()
 
 void Frog1::OnController()
 {
-    if (Input::IsKeyDown('1'))
+    if (Controller::Get(ControlType::SwitchFrog1))
         m_isFrogActive = true;
 
-    if (Input::IsKeyDown('2'))
+    if (Controller::Get(ControlType::SwitchFrog2))
         m_isFrogActive = false;
 
     if (m_isSpacePressed) 
@@ -129,16 +129,16 @@ void Frog1::ControllerMoveWall()
 
     if (m_isOnWall)
     {
-        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
+        if (Controller::Get(ControlType::Up))
             forward += 1.f;
 
-        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
+        if (Controller::Get(ControlType::Down))
             forward -= 1.f;
 
-        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
+        if (Controller::Get(ControlType::Left))
             right -= 1.f;
 
-        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
+        if (Controller::Get(ControlType::Right))
             right += 1.f;
     }
 
