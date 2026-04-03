@@ -68,19 +68,7 @@ void Frog::OnController()
 
     ControllerMove();
 
-    if (Input::IsKeyDown('E'))
-    {
-        if(m_isFiring)
-        {
-            m_isFiring = false;
-        }
-        else
-        {
-            m_isFiring = true;
-        }
-        
-        m_tongue->SetFire(m_isFiring);
-    }
+    FireController();
 }
 
 
@@ -316,6 +304,24 @@ void Frog::ControllerJump()
             m_arrow->SetActive(false);
             m_arrowTimer.ResetProgress();
         }
+    }
+}
+
+void Frog::FireController()
+{
+    if (Input::IsKeyDown('E'))
+    {
+        if (m_isFiring)
+        {
+            m_isFiring = false;
+        }
+        else
+        {
+            m_isFiring = true;
+        }
+
+        m_tongue->SetFire(m_isFiring, *this);
+        m_isFiring = false;
     }
 }
 
