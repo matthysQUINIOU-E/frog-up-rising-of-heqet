@@ -40,7 +40,6 @@ void Frog1::OnUpdate()
     if (m_isFrogActive)
         Frog::OnUpdate();
 
-    //maybe
     if(m_isOrientedWall)
     {
         float dt = App::Get()->GetChrono().GetScaledDeltaTime();

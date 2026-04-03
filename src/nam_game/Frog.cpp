@@ -65,12 +65,8 @@ void Frog::OnUpdate()
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
     
-
-    if(!m_isOrientedWall)
-    {
-       RotateUpdate();
-       Rotate();
-    }
+    RotateUpdate();
+    Rotate();
     
     
 }
@@ -80,22 +76,10 @@ void Frog::OnController()
     ControllerJump();
 
     InclineArrow();
-
+    
     ControllerMove();
 
-    if (Input::IsKeyDown('E'))
-    {
-        if(m_isFiring)
-        {
-            m_isFiring = false;
-        }
-        else
-        {
-            m_isFiring = true;
-        }
-        
-        m_tongue->SetFire(m_isFiring);
-    }
+    FireController();
 }
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
@@ -203,7 +187,6 @@ void Frog::Jump(XMFLOAT3 direction)
 
 void Frog::Rotate()
 {
-
     Ecs& ecs = GetEcs();
 
     XMFLOAT3 impulse = { 0.f, 0.0f, 0.f };
@@ -365,6 +348,24 @@ void Frog::ControllerJump()
             m_arrow->SetActive(false);
             m_arrowTimer.ResetProgress();
         }
+    }
+}
+
+void Frog::FireController()
+{
+    if (Input::IsKeyDown('E'))
+    {
+        if (m_isFiring)
+        {
+            m_isFiring = false;
+        }
+        else
+        {
+            m_isFiring = true;
+        }
+
+        m_tongue->SetFire(m_isFiring, *this);
+        m_isFiring = false;
     }
 }
 

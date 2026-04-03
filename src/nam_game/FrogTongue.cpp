@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Frog.h"
 #include "FrogTongue.h"
 #include "ColliderTag.h"
 
@@ -9,7 +10,7 @@ void FrogTongue::OnInit()
 {
 	MeshRendererComponent tongueMesh;
 	tongueMesh.CreateMeshInstance();
-	tongueMesh.mp_mesh->BuildBox({ 0.1f, 0.1f, 1.f }, { 1.0f, 0.411f, 0.705f, 1.0f });
+	tongueMesh.mp_mesh->BuildBox({ 0.1f, 0.1f, 0.99f }, { 1.0f, 0.411f, 0.705f, 1.0f });
 	AddComponent<MeshRendererComponent>(tongueMesh);
 
 	TransformComponent tongueTransform;
@@ -29,6 +30,8 @@ void FrogTongue::OnUpdate()
 
 	if (!m_isFiring)
 		return;
+
+	m_pos = m_frog.GetComponent<TransformComponent>().GetWorldPosition(); // bancal la ligne mais ça marche donc tranquille
 
 	TransformComponent& tc = GetComponent<TransformComponent>();
 	XMFLOAT3 fwd = tc.GetWorldForward();
@@ -78,7 +81,7 @@ void FrogTongue::OnCollision(const nam::SingleCollisionInfo& self, const nam::Si
 		m_arrived = true;
 }
 
-void FrogTongue::SetFire(bool _fire)
+void FrogTongue::SetFire(bool _fire, Frog _frog)
 {
 	if (_fire && !m_isFiring)
 	{
@@ -86,7 +89,8 @@ void FrogTongue::SetFire(bool _fire)
 		m_arrived = false;
 		m_move = 0.0f;
 
-		m_pos = GetComponent<TransformComponent>().GetWorldPosition();
+		m_frog = _frog;
+		m_pos = m_frog.GetComponent<TransformComponent>().GetWorldPosition();
 	}
 	else if (!_fire && m_isFiring)
 	{
