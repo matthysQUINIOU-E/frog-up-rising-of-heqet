@@ -27,10 +27,6 @@ void Frog::OnInit()
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
 
-    m_tongue = &scene.CreateGameObject<FrogTongue>(false);
-    TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
-    tongueTransform.SetParent(&GetComponent<TransformComponent>());
-    
     m_gravityTimerTarget = 0.5f;
     m_gravityTimer.Init(m_gravityTimerTarget);
 }
@@ -63,9 +59,16 @@ void Frog::OnUpdate()
 
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
+
     
     RotateUpdate();
     Rotate();
+
+    //if(!m_isOrientedWall)
+    //{
+    //    RotateUpdate();
+    //    Rotate();
+    //}
     
     
 }
@@ -75,10 +78,8 @@ void Frog::OnController()
     ControllerJump();
 
     InclineArrow();
-    
-    ControllerMove();
 
-    FireController();
+    ControllerMove();
 }
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
@@ -186,6 +187,7 @@ void Frog::Jump(XMFLOAT3 direction)
 
 void Frog::Rotate()
 {
+
     Ecs& ecs = GetEcs();
 
     XMFLOAT3 impulse = { 0.f, 0.0f, 0.f };
@@ -348,24 +350,6 @@ void Frog::ControllerJump()
             m_arrow->SetActive(false);
             m_arrowTimer.ResetProgress();
         }
-    }
-}
-
-void Frog::FireController()
-{
-    if (Input::IsKeyDown('E'))
-    {
-        if (m_isFiring)
-        {
-            m_isFiring = false;
-        }
-        else
-        {
-            m_isFiring = true;
-        }
-
-        m_tongue->SetFire(m_isFiring, *this);
-        m_isFiring = false;
     }
 }
 
