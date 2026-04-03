@@ -2,8 +2,9 @@
 #include "Frog.h"
 #include "Camera.h"
 #include "Constant.h"
-#include "FrogArrow.h"
 #include "ColliderTag.h"
+#include "FrogArrow.h"
+#include "FrogTongue.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -27,8 +28,9 @@ void Frog::OnInit()
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
     m_arrowTimer.Init(m_targetTime);
 
-    m_gravityTimerTarget = 0.5f;
-    m_gravityTimer.Init(m_gravityTimerTarget);
+    m_tongue = &scene.CreateGameObject<FrogTongue>(false);
+    TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
+    tongueTransform.SetParent(&GetComponent<TransformComponent>());
 }
 
 void Frog::OnUpdate()
@@ -44,33 +46,20 @@ void Frog::OnUpdate()
         m_arrowTimer.ResetProgress();
     }
 
-    m_gravityTimer.Update(dt);
-    
-    if (m_gravityTimer.IsTargetReached())
-    {
-        PhysicComponent& physic = GetComponent<PhysicComponent>();
-        m_isOnWall = false;
-        m_isOrientedWall = false;
-        physic.m_useGravity = true;
-        physic.m_dirGravity = m_gravity;
-        m_gravityTimer.ResetProgress();
-    }
 
+    if (m_isFiring && m_tongue->IsArrived())
+    {
+        m_isFiring = false;
+    }
 
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
 
-    
-    RotateUpdate();
-    Rotate();
-
-    //if(!m_isOrientedWall)
-    //{
-    //    RotateUpdate();
-    //    Rotate();
-    //}
-    
-    
+    if (m_isOrientedWall == false)
+    {
+        RotateUpdate();
+        Rotate();
+    }
 }
 
 void Frog::OnController()
@@ -80,6 +69,20 @@ void Frog::OnController()
     InclineArrow();
 
     ControllerMove();
+
+    if (Input::IsKeyDown('E'))
+    {
+        if(m_isFiring)
+        {
+            m_isFiring = false;
+        }
+        else
+        {
+            m_isFiring = true;
+        }
+        
+        m_tongue->SetFire(m_isFiring);
+    }
 }
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
@@ -239,7 +242,6 @@ void Frog::Rotate()
     }
 }
 
-
 void Frog::RotateUpdate()
 {
     if (m_isGrounded)
@@ -376,5 +378,3 @@ void Frog::Move(float _forward, float _right)
     XMStoreFloat3(&direction, vDirection);
     Jump(direction);
 }
-
-

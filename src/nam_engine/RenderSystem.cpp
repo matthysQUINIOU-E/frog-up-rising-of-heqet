@@ -46,7 +46,6 @@ namespace nam
 		{
 			ecs.ForEach<TransformComponent, MeshRendererComponent>([&](uint32_t entity, TransformComponent& transform, MeshRendererComponent& meshRenderer)
 			{
-				transform.UpdateWorldData();
 
 				Mesh* p_mesh = meshRenderer.mp_mesh;
 
@@ -69,7 +68,6 @@ namespace nam
 		//2D Render
 		ecs.ForEach<TransformComponent, SpriteRendererComponent>([&](uint32_t entity, TransformComponent& transform, SpriteRendererComponent& spriteRenderer)
 		{
-			transform.UpdateWorldData();
 
 			Render2DItemData spriteData;
 			spriteData.mp_item = spriteRenderer.mp_sprite;
@@ -82,7 +80,6 @@ namespace nam
 		//Text
 		ecs.ForEach<TransformComponent, TextRendererComponent>([&](uint32_t entity, TransformComponent& transform, TextRendererComponent& textRenderer)
 			{
-				transform.UpdateWorldData();
 
 				Render2DItemData textData;
 				textData.mp_item = textRenderer.mp_text;

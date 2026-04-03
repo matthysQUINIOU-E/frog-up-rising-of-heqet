@@ -15,7 +15,6 @@ namespace nam
 		float gravity = dt * m_gravity;
 
 		ecs.ForEach<TransformComponent, PhysicComponent>([&](uint32_t entity, TransformComponent& transform, PhysicComponent& physic) {
-			transform.UpdateWorldData();
 
 			if (physic.m_useGravity) {
 				XMVECTOR vDir = XMLoadFloat3(&physic.m_dirGravity);
