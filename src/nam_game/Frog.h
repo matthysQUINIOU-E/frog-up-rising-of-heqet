@@ -26,6 +26,8 @@ protected:
 
 	DirectX::XMFLOAT3 m_gravity = { 0.f, -1.f, 0.f };
 	DirectX::XMFLOAT3 m_normal = { 0.f, 0.f, 0.f };
+	
+	FrogTongue* m_tongue = nullptr;
 
 	float m_gravityTimerTarget;
 	nam::Timer m_gravityTimer;
@@ -47,4 +49,5 @@ private:
 	void InclineArrow();
 	void ControllerMove();
 	void ControllerJump();
+	void FireController();
 };

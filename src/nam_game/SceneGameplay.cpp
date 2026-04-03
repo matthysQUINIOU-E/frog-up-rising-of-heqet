@@ -58,6 +58,7 @@ void SceneGameplay::Init()
         box.m_tag = (size)ColliderTag::Platform;
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+        box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
     }
 
     {
@@ -74,6 +75,7 @@ void SceneGameplay::Init()
         box.m_tag = (size)ColliderTag::Platform;
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+        box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
     }
 
     {
@@ -90,6 +92,7 @@ void SceneGameplay::Init()
         box.m_tag = (size)ColliderTag::Platform;
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+        box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
     }
 
     {
@@ -106,6 +109,7 @@ void SceneGameplay::Init()
         box.m_tag = (size)ColliderTag::Platform;
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+        box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
     }
 
     {
@@ -123,6 +127,7 @@ void SceneGameplay::Init()
         box.m_tag = (size)ColliderTag::Platform;
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+        box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
     }
 
 
@@ -140,6 +145,7 @@ void SceneGameplay::Init()
         box.m_tag = (size)ColliderTag::Platform;
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+        box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
     }
 
     //player1
