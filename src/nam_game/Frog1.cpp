@@ -26,7 +26,6 @@ void Frog1::OnInit()
     box.m_tag = (size)ColliderTag::FrogJoel;
     box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
-    box.m_shouldCollideWith.insert((size)ColliderTag::Collectible);
 
     SetBehavior();
     SetController();
@@ -86,92 +85,92 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     }
 }
 
-//void Frog1::MoveWall(float _forward, float _right)
-//{
-//    m_jumpImpulse = 2.f;
-//
-//    TransformComponent& transform = GetComponent<TransformComponent>();
-//
-//    XMVECTOR vDirection = XMLoadFloat3(&m_normal);
-//
-//    XMFLOAT3 forward = transform.GetWorldForward();
-//    XMVECTOR vForward = XMLoadFloat3(&forward);
-//    vForward = XMVectorScale(vForward, _forward);
-//    vDirection = XMVectorAdd(vDirection, vForward);
-//
-//    XMFLOAT3 right = transform.GetWorldRight();
-//    XMVECTOR vRight = XMLoadFloat3(&right);
-//    vRight = XMVectorScale(vRight, _right);
-//    vDirection = XMVectorAdd(vDirection, vRight);
-//
-//    vDirection = XMVector3Normalize(vDirection);
-//
-//    XMFLOAT3 direction;
-//    XMStoreFloat3(&direction, vDirection);
-//    Frog::Jump(direction);
-//}
-//
-//void Frog1::ControllerMoveWall()
-//{
-//    float forward = 0.f;
-//    float right = 0.f;
-//
-//    if (m_isOnWall)
-//    {
-//        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
-//            forward += 1.f;
-//
-//        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
-//            forward -= 1.f;
-//
-//        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
-//            right -= 1.f;
-//
-//        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
-//            right += 1.f;
-//    }
-//
-//    if (forward == 0.f && right == 0.f)
-//        return;
-//
-//    MoveWall(forward, right);
-//}
-//
-//void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
-//{
-//    PhysicComponent& physic = GetComponent<PhysicComponent>();
-//    TransformComponent& transform = GetComponent<TransformComponent>();
-//
-//    m_gravityTimer.ResetProgress();
-//    m_isOrientedWall = true;
-//    m_isGrounded = false;
-//    m_normal = other.m_normal;
-//    physic.m_dirGravity = self.m_normal;
-//    physic.m_velocity = { 0.f,0.f,0.f };
-//
-//    XMVECTOR vNormal = XMLoadFloat3(&m_normal);
-//
-//    XMFLOAT3 currentFwd = transform.GetWorldForward();
-//    XMVECTOR vCurrentFwd = XMLoadFloat3(&currentFwd);
-//    XMVECTOR vProjFwd = vCurrentFwd - XMVectorScale(vNormal, XMVectorGetX(XMVector3Dot(vCurrentFwd, vNormal)));
-//
-//    float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
-//
-//    XMVECTOR vForward = {0.f, 0.f, 0.f};
-//    if (projLen > EPSILON)
-//    {
-//        vForward = XMVector3Normalize(vProjFwd);
-//    }
-//    else
-//    {
-//        XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-//        XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
-//
-//        XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
-//    }
-//
-//    XMFLOAT3 newForward;
-//    XMStoreFloat3(&newForward, vForward);
-//    transform.LookToWorld(newForward, m_normal);
-//}
+void Frog1::MoveWall(float _forward, float _right)
+{
+    m_jumpImpulse = 2.f;
+
+    TransformComponent& transform = GetComponent<TransformComponent>();
+
+    XMVECTOR vDirection = XMLoadFloat3(&m_normal);
+
+    XMFLOAT3 forward = transform.GetWorldForward();
+    XMVECTOR vForward = XMLoadFloat3(&forward);
+    vForward = XMVectorScale(vForward, _forward);
+    vDirection = XMVectorAdd(vDirection, vForward);
+
+    XMFLOAT3 right = transform.GetWorldRight();
+    XMVECTOR vRight = XMLoadFloat3(&right);
+    vRight = XMVectorScale(vRight, _right);
+    vDirection = XMVectorAdd(vDirection, vRight);
+
+    vDirection = XMVector3Normalize(vDirection);
+
+    XMFLOAT3 direction;
+    XMStoreFloat3(&direction, vDirection);
+    Frog::Jump(direction);
+}
+
+void Frog1::ControllerMoveWall()
+{
+    float forward = 0.f;
+    float right = 0.f;
+
+    if (m_isOnWall)
+    {
+        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
+            forward += 1.f;
+
+        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
+            forward -= 1.f;
+
+        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
+            right -= 1.f;
+
+        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
+            right += 1.f;
+    }
+
+    if (forward == 0.f && right == 0.f)
+        return;
+
+    MoveWall(forward, right);
+}
+
+void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
+{
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    TransformComponent& transform = GetComponent<TransformComponent>();
+
+    m_gravityTimer.ResetProgress();
+    m_isOrientedWall = true;
+    m_isGrounded = false;
+    m_normal = other.m_normal;
+    physic.m_dirGravity = self.m_normal;
+    physic.m_velocity = { 0.f,0.f,0.f };
+
+    XMVECTOR vNormal = XMLoadFloat3(&m_normal);
+
+    XMFLOAT3 currentFwd = transform.GetWorldForward();
+    XMVECTOR vCurrentFwd = XMLoadFloat3(&currentFwd);
+    XMVECTOR vProjFwd = vCurrentFwd - XMVectorScale(vNormal, XMVectorGetX(XMVector3Dot(vCurrentFwd, vNormal)));
+
+    float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
+
+    XMVECTOR vForward = {0.f, 0.f, 0.f};
+    if (projLen > EPSILON)
+    {
+        vForward = XMVector3Normalize(vProjFwd);
+    }
+    else
+    {
+        XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+        XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
+
+        XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+    }
+
+    XMFLOAT3 newForward;
+    XMStoreFloat3(&newForward, vForward);
+    transform.LookToWorld(newForward, m_normal);
+}
 
