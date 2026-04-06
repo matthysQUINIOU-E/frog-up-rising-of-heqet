@@ -6,6 +6,10 @@
 #include <SceneGameplay.h>
 #include <SceneTag.h>
 
+// remove 
+#include "SaveManager.h"
+#include "ConfigManager.h"
+
 using namespace nam;
 using namespace DirectX;
 
@@ -24,6 +28,9 @@ void SceneLevelChoice::Init()
 			}
 		);
 	}
+
+	SaveManager::GetSave();
+	ConfigManager::GetConfig();
 }
 
 void SceneLevelChoice::Destroy()

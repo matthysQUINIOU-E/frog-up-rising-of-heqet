@@ -3,7 +3,6 @@
 #include <regex>
 #include <fstream>
 #include <Vertex.h>
-#include <json.h>
 #include "Constant.h"
 #include "MeshManager.h"
 #include "TextureTag.h"

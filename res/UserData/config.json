@@ -1,0 +1,31 @@
+{
+    "profils": [
+        {
+            "customization": {
+                "frog1Cosmetic": 0,
+                "frog1Texture": 0,
+                "frog2Cosmetic": 0,
+                "frog2Texture": 0
+            },
+            "soundVolume": 0
+        },
+        {
+            "customization": {
+                "frog1Cosmetic": 0,
+                "frog1Texture": 0,
+                "frog2Cosmetic": 0,
+                "frog2Texture": 0
+            },
+            "soundVolume": 0
+        },
+        {
+            "customization": {
+                "frog1Cosmetic": 0,
+                "frog1Texture": 0,
+                "frog2Cosmetic": 0,
+                "frog2Texture": 0
+            },
+            "soundVolume": 0
+        }
+    ]
+}
