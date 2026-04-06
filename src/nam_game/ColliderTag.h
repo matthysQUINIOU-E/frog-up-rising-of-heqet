@@ -6,6 +6,7 @@ enum class ColliderTag : nam::size
     Platform,
     FrogJoel,
     FrogEllie,
+    Checkpoint,
 	Size
 
 };

@@ -27,6 +27,9 @@ protected:
 	DirectX::XMFLOAT3 m_gravity = { 0.f, -1.f, 0.f };
 	DirectX::XMFLOAT3 m_normal = { 0.f, 0.f, 0.f };
 
+	DirectX::XMFLOAT3 m_checkpointCenter = { 0.f, 0.f, 0.f };
+	bool m_hasCheckpoint = true;
+
 	float m_gravityTimerTarget;
 	nam::Timer m_gravityTimer;
 
@@ -37,6 +40,8 @@ public:
 	void OnUpdate() override;
 	void OnController() override;
 	void OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other) override;
+	void SetCheckpoint(DirectX::XMFLOAT3 center);
+	void Respawn();
 private:
 	void ChargeJump();
 	void Move(float _forward, float _right);

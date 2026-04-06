@@ -73,6 +73,9 @@ void Frog::OnController()
     InclineArrow();
 
     ControllerMove();
+
+    if (Input::IsKeyDown('K'))
+        Respawn();
 }
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
@@ -376,4 +379,26 @@ void Frog::Move(float _forward, float _right)
     Jump(direction);
 }
 
+void Frog::SetCheckpoint(XMFLOAT3 center)
+{
+    m_checkpointCenter = center;
+    m_hasCheckpoint = true;
+}
 
+void Frog::Respawn()
+{
+    if (!m_hasCheckpoint)
+        return;
+
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    transform.SetWorldPosition(m_checkpointCenter);
+
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    physic.m_velocity = { 0.f, 0.f, 0.f };
+    physic.m_useGravity = true;
+    physic.m_dirGravity = m_gravity;
+
+    m_isGrounded = false;
+    m_isOnWall = false;
+    m_normal = { 0.f, 1.f, 0.f };
+}
