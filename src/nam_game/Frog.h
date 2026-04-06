@@ -40,7 +40,7 @@ protected:
 	DirectX::XMFLOAT3 m_normal = { 0.f, 0.f, 0.f };
 	DirectX::XMFLOAT3 m_baseScale = { 1.f,1.f,1.f };
 	
-	FrogTongue* m_tongue;
+	FrogTongue* m_tongue = nullptr;
 
 protected:
 	void Jump(DirectX::XMFLOAT3 direction);

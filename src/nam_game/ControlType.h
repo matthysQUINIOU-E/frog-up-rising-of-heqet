@@ -22,6 +22,6 @@ enum class ControlType
 	SwitchFrog1,
 	SwitchFrog2,
 
-	UnlockCamera
+	Pause
 };
 

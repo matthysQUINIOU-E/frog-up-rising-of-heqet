@@ -3,6 +3,7 @@
 #include "ColliderTag.h"
 #include "Camera.h"
 #include "Controller.h"
+#include "GameVariables.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -55,6 +56,9 @@ void Frog1::OnUpdate()
 
 void Frog1::OnController()
 {
+    if (GameVariables::s_isGamePaused)
+        return;
+
     if (Controller::Get(ControlType::SwitchFrog1))
         m_isFrogActive = true;
 

@@ -35,7 +35,7 @@ bool Controller::Get(ControlType controlType)
 		return Input::IsKeyDown('1');
 	case ControlType::SwitchFrog2:
 		return Input::IsKeyDown('2');
-	case ControlType::UnlockCamera:
+	case ControlType::Pause:
 		return Input::IsKeyDown(VK_ESCAPE);
 	default:
 		return false;

@@ -23,7 +23,7 @@ void GameText::SetText(std::string text)
 void GameText::SetPostion(XMFLOAT2 position)
 {
 	TransformComponent& t = GetComponent<TransformComponent>();
-	t.SetWorldPosition({position.x,position.x,0});
+	t.SetWorldPosition({position.x,position.y,0});
 }
 
 void GameText::SetTextSize(float size)

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Camera.h"
 #include "Controller.h"
+#include "SceneTag.h"
+#include "GameVariables.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -38,17 +40,36 @@ void Camera::OnController()
 {
     App* app = App::Get();
 
+    if (Controller::Get(ControlType::Pause))
+    {
+        m_cursorUse = !m_cursorUse;
+        app->GetChrono().SetFreezeState(m_cursorUse);
+        app->CreateOrGetScene<Scene>((size)SceneTag::Pause).SetActive(m_cursorUse);
+        GameVariables::s_isGamePaused = m_cursorUse;
+
+        if (!m_cursorUse)
+        {
+            Window& window = app->GetWindow();
+            XMFLOAT2 size = XMFLOAT2((float)window.m_clientWidth, (float)window.m_clientHeight);
+            XMFLOAT2 centerSize = XMFLOAT2(size.x * 0.5f, size.y * 0.5f);
+            Input::SetMousePosition(centerSize);
+            Input::UpdateMouseDelta();
+        }
+    }
+
+    if (m_cursorUse)
+        Input::ShowMouse();
+
+    if (GameVariables::s_isGamePaused)
+        return;
+    else if (m_cursorUse)
+        m_cursorUse = !m_cursorUse;
+
     if (Controller::Get(ControlType::SwitchFrog1))
         m_frogToFollow = 0;
 
     if (Controller::Get(ControlType::SwitchFrog2))
         m_frogToFollow = 1;
-
-    if (Controller::Get(ControlType::UnlockCamera))
-        m_cursorUse = !m_cursorUse;
-
-    if (m_cursorUse)
-        Input::ShowMouse();
 
     TransformComponent& transform = GetComponent<TransformComponent>();
 

@@ -15,9 +15,8 @@ private:
 private:
 	DirectX::XMFLOAT3 m_wallNormal = { 0.f, 0.f, 0.f };
 
-	float m_gravityTimerTarget;
+	float m_gravityTimerTarget = 0.5f;
 	nam::Timer m_gravityTimer;
-
 };
 
 
