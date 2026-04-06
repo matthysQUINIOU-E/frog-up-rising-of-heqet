@@ -3,6 +3,8 @@
 
 #include "TextureLoader.h"
 #include "SceneInitializer.h"
+#include "SaveManager.h"
+#include "ConfigManager.h"
 
 using namespace nam;
 
@@ -12,6 +14,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR cmdLine, i
     
     TextureLoader::LoadAllTexture(app);
     SceneInitializer::InitScenes(app);
+    ConfigManager::GetConfig();
+    SaveManager::GetSave();
 
   	app->Run();	
 }

@@ -1,5 +1,5 @@
 #pragma once
-class SceneVictoire : public nam::Scene
+class SceneVictory : public nam::Scene
 {
 public:
 	void Init() override;
