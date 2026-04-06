@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Camera.h"
+#include "Controller.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -21,7 +22,6 @@ void Camera::OnUpdate()
     {
         ecs.ForEach<Frog1Tag, TransformComponent>([&](uint32_t entity, Frog1Tag& tag, TransformComponent& transform)
         {
-            transform.UpdateWorldData();
             m_targetToFollow = transform.GetWorldPosition();
         });
     }
@@ -29,7 +29,6 @@ void Camera::OnUpdate()
     {
         ecs.ForEach<Frog2Tag, TransformComponent>([&](uint32_t entity, Frog2Tag& tag, TransformComponent& transform)
         {
-            transform.UpdateWorldData();
             m_targetToFollow = transform.GetWorldPosition();
         });
     }
@@ -39,13 +38,13 @@ void Camera::OnController()
 {
     App* app = App::Get();
 
-    if (Input::IsKeyDown('1'))
+    if (Controller::Get(ControlType::SwitchFrog1))
         m_frogToFollow = 0;
 
-    if (Input::IsKeyDown('2'))
+    if (Controller::Get(ControlType::SwitchFrog2))
         m_frogToFollow = 1;
 
-    if (Input::IsKeyDown(VK_ESCAPE))
+    if (Controller::Get(ControlType::UnlockCamera))
         m_cursorUse = !m_cursorUse;
 
     if (m_cursorUse)
@@ -64,7 +63,7 @@ void Camera::OnController()
         XMFLOAT2 delta = Input::GetMouseDelta();
         Input::SetMousePosition(centerSize);
 
-        transform.RotateAroundWorld(m_targetToFollow, { 0.f, 1.f, 0.f }, (float)delta.x * m_sensitivity);
+        transform.RotateAroundWorld(m_targetToFollow, transform.GetWorldUp(), (float)delta.x * m_sensitivity);
         transform.RotateAroundWorld(m_targetToFollow, transform.GetWorldRight(), (float)delta.y * m_sensitivity);
 
     }

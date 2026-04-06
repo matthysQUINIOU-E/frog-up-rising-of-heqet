@@ -10,7 +10,7 @@ private:
 	DirectX::XMFLOAT3 m_targetToFollow = { 0.f,0.f,0.f };
 	float m_distanceFromTarget = 5.f;
 	bool m_cursorUse = false;
-	float m_sensitivity = 0.01f;
+	float m_sensitivity = 0.001f;
 
 public:
 	void OnInit() override;

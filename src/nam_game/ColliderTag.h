@@ -1,7 +1,13 @@
 #pragma once
+
 enum class ColliderTag : nam::size
 {
-	Platform,
+    Ground,
+    Platform,
+    FrogJoel,
+    FrogEllie,
+    Tongue,
 	Size
+
 };
 

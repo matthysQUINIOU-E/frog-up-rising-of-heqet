@@ -584,6 +584,7 @@ namespace nam
 
     const DirectX::XMFLOAT4X4 TransformComponent::GetWorldMatrixTranspose()
     {
+        UpdateWorldData();
         DirectX::XMFLOAT4X4 transpose;
         DirectX::XMMATRIX mat = XMMatrixTranspose(XMLoadFloat4x4(&m_worldMatrix));
         XMStoreFloat4x4(&transpose, mat);
@@ -695,6 +696,10 @@ namespace nam
     {
         if (!m_worldDirty)
             return;
+
+        if (m_parent) {
+            m_parent->UpdateWorldData();
+        }
 
         UpdateMatrices();
 

@@ -21,7 +21,6 @@ namespace nam
             [&](u32 e, SphereColliderComponent& s, TransformComponent& t, MeshRendererComponent& m) {
                 if (!s.m_basedOnMesh)
                     return;
-                t.UpdateWorldData();
                 s.UpdateSphereBox(t, m, m_updateId);
             }
         );
@@ -30,17 +29,14 @@ namespace nam
             [&](u32 e, BoxColliderComponent& b, TransformComponent& t, MeshRendererComponent& m) {
                 if (!b.m_basedOnMesh)
                     return;
-                t.UpdateWorldData();
                 b.UpdateObbBox(t, m, m_updateId);
             }
         );
-
 
         ecs.ForEach<SphereColliderComponent, TransformComponent>(
             [&](u32 e, SphereColliderComponent& s, TransformComponent& t) {
                 if (s.m_basedOnMesh)
                     return;
-                t.UpdateWorldData();
                 s.UpdateSphereBox(t, m_updateId);
             }
         );
@@ -49,7 +45,6 @@ namespace nam
             [&](u32 e, BoxColliderComponent& b, TransformComponent& t) {
                 if (b.m_basedOnMesh)
                     return;
-                t.UpdateWorldData();
                 b.UpdateObbBox(t, m_updateId);
             }
         );

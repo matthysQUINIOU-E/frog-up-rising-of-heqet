@@ -38,8 +38,6 @@ namespace nam
 		if (tc == nullptr || cc == nullptr)
 			return;
 
-		tc->UpdateWorldData();
-
 		CBufferViewProj3D viewProj;
 		viewProj.m_cameraPos = tc->GetWorldPosition();
 
