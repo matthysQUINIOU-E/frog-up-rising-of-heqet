@@ -35,8 +35,7 @@ void Frog1::OnUpdate()
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
-    if (m_isFrogActive)
-        Frog::OnUpdate();
+    Frog::OnUpdate();
 
     if(m_isOrientedWall)
     {
@@ -69,8 +68,7 @@ void Frog1::OnController()
         m_isOnWall = false;
     }
 
-    if (m_isFrogActive)
-        Frog::OnController();
+    Frog::OnController();
 
     ControllerMoveWall();
 }

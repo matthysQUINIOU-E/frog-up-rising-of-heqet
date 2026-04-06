@@ -27,7 +27,10 @@ void Frog::OnInit()
     m_arrow = &scene.CreateGameObject<FrogArrow>(false);
     TransformComponent& arrowTransform = m_arrow->GetComponent<TransformComponent>();
     arrowTransform.SetParent(&GetComponent<TransformComponent>());  
-    m_arrowTimer.Init(m_targetTime);
+    m_arrowTimer.Init(m_targetTimeArrow);
+
+    m_stompedTimer.Init(m_targetTimeStomped);
+    m_unstompTimer.Init(m_unstompStepDuration);
 
     m_tongue = &scene.CreateGameObject<FrogTongue>(false);
     TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
@@ -38,6 +41,8 @@ void Frog::OnUpdate()
 {
     float dt = App::Get()->GetChrono().GetScaledDeltaTime();
     m_arrowTimer.Update(dt);
+    m_stompedTimer.Update(dt);
+    m_unstompTimer.Update(dt);
 
     if (m_arrowTimer.IsTargetReached())
     {
@@ -45,11 +50,41 @@ void Frog::OnUpdate()
         m_arrowTimer.ResetProgress();
     }
 
+    if (m_isStompted && m_stompedTimer.IsTargetReached())
+    {
+        m_unstompScales.push_back({ m_baseScale });
+        float xDiff = m_stompedScale.x - m_baseScale.x;
+        float yDiff = m_stompedScale.y - m_baseScale.y;
+        float zDiff = m_stompedScale.z - m_baseScale.z;
+        float invUnstompSteps = 1.f / m_unstompSteps;
+        for (size i = 0; i < m_unstompSteps; i++)
+        {
+            float t = i * invUnstompSteps;
+            m_unstompScales.push_back({ m_baseScale.x + t * xDiff, m_baseScale.y + t * yDiff, m_baseScale.z + t * zDiff });
+        }
+        m_unstompTimer.ResetProgress();
+        TransformComponent& t = GetComponent<TransformComponent>();
+        m_jumpImpulse = 5.f;
+        Jump(t.GetWorldUp());
+        m_isStompted = false;
+    }
+
+    if (!m_unstompScales.empty() && m_unstompTimer.IsTargetReached())
+    {
+        m_unstompTimer.ResetProgress();
+        TransformComponent& t = GetComponent<TransformComponent>();
+        t.SetWorldScale(m_unstompScales.back());
+        m_unstompScales.pop_back();
+    }
+
 
     if (m_isFiring && m_tongue->IsArrived())
     {
         m_isFiring = false;
     }
+
+    if (!m_isFrogActive)
+        return;
 
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
@@ -63,6 +98,9 @@ void Frog::OnUpdate()
 
 void Frog::OnController()
 {
+    if (!m_isFrogActive)
+        return;
+
     ControllerJump();
     ControllerMove();
     ControllerTongue();
@@ -73,57 +111,14 @@ void Frog::OnController()
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
-    PhysicComponent& physic = GetComponent<PhysicComponent>();
-    TransformComponent& transform = GetComponent<TransformComponent>();
-
     bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) && self.m_normal.y < 0.f;
     bool onFloor = other.m_tag == (size)ColliderTag::Ground;
 
     if (onPlateform || onFloor)
-    {
-        XMFLOAT3 up = transform.GetWorldUp();
-        XMFLOAT3 normal = other.m_normal;
+        FloorWallCollision(self,other);
 
-        XMVECTOR vUp = XMLoadFloat3(&up);
-        XMVECTOR vOtherNormal = XMLoadFloat3(&normal);
-
-        XMVECTOR vSub = vUp - vOtherNormal;
-        XMFLOAT3 sub;
-        XMStoreFloat3(&sub, vSub);
-
-        if( abs(sub.x) <= EPSILON && abs(sub.y) <= EPSILON && abs(sub.z) <= EPSILON)
-            physic.m_useGravity = false;
-        else
-            physic.m_useGravity = true;
-
-        
-        m_isGrounded = true;
-        m_isOnWall = false;
-        m_isOrientedWall = false;
-        physic.m_dirGravity = self.m_normal;
-        physic.m_velocity = { 0.f,0.f,0.f };
-        m_normal = other.m_normal;
-
-        if (m_normal.y == 1)
-        {
-            transform.SetWorldUp(m_normal);
-        }
-        else
-        {
-            XMVECTOR vNormal = XMLoadFloat3(&m_normal);
-
-            XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-            XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
-
-            XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
-
-            XMFLOAT3 newForward;
-            XMStoreFloat3(&newForward, vForward);
-
-            transform.LookToWorld(newForward, m_normal);
-
-        }
-    }
+    if (other.m_tag == (size)ColliderTag::FrogEllie || other.m_tag == (size)ColliderTag::FrogJoel)
+        FrogCollision(self,other);
 }
 
 void Frog::ChargeJump()
@@ -341,6 +336,71 @@ void Frog::ControllerGroundPound()
         pc.AddImpulse(t.GetWorldUp());
     }
     pc.AddImpulse({ 0,-20,0 });
+}
+
+void Frog::FloorWallCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
+{
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    TransformComponent& transform = GetComponent<TransformComponent>();
+
+    XMFLOAT3 up = transform.GetWorldUp();
+    XMFLOAT3 normal = other.m_normal;
+
+    XMVECTOR vUp = XMLoadFloat3(&up);
+    XMVECTOR vOtherNormal = XMLoadFloat3(&normal);
+
+    XMVECTOR vSub = vUp - vOtherNormal;
+    XMFLOAT3 sub;
+    XMStoreFloat3(&sub, vSub);
+
+    if (abs(sub.x) <= EPSILON && abs(sub.y) <= EPSILON && abs(sub.z) <= EPSILON)
+        physic.m_useGravity = false;
+    else
+        physic.m_useGravity = true;
+
+
+    m_isGrounded = true;
+    m_isOnWall = false;
+    m_isOrientedWall = false;
+    physic.m_dirGravity = self.m_normal;
+    physic.m_velocity = { 0.f,0.f,0.f };
+    m_normal = other.m_normal;
+
+    if (m_normal.y == 1)
+    {
+        transform.SetWorldUp(m_normal);
+    }
+    else
+    {
+        XMVECTOR vNormal = XMLoadFloat3(&m_normal);
+
+        XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+        XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
+
+        XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+
+        XMFLOAT3 newForward;
+        XMStoreFloat3(&newForward, vForward);
+
+        transform.LookToWorld(newForward, m_normal);
+
+    }
+}
+
+void Frog::FrogCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
+{
+    XMFLOAT3 up = self.m_transform->GetWorldUp();
+    XMVECTOR vUp = XMLoadFloat3(&up);
+    XMVECTOR collisionNormal = XMLoadFloat3(&self.m_normal);
+    float dot = XMVectorGetX(XMVector3Dot(vUp, collisionNormal));
+    float angle = acosf(dot); 
+    float threshold = XMConvertToRadians(45.0f);
+    if (angle <= threshold) {
+        m_isStompted = true;
+        self.m_transform->SetWorldScale(m_stompedScale);
+        m_stompedTimer.ResetProgress();
+        m_unstompScales.clear();
+    }
 }
 
 void Frog::Move(float _forward, float _right)

@@ -34,8 +34,7 @@ void Frog2::OnUpdate()
 
     transform->LookToWorld({ frogForward.x, 0.0f, frogForward.z });
 
-    if (m_isFrogActive)
-        Frog::OnUpdate();
+    Frog::OnUpdate();
 }
 
 void Frog2::OnController()
@@ -46,8 +45,7 @@ void Frog2::OnController()
     if (Controller::Get(ControlType::SwitchFrog2))
         m_isFrogActive = true;
 
-    if (m_isFrogActive)
-        Frog::OnController();
+    Frog::OnController();
 }
 
 void Frog2::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
