@@ -16,7 +16,7 @@ void Frog1::OnInit()
 
     MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
     mrc.mp_mesh->SetColor({ 0.5f, 0.0f, 0.0f, 1.f });
-        
+
     TransformComponent& tc = GetComponent<TransformComponent>();
     tc.SetWorldPosition({ -1.f,2.f,0.f });
 
@@ -34,7 +34,30 @@ void Frog1::OnInit()
     SetBehavior();
     SetController();
 
+    m_jaugeProgress = m_jaugeTimerTarget; 
     m_isFrogActive = true;
+}
+
+void Frog1::UpdateJaugeDisplay(float progress)
+{
+    float baseInterval = m_jaugeTimerTarget * 0.2f;
+    float interval1 = baseInterval;         
+    float interval2 = baseInterval * 2.f;  
+    float interval3 = baseInterval * 3.f;   
+    float interval4 = baseInterval * 4.f;   
+
+    if (progress <= 0.f)
+        m_jauge->SetJauge(JaugeType::Jauge0);
+    else if (progress < interval1)
+        m_jauge->SetJauge(JaugeType::Jauge1);
+    else if (progress < interval2)
+        m_jauge->SetJauge(JaugeType::Jauge2);
+    else if (progress < interval3)
+        m_jauge->SetJauge(JaugeType::Jauge3);
+    else if (progress < interval4)
+        m_jauge->SetJauge(JaugeType::Jauge4);
+    else
+        m_jauge->SetJauge(JaugeType::Jauge5);
 }
 
 void Frog1::OnUpdate()
@@ -47,47 +70,43 @@ void Frog1::OnUpdate()
 
     if (m_isOrientedWall)
     {
-        m_jaugeTimer.Update(dt);
+        m_isRecharging = false;
         m_jauge->SetActive(true);
 
-        float time = m_jaugeTimer.GetProgress();
+        m_jaugeProgress -= dt;
+        if (m_jaugeProgress < 0.f)
+            m_jaugeProgress = 0.f;
 
-        float baseInterval = m_jaugeTimerTarget * 0.2f;
-        float interval1 = baseInterval * 4.f;
-        float interval2 = baseInterval * 3.f;
-        float interval3 = baseInterval * 2.f;
-        float interval4 = baseInterval;
+        UpdateJaugeDisplay(m_jaugeProgress);
 
-        bool jauge5 = time >= interval1 && time < m_jaugeTimerTarget;
-        bool jauge4 = time >= interval2 && time < interval1;
-        bool jauge3 = time >= interval3 && time < interval2;
-        bool jauge2 = time >= interval4 && time < interval3;
-        bool jauge1 = time > 0.f && time < interval4;
-
-        if (jauge5)
-            m_jauge->SetJauge(JaugeType::Jauge5);
-        else if (jauge4)
-            m_jauge->SetJauge(JaugeType::Jauge4);
-        else if (jauge3)
-            m_jauge->SetJauge(JaugeType::Jauge3);
-        else if (jauge2)
-            m_jauge->SetJauge(JaugeType::Jauge2);
-        else if (jauge1)
-            m_jauge->SetJauge(JaugeType::Jauge1);
-        else if (m_jaugeTimer.IsTargetReached())
+        if (m_jaugeProgress <= 0.f)
         {
             m_jauge->SetJauge(JaugeType::Jauge0);
             pc.m_dirGravity = m_gravity;
+            m_isOrientedWall = false;
         }
-        
-
-        // faire des verif avec GetProgress
     }
-    else
+    else if (m_isGrounded && m_jaugeProgress < m_jaugeTimerTarget)
+    {
+        m_isRecharging = true;
+        m_jauge->SetActive(true);
+
+        m_jaugeProgress += dt * (m_jaugeTimerTarget / m_rechargeRate);
+        if (m_jaugeProgress > m_jaugeTimerTarget)
+            m_jaugeProgress = m_jaugeTimerTarget;
+
+        UpdateJaugeDisplay(m_jaugeProgress);
+
+        if (m_jaugeProgress >= m_jaugeTimerTarget)
+        {
+            m_isRecharging = false;
+            m_jauge->SetJauge(JaugeType::Jauge5);
+            m_jauge->SetActive(false);
+        }
+    }
+    else if (!m_isOrientedWall && !m_isRecharging)
     {
         m_jauge->SetActive(false);
-        m_jaugeTimer.ResetProgress();
-        m_jauge->SetJauge(JaugeType::Jauge5);
     }
 }
 
@@ -99,17 +118,17 @@ void Frog1::OnController()
     if (Input::IsKeyDown('2'))
         m_isFrogActive = false;
 
-    if (m_isSpacePressed) 
+    if (m_isSpacePressed)
     {
         PhysicComponent& physic = GetComponent<PhysicComponent>();
-        physic.m_dirGravity = m_gravity; 
+        physic.m_dirGravity = m_gravity;
         m_isOnWall = false;
     }
 
     if (m_isFrogActive)
         Frog::OnController();
 
-    if(m_isOnWall)
+    if (m_isOnWall)
         ControllerMoveWall();
 }
 
@@ -188,12 +207,16 @@ void Frog1::ControllerMoveWall()
 
 void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
+    if (m_jaugeProgress <= 0.f)
+        return;
+
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     TransformComponent& transform = GetComponent<TransformComponent>();
 
     m_gravityTimer.ResetProgress();
     m_isOrientedWall = true;
     m_isGrounded = false;
+    m_isRecharging = false;
     m_normal = other.m_normal;
     physic.m_dirGravity = self.m_normal;
     physic.m_velocity = { 0.f,0.f,0.f };
@@ -206,7 +229,7 @@ void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisi
 
     float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
 
-    XMVECTOR vForward = {0.f, 0.f, 0.f};
+    XMVECTOR vForward = { 0.f, 0.f, 0.f };
     if (projLen > EPSILON)
     {
         vForward = XMVector3Normalize(vProjFwd);
@@ -216,11 +239,10 @@ void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisi
         XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
         XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
 
-        XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+        vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
     }
 
     XMFLOAT3 newForward;
     XMStoreFloat3(&newForward, vForward);
     transform.LookToWorld(newForward, m_normal);
 }
-
