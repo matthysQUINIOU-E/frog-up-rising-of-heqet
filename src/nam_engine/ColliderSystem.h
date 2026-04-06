@@ -25,6 +25,7 @@ namespace nam {
 
 		CollisionInfo CalculateCollisionInfo(const DirectX::BoundingOrientedBox& box1, const DirectX::BoundingOrientedBox& box2);
 		CollisionInfo CalculateCollisionInfo(const DirectX::BoundingOrientedBox& box,const DirectX::BoundingSphere& sphere);
+		CollisionInfo CalculateCollisionInfo(const DirectX::BoundingSphere& sphere, const DirectX::BoundingOrientedBox& box);
 		CollisionInfo CalculateCollisionInfo(const DirectX::BoundingSphere& sphere1,const DirectX::BoundingSphere& sphere2);
 		
 		void ProcessCollisionsIntersection(Ecs& ecs, Vector<CollisionInfo>& collisions);

@@ -17,6 +17,7 @@ namespace nam
 
         m_spatialHash.Clear();
 
+        // update colliders
         ecs.ForEach<SphereColliderComponent, TransformComponent, MeshRendererComponent>(
             [&](u32 e, SphereColliderComponent& s, TransformComponent& t, MeshRendererComponent& m) {
                 if (!s.m_basedOnMesh)
@@ -49,6 +50,7 @@ namespace nam
             }
         );
 
+        // add to spacial
         ecs.ForEach<SphereColliderComponent>(
             [&](u32 e, SphereColliderComponent& s) {
                 if (s.m_dirty)
@@ -88,7 +90,7 @@ namespace nam
                             continue;
 
                         TransformComponent& t2 = ecs.GetComponent<TransformComponent>(e2);
-                        CheckCollision(t1, t2, b1, s1, e1, e2, collisions); // pass box then sphere 
+                        CheckCollision(t1, t2, b1, s1, e1, e2, collisions);
                     }
                 }
             }
@@ -109,7 +111,7 @@ namespace nam
                             continue;
 
                         TransformComponent& t2 = ecs.GetComponent<TransformComponent>(e2);
-                        CheckCollision(t1, t2, b1, s1, e1, e2, collisions);  // pass box then sphere 
+                        CheckCollision(t1, t2, s1, b1, e1, e2, collisions); 
                     }
                     else if (ecs.HasComponent<SphereColliderComponent>(e2)) {
                         SphereColliderComponent& s2 = ecs.GetComponent<SphereColliderComponent>(e2);
@@ -277,6 +279,15 @@ namespace nam
             info.m_contactPoint = sphere.Center;
         }
 
+        return info;
+    }
+
+    CollisionInfo ColliderSystem::CalculateCollisionInfo(const BoundingSphere& sphere, const BoundingOrientedBox& box)
+    {
+        CollisionInfo info = CalculateCollisionInfo(box, sphere);
+        XMVECTOR vNormal = XMLoadFloat3(&info.m_normal);
+        vNormal = XMVectorScale(vNormal, -1.f);
+        XMStoreFloat3(&info.m_normal, vNormal);
         return info;
     }
 
