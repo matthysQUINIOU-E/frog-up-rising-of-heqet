@@ -395,11 +395,15 @@ void Frog::FrogCollision(const SingleCollisionInfo& self, const SingleCollisionI
     float dot = XMVectorGetX(XMVector3Dot(vUp, collisionNormal));
     float angle = acosf(dot); 
     float threshold = XMConvertToRadians(45.0f);
+
     if (angle <= threshold) {
         m_isStompted = true;
         self.m_transform->SetWorldScale(m_stompedScale);
         m_stompedTimer.ResetProgress();
         m_unstompScales.clear();
+        m_isGrounded = false;
+        PhysicComponent& physic = GetComponent<PhysicComponent>();
+        physic.m_useGravity = true;
     }
 }
 
