@@ -25,6 +25,7 @@ void Frog2::OnInit()
     SetBehavior();
     SetController();
 
+    m_maxImpulse = 25.f;
 }
 
 void Frog2::OnUpdate()
