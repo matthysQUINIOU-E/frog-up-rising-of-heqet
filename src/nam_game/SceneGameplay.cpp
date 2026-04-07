@@ -8,6 +8,9 @@
 #include "Camera.h"
 #include "Frog1.h"
 #include "Frog2.h"
+#include "Dragonfly.h"
+#include "Spider.h"
+#include "Grasshopper.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -155,6 +158,12 @@ void SceneGameplay::Init()
     //player2
     {
         Frog2& frog = CreateGameObject<Frog2>();
+    }
+
+    // collectibles
+    {
+        Dragonfly& dragonfly = CreateGameObject<Dragonfly>();
+        dragonfly.SetPosition({ 0.0f, 0.5f, 5.0f });
     }
 }
 
