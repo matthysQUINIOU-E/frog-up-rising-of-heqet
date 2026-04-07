@@ -27,6 +27,12 @@ enum class SpriteTag : nam::size
 	ButtonQuestion1,
 	ButtonPlay1,
 	ButtonList1,
+	Jauge0,
+	Jauge1,
+	Jauge2,
+	Jauge3,
+	Jauge4,
+	Jauge5,
 	Size
 };
 

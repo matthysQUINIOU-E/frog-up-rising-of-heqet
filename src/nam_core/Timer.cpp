@@ -55,6 +55,11 @@ namespace nam
 		(m_countdownMode) ? m_progress = m_targetTime : m_progress = 0.f;
 	}
 
+	void Timer::SetProgress(float targetTime)
+	{
+		m_progress = targetTime;
+	}
+
 	const float Timer::GetTargetTime() const
 	{
 		return m_targetTime;
