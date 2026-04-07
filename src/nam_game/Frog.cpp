@@ -129,8 +129,9 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
     //if (onPlateform || onFloor)
     //    FloorWallCollision(self,other);
 
-    //if (other.m_tag == (size)ColliderTag::FrogEllie || other.m_tag == (size)ColliderTag::FrogJoel)
-    //    FrogCollision(self,other);
+    if (other.m_tag == (size)ColliderTag::FrogEllie || other.m_tag == (size)ColliderTag::FrogJoel)
+        FrogCollision(self,other);
+
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     TransformComponent& transform = GetComponent<TransformComponent>();
 
@@ -461,6 +462,9 @@ void Frog::UseGravity(XMFLOAT3 normal)
 
 void Frog::FloorWallCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+
     m_isGrounded = true;
     m_isOnWall = false;
     m_isOrientedWall = false;
