@@ -46,7 +46,7 @@ void SceneGuide::Init()
 	title.SetPostion({ 650,400 });
 	title.SetText(
 		"Controls : \n"
-		"- fire your tongue : E \n"
+		"- stick out the tongue : E \n"
 		"- ground pound : A \n"
 		"- move forward : Z / up arrow \n"
 		"- move backward : S / down arrow \n"
@@ -54,7 +54,7 @@ void SceneGuide::Init()
 		"- move left : Q / left arrow \n"
 		"- orient jump up : shift \n"
 		"- orient jump down : control \n"
-		"- jump : space (hold for long jump) \n"
+		"- jump (hold for long jump) : space \n"
 		"- switch frogs : 1 / 2 (& / é) \n"
 		"- pause : escape \n"
 	);
