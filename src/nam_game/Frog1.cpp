@@ -25,6 +25,7 @@ void Frog1::OnInit()
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::FrogJoel;
     box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+    box.m_shouldCollideWith.insert((size)ColliderTag::Ground);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
 
     Scene& scene = GetScene();
@@ -74,13 +75,13 @@ void Frog1::OnUpdate()
         m_jauge->SetActive(true);
 
         m_jaugeProgress -= dt;
-        if (m_jaugeProgress < 0.f)
-            m_jaugeProgress = 0.f;
 
         UpdateJaugeDisplay(m_jaugeProgress);
 
         if (m_jaugeProgress <= 0.f)
         {
+            m_jaugeProgress = 0.f;
+
             m_jauge->SetJauge(JaugeType::Jauge0);
             pc.m_dirGravity = m_gravity;
             m_isOrientedWall = false;
@@ -92,13 +93,12 @@ void Frog1::OnUpdate()
         m_jauge->SetActive(true);
 
         m_jaugeProgress += dt * (m_jaugeTimerTarget / m_rechargeRate);
-        if (m_jaugeProgress > m_jaugeTimerTarget)
-            m_jaugeProgress = m_jaugeTimerTarget;
 
         UpdateJaugeDisplay(m_jaugeProgress);
 
         if (m_jaugeProgress >= m_jaugeTimerTarget)
         {
+            m_jaugeProgress = m_jaugeTimerTarget;
             m_isRecharging = false;
             m_jauge->SetJauge(JaugeType::Jauge5);
             m_jauge->SetActive(false);

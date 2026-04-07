@@ -37,7 +37,7 @@ void SceneGameplay::Init()
         go.AddComponent<MeshRendererComponent>(mrc);
         go.AddComponent<TransformComponent>(TransformComponent());
         BoxColliderComponent& box = go.SetBoxCollider();
-        box.m_tag = (size)ColliderTag::Platform;
+        box.m_tag = (size)ColliderTag::Ground;
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
