@@ -2,8 +2,8 @@
 #include "Frog1.h"
 #include "ColliderTag.h"
 #include "Camera.h"
-#include "Constant.h"
-
+#include "Controller.h"
+#include "GameVariables.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -24,9 +24,6 @@ void Frog1::OnInit()
 
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::FrogJoel;
-    box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
-    box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
-    box.m_shouldCollideWith.insert((size)ColliderTag::Collectible);
 
     SetBehavior();
     SetController();
@@ -38,16 +35,33 @@ void Frog1::OnUpdate()
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
 
-    if (m_isFrogActive)
-        Frog::OnUpdate();
+    Frog::OnUpdate();
+
+    if(m_isOrientedWall)
+    {
+        float dt = App::Get()->GetChrono().GetScaledDeltaTime();
+        m_gravityTimer.Update(dt);
+    }
+
+    if (m_gravityTimer.IsTargetReached())
+    {
+        m_isOnWall = false;
+        m_isOrientedWall = false;
+        physic.m_useGravity = true;
+        physic.m_dirGravity = m_gravity;
+        m_gravityTimer.ResetProgress();
+    }
 }
 
 void Frog1::OnController()
 {
-    if (Input::IsKeyDown('1'))
+    if (GameVariables::s_isGamePaused)
+        return;
+
+    if (Controller::Get(ControlType::SwitchFrog1))
         m_isFrogActive = true;
 
-    if (Input::IsKeyDown('2'))
+    if (Controller::Get(ControlType::SwitchFrog2))
         m_isFrogActive = false;
 
     if (m_isSpacePressed) 
@@ -57,8 +71,7 @@ void Frog1::OnController()
         m_isOnWall = false;
     }
 
-    if (m_isFrogActive)
-        Frog::OnController();
+    Frog::OnController();
 
     if(m_isOnWall)
         ControllerMoveWall();
@@ -118,16 +131,16 @@ void Frog1::ControllerMoveWall()
 
     if (m_isOnWall)
     {
-        if (Input::IsKey('Z') || Input::IsKey(VK_UP))
+        if (Controller::Get(ControlType::Up))
             forward += 1.f;
 
-        if (Input::IsKey('S') || Input::IsKey(VK_DOWN))
+        if (Controller::Get(ControlType::Down))
             forward -= 1.f;
 
-        if (Input::IsKey('Q') || Input::IsKey(VK_LEFT))
+        if (Controller::Get(ControlType::Left))
             right -= 1.f;
 
-        if (Input::IsKey('D') || Input::IsKey(VK_RIGHT))
+        if (Controller::Get(ControlType::Right))
             right += 1.f;
     }
 

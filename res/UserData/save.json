@@ -1,0 +1,40 @@
+{
+    "profils": [
+        {
+            "level1": {
+                "collected": [
+                    50,
+                    85,
+                    75,
+                    62
+                ],
+                "completed": false,
+                "time": 0
+            }
+        },
+        {
+            "level1": {
+                "collected": [
+                    50,
+                    85,
+                    75,
+                    62
+                ],
+                "completed": false,
+                "time": 0
+            }
+        },
+        {
+            "level1": {
+                "collected": [
+                    50,
+                    85,
+                    75,
+                    62
+                ],
+                "completed": false,
+                "time": 0
+            }
+        }
+    ]
+}

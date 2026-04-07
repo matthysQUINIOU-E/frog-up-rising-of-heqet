@@ -1,3 +1,4 @@
+#include "Text.h"
 #include "pch.h"
 #include "Text.h"
 
