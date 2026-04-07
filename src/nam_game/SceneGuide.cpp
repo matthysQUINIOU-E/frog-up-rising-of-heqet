@@ -41,6 +41,23 @@ void SceneGuide::Init()
 			GameVariables::s_lastScene = SceneTag::Guide;
 		}
 	);
+
+	GameText& title = CreateGameObject<GameText>();
+	title.SetPostion({ 650,400 });
+	title.SetText(
+		"Controls : \n"
+		"- fire your tongue : E \n"
+		"- ground pound : A \n"
+		"- move forward : Z / up arrow \n"
+		"- move backward : S / down arrow \n"
+		"- move right : D / right arrow \n"
+		"- move left : Q / left arrow \n"
+		"- orient jump up : shift \n"
+		"- orient jump down : control \n"
+		"- jump : space (hold for long jump) \n"
+		"- switch frogs : 1 / 2 (& / é) \n"
+		"- pause : escape \n"
+	);
 }
 
 void SceneGuide::Destroy()
