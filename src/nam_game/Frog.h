@@ -11,6 +11,7 @@ protected:
 	bool m_isFrogActive = false;
 	bool m_isSpacePressed = false;
 	bool m_isGrounded = false;
+	bool m_isorientedGround = false;
 	bool m_isOnWall = false;
 	bool m_isOrientedWall = false;
 	bool m_isRotate = false;
@@ -52,4 +53,6 @@ private:
 	void InclineArrow();
 	void ControllerMove();
 	void ControllerJump();
+
+	void UseGravity(DirectX::XMFLOAT3 normal);
 };

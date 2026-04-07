@@ -87,7 +87,7 @@ void Frog1::OnUpdate()
             m_isOrientedWall = false;
         }
     }
-    else if (m_isGrounded && m_jaugeProgress < m_jaugeTimerTarget)
+    else if (m_isorientedGround && m_jaugeProgress < m_jaugeTimerTarget)
     {
         m_isRecharging = true;
         m_jauge->SetActive(true);
@@ -144,6 +144,7 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     if (onFrog)
     {
         m_isGrounded = true;
+        m_isorientedGround = true;
         m_isOnWall = false;
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
@@ -216,6 +217,7 @@ void Frog1::CollisionOnWall(const SingleCollisionInfo& self, const SingleCollisi
     m_gravityTimer.ResetProgress();
     m_isOrientedWall = true;
     m_isGrounded = false;
+    m_isorientedGround = false;
     m_isRecharging = false;
     m_normal = other.m_normal;
     physic.m_dirGravity = self.m_normal;

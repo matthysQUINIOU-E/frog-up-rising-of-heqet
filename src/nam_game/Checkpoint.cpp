@@ -12,7 +12,8 @@ void Checkpoint::OnInit()
     AddComponent<TransformComponent>(tc);
 
     MeshRendererComponent mrc;
-    mrc.mp_mesh->BuildPlane({ 3.f, 3.f }, { 1.f, 0.f, 0.f, 0.f });
+    mrc.CreateMeshInstance();
+    mrc.mp_mesh->BuildPlane({ 3.f, 3.f }, { 1.f, 0.f, 0.f, 1.f });
     AddComponent<MeshRendererComponent>(mrc);
 
     BoxColliderComponent& box = SetBoxCollider();
@@ -22,13 +23,4 @@ void Checkpoint::OnInit()
 
 void Checkpoint::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
-    if (other.m_tag != (size)ColliderTag::FrogEllie || other.m_tag != (size)ColliderTag::FrogJoel)
-        return;
-
-    TransformComponent& transform = GetComponent<TransformComponent>();
-    m_center = transform.GetWorldPosition();
-
-    //Frog* frog = static_cast<Frog*>(/*COMMENT JE RECUPERE MA PTN DE GRNOUILLE AVEC L'ID*/other.m_entity);
-    //if (frog)
-    //    frog->SetCheckpoint(m_center);
 }

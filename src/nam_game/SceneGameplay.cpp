@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Frog1.h"
 #include "Frog2.h"
+#include "Checkpoint.h"
 #include "Button.h"
 #include "SceneLevelChoice.h"
 #include "SceneTag.h"
@@ -124,7 +125,6 @@ void SceneGameplay::Init()
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
 
-
     {
         GameObject& go = CreateGameObject<GameObject>();
         MeshRendererComponent mrc;
@@ -148,9 +148,15 @@ void SceneGameplay::Init()
 
     //player2
     {
-        Frog2& frog = CreateGameObject<Frog2>();
+        //Frog2& frog = CreateGameObject<Frog2>();
     }
 
+    //checkpoint
+    {
+        Checkpoint& checkpoint = CreateGameObject<Checkpoint>();
+        TransformComponent& transform = checkpoint.GetComponent<TransformComponent>();
+        transform.SetWorldPosition({10,25,45});
+    }
 }
 
 void SceneGameplay::Destroy()

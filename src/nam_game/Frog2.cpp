@@ -58,6 +58,7 @@ void Frog2::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     if(onFrog)
     {
         m_isGrounded = true;
+        m_isorientedGround = true;
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
     }

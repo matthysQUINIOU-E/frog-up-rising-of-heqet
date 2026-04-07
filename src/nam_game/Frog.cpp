@@ -89,30 +89,17 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
     XMVECTOR vFrogUp = XMLoadFloat3(&frogUp);
     float dotUp = XMVectorGetX(XMVector3Dot(vSelfNormal, vFrogUp));
 
-    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) && dotUp <= -0.5f && self.m_normal.y != 0.f;
-    bool onFloor = other.m_tag == (size)ColliderTag::Ground && self.m_normal.y != 0.f;
+    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) && dotUp <= -0.5f;
+    bool onFloor = other.m_tag == (size)ColliderTag::Ground;
 
     if (onPlateform || onFloor)
     {
         m_gravityTimer.ResetProgress();
 
-        XMFLOAT3 up = transform.GetWorldUp();
-        XMFLOAT3 normal = other.m_normal;
-
-        XMVECTOR vUp = XMLoadFloat3(&up);
-        XMVECTOR vOtherNormal = XMLoadFloat3(&normal);
-
-        XMVECTOR vSub = vUp - vOtherNormal;
-        XMFLOAT3 sub;
-        XMStoreFloat3(&sub, vSub);
-
-        if (abs(sub.x) <= EPSILON && abs(sub.y) <= EPSILON && abs(sub.z) <= EPSILON)
-            physic.m_useGravity = false;
-        else
-            physic.m_useGravity = true;
-
-
+        UseGravity(other.m_normal);
+       
         m_isGrounded = true;
+        m_isorientedGround = true;
         m_isOnWall = false;
         m_isOrientedWall = false;
         physic.m_dirGravity = self.m_normal;
@@ -153,78 +140,15 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
             transform.LookToWorld(newForward, m_normal);
         }
     }
-}
 
-//void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
-//{
-//    PhysicComponent& physic = GetComponent<PhysicComponent>();
-//    TransformComponent& transform = GetComponent<TransformComponent>();
-//
-//    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) && self.m_normal.y < -0.5f;
-//    bool onFloor = other.m_tag == (size)ColliderTag::Ground;
-//
-//    if (onPlateform || onFloor)
-//    {
-//        m_gravityTimer.ResetProgress();
-//
-//        XMFLOAT3 up = transform.GetWorldUp();
-//        XMFLOAT3 normal = other.m_normal;
-//
-//        XMVECTOR vUp = XMLoadFloat3(&up);
-//        XMVECTOR vOtherNormal = XMLoadFloat3(&normal);
-//
-//        XMVECTOR vSub = vUp - vOtherNormal;
-//        XMFLOAT3 sub;
-//        XMStoreFloat3(&sub, vSub);
-//
-//        if (abs(sub.x) <= EPSILON && abs(sub.y) <= EPSILON && abs(sub.z) <= EPSILON)
-//            physic.m_useGravity = false;
-//        else
-//            physic.m_useGravity = true;
-//
-//
-//        m_isGrounded = true;
-//        m_isOnWall = false;
-//        m_isOrientedWall = false;
-//        physic.m_dirGravity = self.m_normal;
-//        physic.m_velocity = { 0.f,0.f,0.f };
-//        m_normal = other.m_normal;
-//
-//        if (m_normal.y == 1)
-//        {
-//            transform.SetWorldUp(m_normal);
-//        }
-//        else
-//        {
-//            XMVECTOR vNormal = XMLoadFloat3(&m_normal);
-//
-//            XMFLOAT3 currentFwd = transform.GetWorldForward();
-//            XMVECTOR vCurrentFwd = XMLoadFloat3(&currentFwd);
-//            XMVECTOR vProjFwd = vCurrentFwd - XMVectorScale(vNormal, XMVectorGetX(XMVector3Dot(vCurrentFwd, vNormal)));
-//
-//            float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
-//
-//            XMVECTOR vForward;
-//            if (projLen > EPSILON)
-//            {
-//                vForward = XMVector3Normalize(vProjFwd);
-//            }
-//            else
-//            {
-//                float dotY = abs(XMVectorGetX(XMVector3Dot(vNormal, XMVectorSet(0.f, 1.f, 0.f, 0.f))));
-//                XMVECTOR vRef = (dotY < 0.9f)
-//                    ? XMVectorSet(0.f, 1.f, 0.f, 0.f)
-//                    : XMVectorSet(0.f, 0.f, 1.f, 0.f);
-//                XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vRef, vNormal));
-//                vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
-//            }
-//
-//            XMFLOAT3 newForward;
-//            XMStoreFloat3(&newForward, vForward);
-//            transform.LookToWorld(newForward, m_normal);
-//        }
-//    }
-//}
+    if (other.m_tag == (size)ColliderTag::Checkpoint)
+    {
+        TransformComponent* transform = other.m_transform;
+        XMFLOAT3 m_center = transform->GetWorldPosition();
+        SetCheckpoint(m_center);
+        Print("CHECKPOINT ATTEINT");
+    }
+}
 
 void Frog::ChargeJump()
 {
@@ -254,6 +178,7 @@ void Frog::Jump(XMFLOAT3 direction)
     physic.AddImpulse(impulse);
 
     physic.m_useGravity = true;
+    m_isorientedGround = true;
     m_isGrounded = false;
     m_isOnWall = false;
 }
@@ -306,6 +231,7 @@ void Frog::Rotate()
             physic.AddImpulse(impulse);
             physic.m_useGravity = true;
             m_isGrounded = false;
+            m_isorientedGround = true;
             m_isOnWall = false;
 
         }
@@ -425,6 +351,27 @@ void Frog::ControllerJump()
     }
 }
 
+void Frog::UseGravity(XMFLOAT3 normal)
+{
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    TransformComponent& transform = GetComponent<TransformComponent>();
+
+    XMFLOAT3 up = transform.GetWorldUp();
+
+    XMVECTOR vUp = XMLoadFloat3(&up);
+    XMVECTOR vOtherNormal = XMLoadFloat3(&normal);
+
+    XMVECTOR vSub = vUp - vOtherNormal;
+    XMFLOAT3 sub;
+    XMStoreFloat3(&sub, vSub);
+
+    if (abs(sub.x) <= EPSILON && abs(sub.y) <= EPSILON && abs(sub.z) <= EPSILON)
+        physic.m_useGravity = false;
+    else
+        physic.m_useGravity = true;
+
+}
+
 void Frog::Move(float _forward, float _right)
 {
     m_jumpImpulse = 2.f;
@@ -469,6 +416,7 @@ void Frog::Respawn()
     physic.m_dirGravity = m_gravity;
 
     m_isGrounded = false;
+    m_isorientedGround = true;
     m_isOnWall = false;
     m_normal = { 0.f, 1.f, 0.f };
 }
