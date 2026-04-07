@@ -415,7 +415,7 @@ void Frog::ControllerTongue()
             m_isFiring = true;
         }
 
-        m_tongue->SetFire(m_isFiring);
+        m_tongue->SetFire(m_isFiring, *this);
     }
 }
 
