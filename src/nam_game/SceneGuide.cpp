@@ -42,21 +42,21 @@ void SceneGuide::Init()
 		}
 	);
 
-	GameText& title = CreateGameObject<GameText>();
-	title.SetPostion({ 650,400 });
-	title.SetText(
+	GameText& controls = CreateGameObject<GameText>();
+	controls.SetPostion({ 600,350 });
+	controls.SetText(
 		"Controls : \n"
-		"- stick out the tongue : E \n"
-		"- ground pound : A \n"
-		"- move forward : Z / up arrow \n"
-		"- move backward : S / down arrow \n"
-		"- move right : D / right arrow \n"
-		"- move left : Q / left arrow \n"
-		"- orient jump up : shift \n"
-		"- orient jump down : control \n"
-		"- jump (hold for long jump) : space \n"
-		"- switch frogs : 1 / 2 (& / é) \n"
-		"- pause : escape \n"
+		"stick out the tongue : E \n"
+		"ground pound : A \n"
+		"move forward : Z / up arrow \n"
+		"move backward : S / down arrow \n"
+		"move right : D / right arrow \n"
+		"move left : Q / left arrow \n"
+		"orient jump up : shift \n"
+		"orient jump down : control \n"
+		"jump (hold for long jump) : space \n"
+		"switch frogs : 1 / 2 \n"
+		"pause : escape \n"
 	);
 }
 
