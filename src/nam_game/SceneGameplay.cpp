@@ -148,14 +148,14 @@ void SceneGameplay::Init()
 
     //player2
     {
-        //Frog2& frog = CreateGameObject<Frog2>();
+        Frog2& frog = CreateGameObject<Frog2>();
     }
 
     //checkpoint
     {
         Checkpoint& checkpoint = CreateGameObject<Checkpoint>();
         TransformComponent& transform = checkpoint.GetComponent<TransformComponent>();
-        transform.SetWorldPosition({10,25,45});
+        transform.SetWorldPosition({10,21,45});
     }
 }
 

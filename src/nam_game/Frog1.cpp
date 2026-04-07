@@ -27,6 +27,8 @@ void Frog1::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
     box.m_shouldCollideWith.insert((size)ColliderTag::Ground);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+    box.m_shouldCollideWith.insert((size)ColliderTag::Checkpoint);
+
 
     Scene& scene = GetScene();
     m_jauge = &scene.CreateGameObject<Jauge>();

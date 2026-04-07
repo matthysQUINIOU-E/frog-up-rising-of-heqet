@@ -28,7 +28,7 @@ protected:
 	DirectX::XMFLOAT3 m_gravity = { 0.f, -1.f, 0.f };
 	DirectX::XMFLOAT3 m_normal = { 0.f, 0.f, 0.f };
 
-	DirectX::XMFLOAT3 m_checkpointCenter = { 0.f, 10.f, 0.f };
+	DirectX::XMFLOAT3 m_checkpointCenter = { 0.f, 1.f, 0.f };
 	bool m_hasCheckpoint = true;
 
 	float m_gravityTimerTarget;

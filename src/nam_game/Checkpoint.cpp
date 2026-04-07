@@ -18,6 +18,7 @@ void Checkpoint::OnInit()
 
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::Checkpoint;
+    box.m_noIntersectionPush = true;
     AddComponent<BoxColliderComponent>(box);
 }
 

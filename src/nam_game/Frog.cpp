@@ -83,13 +83,13 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     TransformComponent& transform = GetComponent<TransformComponent>();
 
-    XMFLOAT3 selfNormal = self.m_normal;
-    XMVECTOR vSelfNormal = XMLoadFloat3(&selfNormal);
-    XMFLOAT3 frogUp = transform.GetWorldUp();
-    XMVECTOR vFrogUp = XMLoadFloat3(&frogUp);
-    float dotUp = XMVectorGetX(XMVector3Dot(vSelfNormal, vFrogUp));
+    //XMFLOAT3 selfNormal = self.m_normal;
+    //XMVECTOR vSelfNormal = XMLoadFloat3(&selfNormal);
+    //XMFLOAT3 frogUp = transform.GetWorldUp();
+    //XMVECTOR vFrogUp = XMLoadFloat3(&frogUp);
+    //float dotUp = XMVectorGetX(XMVector3Dot(vSelfNormal, vFrogUp));
 
-    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) && dotUp <= -0.5f;
+    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) &&  self.m_normal.y <= -0.5f;
     bool onFloor = other.m_tag == (size)ColliderTag::Ground;
 
     if (onPlateform || onFloor)
@@ -399,6 +399,7 @@ void Frog::Move(float _forward, float _right)
 void Frog::SetCheckpoint(XMFLOAT3 center)
 {
     m_checkpointCenter = center;
+    m_checkpointCenter.y += 2.f;
     m_hasCheckpoint = true;
 }
 
