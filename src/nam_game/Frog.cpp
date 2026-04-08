@@ -38,6 +38,9 @@ void Frog::OnInit()
 
     m_gravityTimerTarget = 0.5f;
     m_gravityTimer.Init(m_gravityTimerTarget);
+
+    m_collectTimerTarget = 2.0f;
+    m_collectTimer.Init(m_collectTimerTarget, true, true);
 }
 
 void Frog::OnUpdate()
@@ -47,6 +50,7 @@ void Frog::OnUpdate()
     m_stompedTimer.Update(dt);
     m_unstompTimer.Update(dt);
     m_gravityTimer.Update(dt);
+    m_collectTimer.Update(dt);
 
     if (m_arrowTimer.IsTargetReached())
     {
@@ -96,6 +100,15 @@ void Frog::OnUpdate()
         physic.m_useGravity = true;
         physic.m_dirGravity = m_gravity;
         m_gravityTimer.ResetProgress();
+    }
+
+    if (m_isFlying)
+    {
+        PhysicComponent& physic = GetComponent<PhysicComponent>();
+        physic.m_dirGravity = m_gravity;
+        TransformComponent& t = GetComponent<TransformComponent>();
+        m_jumpImpulse = 10.f;
+        Jump(t.GetWorldUp());
     }
 
     if (!m_isFrogActive)
@@ -198,6 +211,12 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         TransformComponent* transform = other.m_transform;
         XMFLOAT3 m_center = transform->GetWorldPosition();
         SetCheckpoint(m_center);
+    }
+
+    if (other.m_tag == (size)ColliderTag::CollectDrag)
+    {
+        std::cout << "storm" << std::endl;
+        m_isFlying = true;
     }
 }
 
@@ -361,7 +380,7 @@ void Frog::ControllerMove()
     float forward = 0.f;
     float right = 0.f;
 
-    if (m_isGrounded)
+    if (m_isGrounded || m_isFlying)
     {
         if (Controller::Get(ControlType::Up))
             forward += 1.f;

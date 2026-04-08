@@ -7,7 +7,9 @@ enum class ColliderTag : nam::size
     FrogJoel,
     FrogEllie,
     Tongue,
-    Collectible,
+    CollectDrag,
+    CollectSpid,
+    CollectGras,
     Checkpoint,
 	Size
 

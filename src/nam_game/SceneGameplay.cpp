@@ -163,8 +163,20 @@ void SceneGameplay::Init()
     // collectibles
     {
         Dragonfly& dragonfly = CreateGameObject<Dragonfly>();
-        dragonfly.SetPosition({ 0.0f, 0.5f, 5.0f });
+        TransformComponent& transform = dragonfly.GetComponent<TransformComponent>();
+        transform.SetWorldPosition({ 5.0f, 1.0f, 5.0f });
     }
+    {
+        Dragonfly& spider = CreateGameObject<Dragonfly>();
+        TransformComponent& transform = spider.GetComponent<TransformComponent>();
+        transform.SetWorldPosition({ -5.0f, 1.0f, 5.0f });
+    }
+    {
+        Dragonfly& grass = CreateGameObject<Dragonfly>();
+        TransformComponent& transform = grass.GetComponent<TransformComponent>();
+        transform.SetWorldPosition({ -5.0f, 1.0f, -5.0f });
+    }
+
     //checkpoint
     {
         Checkpoint& checkpoint = CreateGameObject<Checkpoint>();

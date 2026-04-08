@@ -16,7 +16,7 @@ private:
 	float m_move = 0.0f;
 	float m_speed = 90.f; // with deltatime x45, base speed 2.0f
 	float m_maxDistance = 30.f;
-	DirectX::XMFLOAT3 m_pos;
+	DirectX::XMFLOAT3 m_pos = { 0.f,0.f,0.f };
 	Frog m_frog;
 };
 

@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 
 using namespace nam;
@@ -11,6 +12,4 @@ public:
 	void OnInit() override;
 	void OnUpdate() override;
 	void OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other) override;
-
-	void SetPosition(XMFLOAT3 _pos);
 };
