@@ -8,6 +8,8 @@
 #include "Camera.h"
 #include "Frog1.h"
 #include "Frog2.h"
+#include "Platform.h"
+#include "PressurePlate.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -43,6 +45,17 @@ void SceneGameplay::Init()
     }
 
     //platforms
+    {
+        PressurePlate& pp = CreateGameObject<PressurePlate>();
+        pp.SetPosition({ 3,2,3 });
+        pp.SetToggleMode(false);
+
+        Platform& p = CreateGameObject<Platform>();
+        p.SetPosition({ 10,10,10 });
+        p.SetWaypoints({ {10,10,10},{15,10,10},{20,20,10} });
+        p.SetEventListen(pp.GetEventId());
+    }
+
     {
         GameObject& go = CreateGameObject<GameObject>();
         MeshRendererComponent mrc;

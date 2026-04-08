@@ -23,5 +23,6 @@ public:
 
 	uint32_t GetEventId();
 	void SetToggleMode(bool toggleMode);
+	void SetPosition(DirectX::XMFLOAT3 position);
 };
 

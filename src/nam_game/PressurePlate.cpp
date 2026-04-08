@@ -10,6 +10,8 @@ void PressurePlate::OnInit()
 {
 	m_eventId = EventRegister::GenerateId();
 
+	AddComponent<TransformComponent>({});
+
 	BoxColliderComponent& box = SetBoxCollider();
 	box.m_tag = (size)ColliderTag::PressurePlate;
 	box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
@@ -19,9 +21,12 @@ void PressurePlate::OnInit()
 	MeshRendererComponent mrc;
 	mrc.CreateMeshInstance();
 	mrc.mp_mesh->BuildBox({ 1,0.3,1 }, {1,1,1,1});
+	AddComponent<MeshRendererComponent>(mrc);
 
 	m_timerCanToggleDelay.Init(m_timerCanToggleDelayTarget);
 	m_timerUpDelay.Init(m_timerUpDelayTarget);
+
+	SetBehavior();
 }
 
 void PressurePlate::OnUpdate()
@@ -39,7 +44,11 @@ void PressurePlate::OnUpdate()
 	{
 		m_timerUpDelay.Update(dt);
 		if (m_timerUpDelay.IsTargetReached())
+		{
 			m_isPressed = false;
+			TransformComponent& t = GetComponent<TransformComponent>();
+			t.SetWorldScale({ 1,1,1 });
+		}
 	}
 }
 
@@ -65,7 +74,7 @@ void PressurePlate::OnCollision(const SingleCollisionInfo& self, const SingleCol
 
 	if (hasPressedChange && m_isPressed)
 		self.m_transform->SetWorldScale(m_pushedScale);
-	else
+	else if (hasPressedChange)
 		self.m_transform->SetWorldScale({ 1,1,1 });
 }
 
@@ -77,4 +86,10 @@ uint32_t PressurePlate::GetEventId()
 void PressurePlate::SetToggleMode(bool toggleMode)
 {
 	m_toggleMode = toggleMode;
+}
+
+void PressurePlate::SetPosition(DirectX::XMFLOAT3 position)
+{
+	TransformComponent& t = GetComponent<TransformComponent>();
+	t.SetWorldPosition(position);
 }
