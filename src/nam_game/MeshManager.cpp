@@ -39,6 +39,10 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Fly.obj", { 1.f, 1.f, 1.f });
 		mrc.mp_mesh->SetTexture((size)TextureTag::Fly);
 		break;
+	case MeshTag::Spider:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Spider.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.15f, 0.15f, 0.15f, 1.f });
+		break;
 	default:
 		mrc.mp_mesh->BuildBox({ 1,1,1 }, { 1,1,1,1 });
 		break;
