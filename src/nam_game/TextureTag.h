@@ -37,6 +37,7 @@ enum class TextureTag : nam::size
 	Jauge5,
 	Frog1,
 	Frog2,
+	Fly,
 	Size
 };
 
