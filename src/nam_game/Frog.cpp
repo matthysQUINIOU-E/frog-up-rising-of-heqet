@@ -15,10 +15,6 @@ using namespace DirectX;
 void Frog::OnInit()
 {
     MeshRendererComponent mrc;
-    mrc.CreateMeshInstance();
-    mrc.mp_mesh->LoadObj(L"../../res/Assets/Frog/Frog.obj", { 1.f, 1.f, 1.f });
-    mrc.mp_mesh->SetTexture((size)TextureTag::Frog);
-    
     AddComponent<MeshRendererComponent>(mrc);
 
     TransformComponent tc;

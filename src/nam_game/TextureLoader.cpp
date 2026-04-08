@@ -9,7 +9,6 @@ void TextureLoader::LoadAllTexture(nam::App* app)
     app->LoadTexture(L"../../res/Textures/dirt.dds", (size)TextureTag::Dirt);
     app->LoadTexture(L"../../res/Textures/grass.dds", (size)TextureTag::Grass);
     app->LoadTexture(L"../../res/Textures/backgroundGreen.dds", (size)TextureTag::BackgroundGreen);
-    app->LoadTexture(L"../../res/Textures/plateWood.dds", (size)TextureTag::PlateWood);
 
     app->LoadTexture(L"../../res/Textures/Buttons/buttonCog0.dds", (size)TextureTag::ButtonCog0);
     app->LoadTexture(L"../../res/Textures/Buttons/buttonCog1.dds", (size)TextureTag::ButtonCog1);
@@ -43,5 +42,8 @@ void TextureLoader::LoadAllTexture(nam::App* app)
     app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge4.dds", (size)TextureTag::Jauge4);
     app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge5.dds", (size)TextureTag::Jauge5);
 
-    app->LoadTexture(L"../../res/Textures/Frog/FrogTexture.dds", (size)TextureTag::Frog);
+    app->LoadTexture(L"../../res/Textures/Frog/FrogTexture.dds", (size)TextureTag::Frog1);
+    app->LoadTexture(L"../../res/Textures/Frog/FrogTexture2.dds", (size)TextureTag::Frog2);
+    app->LoadTexture(L"../../res/Textures/plateWood.dds", (size)TextureTag::PlateWood);
+
 }

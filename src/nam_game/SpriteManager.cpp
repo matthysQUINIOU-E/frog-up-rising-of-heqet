@@ -5,25 +5,25 @@
 
 using namespace nam;
 
-std::array<bool, (size)SpriteTag::Size> SpriteManager::s_spritesInit = {};
+std::array<bool, (size)SpriteTag::Size + (size)MeshTag::Size> SpriteManager::s_spritesInit = {};
 
 Sprite* SpriteManager::GetSprite(SpriteTag spriteTag)
 {
-	if (s_spritesInit[(size)spriteTag] == false)
+	if (s_spritesInit[(size)spriteTag + (size)MeshTag::Size] == false)
 		return InitSprite(spriteTag);
 
 	SpriteRendererComponent src;
-	src.SetSpriteInstanceFromTag((size)spriteTag);
+	src.SetSpriteInstanceFromTag((size)spriteTag + (size)MeshTag::Size);
 	return src.mp_sprite;
 }
 
 Sprite* SpriteManager::InitSprite(SpriteTag spriteTag)
 {
-	s_spritesInit[(size)spriteTag] = true;
+	s_spritesInit[(size)spriteTag + (size)MeshTag::Size] = true;
 	SpriteRendererComponent mrc;
 
 	mrc.CreateSpriteInstance();
-	mrc.SetSpriteTag((size)spriteTag);
+	mrc.SetSpriteTag((size)spriteTag + (size)MeshTag::Size);
 	switch (spriteTag)
 	{
 	case SpriteTag::ButtonCog0:

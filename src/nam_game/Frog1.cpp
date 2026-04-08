@@ -9,6 +9,7 @@
 #include "SpriteManager.h"
 #include "Jauge.h"
 #include "FrogTongue.h"
+#include "MeshManager.h"
 
 
 using namespace nam;
@@ -18,6 +19,8 @@ void Frog1::OnInit()
 {
     Frog::OnInit();
 
+    MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
+    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Frog1);
 
     TransformComponent& tc = GetComponent<TransformComponent>();
     tc.SetWorldPosition({ -1.f,2.f,0.f });
