@@ -39,8 +39,9 @@ namespace nam
 		}
 		else
 		{
-			localIndex = *page.m_freeLocal.begin();
-			page.m_freeLocal.erase(page.m_freeLocal.begin(localIndex));
+			localIndex = page.m_freeLocal.back();
+			page.m_freeLocal.pop_back();
+			page.m_maskFreeLocal.set(localIndex, false);
 		}
 
 		page.m_data[localIndex] = denseType;
@@ -61,7 +62,8 @@ namespace nam
 		const PageIndex& pageIndex = m_entityToPageIndex[id];
 		SparseSetPage<DenseType>& page = m_pages[pageIndex.m_pageIndex];
 
-		page.m_freeLocal.insert(pageIndex.m_localIndex);
+		page.m_maskFreeLocal.set(pageIndex.m_localIndex, true);
+		page.m_freeLocal.push_back(pageIndex.m_localIndex);
 		page.m_count--;
 		m_entityToPageIndex[id] = { INVALID_PAGE, 0 };
 
@@ -100,7 +102,7 @@ namespace nam
 
 		for (const auto& page : m_pages) {
 			for (u32 j = 0; j < page.m_count + page.m_freeLocal.size(); ++j) {
-				if (page.m_freeLocal.count(j))
+				if (page.m_maskFreeLocal.test(j))
 					continue;
 				entities.push_back(page.m_entities[j]);
 			}
