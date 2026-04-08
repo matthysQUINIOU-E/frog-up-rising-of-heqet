@@ -102,15 +102,6 @@ void Frog::OnUpdate()
         m_gravityTimer.ResetProgress();
     }
 
-    if (m_isFlying)
-    {
-        PhysicComponent& physic = GetComponent<PhysicComponent>();
-        physic.m_dirGravity = m_gravity;
-        TransformComponent& t = GetComponent<TransformComponent>();
-        m_jumpImpulse = 10.f;
-        Jump(t.GetWorldUp());
-    }
-
     if (!m_isFrogActive)
         return;
 
@@ -128,6 +119,7 @@ void Frog::OnController()
 
     ControllerJump();
     ControllerMove();
+    ControllerFlying();
     ControllerTongue();
     ControllerGroundPound();
     InclineArrow();
@@ -380,7 +372,7 @@ void Frog::ControllerMove()
     float forward = 0.f;
     float right = 0.f;
 
-    if (m_isGrounded || m_isFlying)
+    if (m_isGrounded)
     {
         if (Controller::Get(ControlType::Up))
             forward += 1.f;
@@ -456,6 +448,35 @@ void Frog::ControllerGroundPound()
         pc.AddImpulse(t.GetWorldUp());
     }
     pc.AddImpulse({ 0,-20,0 });
+}
+
+void Frog::ControllerFlying()
+{
+    if (m_collectTimer.IsTargetReached())
+        return;
+
+    float forward = 0.f;
+    float right = 0.f;
+
+    if (m_isFlying)
+    {
+        if (Controller::Get(ControlType::Up))
+            forward += 1.f;
+
+        if (Controller::Get(ControlType::Down))
+            forward -= 1.f;
+
+        if (Controller::Get(ControlType::Left))
+            right -= 1.f;
+
+        if (Controller::Get(ControlType::Right))
+            right += 1.f;
+    }
+
+    if (forward == 0.f && right == 0.f)
+        return;
+
+    Move(forward, right);
 }
 
 
