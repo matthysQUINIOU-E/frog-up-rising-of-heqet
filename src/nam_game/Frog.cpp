@@ -154,7 +154,7 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
     //XMVECTOR vFrogUp = XMLoadFloat3(&frogUp);
     //float dotUp = XMVectorGetX(XMVector3Dot(vSelfNormal, vFrogUp));
 
-    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) &&  self.m_normal.y <= -0.5f;
+    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform || other.m_tag == (size)ColliderTag::PressurePlate) &&  self.m_normal.y <= -0.5f;
     bool onFloor = other.m_tag == (size)ColliderTag::Ground;
 
     if (onPlateform || onFloor)

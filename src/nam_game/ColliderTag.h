@@ -11,7 +11,7 @@ enum class ColliderTag : nam::size
     CollectSpid,
     CollectGras,
     Checkpoint,
+    PressurePlate,
 	Size
-
 };
 

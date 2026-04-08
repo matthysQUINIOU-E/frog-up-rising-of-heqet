@@ -28,6 +28,8 @@ void Frog2::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::CollectDrag);
     box.m_shouldCollideWith.insert((size)ColliderTag::CollectSpid);
     box.m_shouldCollideWith.insert((size)ColliderTag::CollectGras);
+    box.m_shouldCollideWith.insert((size)ColliderTag::Checkpoint);
+    box.m_shouldCollideWith.insert((size)ColliderTag::PressurePlate);
 
     SetBehavior();
     SetController();
