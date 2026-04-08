@@ -8,7 +8,7 @@ enum class ColliderTag : nam::size
     FrogEllie,
     Tongue,
     Checkpoint,
+    PressurePlate,
 	Size
-
 };
 
