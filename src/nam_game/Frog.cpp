@@ -35,6 +35,9 @@ void Frog::OnInit()
     m_tongue = &scene.CreateGameObject<FrogTongue>(false);
     TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
     tongueTransform.SetParent(&GetComponent<TransformComponent>());
+
+    m_gravityTimerTarget = 0.5f;
+    m_gravityTimer.Init(m_gravityTimerTarget);
 }
 
 void Frog::OnUpdate()
@@ -43,6 +46,7 @@ void Frog::OnUpdate()
     m_arrowTimer.Update(dt);
     m_stompedTimer.Update(dt);
     m_unstompTimer.Update(dt);
+    m_gravityTimer.Update(dt);
 
     if (m_arrowTimer.IsTargetReached())
     {
@@ -83,17 +87,25 @@ void Frog::OnUpdate()
         m_isFiring = false;
     }
 
+    
+    if (m_gravityTimer.IsTargetReached())
+    {
+        PhysicComponent& physic = GetComponent<PhysicComponent>();
+        m_isOnWall = false;
+        m_isOrientedWall = false;
+        physic.m_useGravity = true;
+        physic.m_dirGravity = m_gravity;
+        m_gravityTimer.ResetProgress();
+    }
+
     if (!m_isFrogActive)
         return;
 
     if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
         ChargeJump();
 
-    if (m_isOrientedWall == false)
-    {
-        RotateUpdate();
-        Rotate();
-    }
+    RotateUpdate();
+    Rotate();  
 }
 
 void Frog::OnController()
@@ -106,19 +118,87 @@ void Frog::OnController()
     ControllerTongue();
     ControllerGroundPound();
     InclineArrow();
+    
+    if (Input::IsKeyDown('K'))
+        Respawn();
 }
 
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
-    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) && self.m_normal.y < 0.f;
-    bool onFloor = other.m_tag == (size)ColliderTag::Ground;
-
-    if (onPlateform || onFloor)
-        FloorWallCollision(self,other);
+    //if (onPlateform || onFloor)
+    //    FloorWallCollision(self,other);
 
     if (other.m_tag == (size)ColliderTag::FrogEllie || other.m_tag == (size)ColliderTag::FrogJoel)
         FrogCollision(self,other);
+
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    TransformComponent& transform = GetComponent<TransformComponent>();
+
+    //XMFLOAT3 selfNormal = self.m_normal;
+    //XMVECTOR vSelfNormal = XMLoadFloat3(&selfNormal);
+    //XMFLOAT3 frogUp = transform.GetWorldUp();
+    //XMVECTOR vFrogUp = XMLoadFloat3(&frogUp);
+    //float dotUp = XMVectorGetX(XMVector3Dot(vSelfNormal, vFrogUp));
+
+    bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) &&  self.m_normal.y <= -0.5f;
+    bool onFloor = other.m_tag == (size)ColliderTag::Ground;
+
+    if (onPlateform || onFloor)
+    {
+        m_gravityTimer.ResetProgress();
+
+        UseGravity(other.m_normal);
+       
+        m_isGrounded = true;
+        m_isorientedGround = true;
+        m_isOnWall = false;
+        m_isOrientedWall = false;
+        physic.m_dirGravity = self.m_normal;
+        physic.m_velocity = { 0.f,0.f,0.f };
+        m_normal = other.m_normal;
+
+        if (m_normal.y == 1)
+        {
+            transform.SetWorldUp(m_normal);
+        }
+        else
+        {
+            XMVECTOR vNormal = XMLoadFloat3(&m_normal);
+
+            XMFLOAT3 currentFwd = transform.GetWorldForward();
+            XMVECTOR vCurrentFwd = XMLoadFloat3(&currentFwd);
+            XMVECTOR vProjFwd = vCurrentFwd - XMVectorScale(vNormal, XMVectorGetX(XMVector3Dot(vCurrentFwd, vNormal)));
+
+            float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
+
+            XMVECTOR vForward;
+            if (projLen > EPSILON)
+            {
+                vForward = XMVector3Normalize(vProjFwd);
+            }
+            else
+            {
+                float dotY = abs(XMVectorGetX(XMVector3Dot(vNormal, XMVectorSet(0.f, 1.f, 0.f, 0.f))));
+                XMVECTOR vRef = (dotY < 0.9f)
+                    ? XMVectorSet(0.f, 1.f, 0.f, 0.f)
+                    : XMVectorSet(0.f, 0.f, 1.f, 0.f);
+                XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vRef, vNormal));
+                vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+            }
+
+            XMFLOAT3 newForward;
+            XMStoreFloat3(&newForward, vForward);
+            transform.LookToWorld(newForward, m_normal);
+        }
+    }
+
+    if (other.m_tag == (size)ColliderTag::Checkpoint)
+    {
+        TransformComponent* transform = other.m_transform;
+        XMFLOAT3 m_center = transform->GetWorldPosition();
+        SetCheckpoint(m_center);
+    }
 }
 
 void Frog::ChargeJump()
@@ -149,12 +229,14 @@ void Frog::Jump(XMFLOAT3 direction)
     physic.AddImpulse(impulse);
 
     physic.m_useGravity = true;
+    m_isorientedGround = true;
     m_isGrounded = false;
     m_isOnWall = false;
 }
 
 void Frog::Rotate()
 {
+
     Ecs& ecs = GetEcs();
 
     XMFLOAT3 impulse = { 0.f, 0.0f, 0.f };
@@ -167,39 +249,51 @@ void Frog::Rotate()
         });
 
     if (cameraTransform == nullptr || transform == nullptr)
-    {
         return;
-    }
+    
+    XMVECTOR vUp = XMLoadFloat3(&m_normal);
 
     XMFLOAT3 camForward = cameraTransform->GetWorldForward();
-    camForward.y = 0.f;
+    XMVECTOR vcamForward = XMLoadFloat3(&camForward);
+    XMVECTOR vCamFwdProj = vcamForward - XMVectorScale(vUp, XMVectorGetX(XMVector3Dot(vcamForward, vUp)));
+
+    float projLen = XMVectorGetX(XMVector3Length(vCamFwdProj));
+    if (projLen < EPSILON)
+        return;
+
+    vCamFwdProj = XMVector3Normalize(vCamFwdProj);
+
     XMFLOAT3 frogForward = transform->GetWorldForward();
+    XMVECTOR vfrogForward = XMLoadFloat3(&frogForward);
+    vfrogForward = XMVector3Normalize(vfrogForward);
 
-    XMVECTOR camForwardVect = XMLoadFloat3(&camForward);
-    camForwardVect = XMVector3Normalize(camForwardVect);
-    XMVECTOR frogForwardVect = XMLoadFloat3(&frogForward);
-    frogForwardVect = XMVector3Normalize(frogForwardVect);
-
-    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(camForwardVect, frogForwardVect);
+    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(vCamFwdProj, vfrogForward);
     XMFLOAT3 diffAngles;
     XMStoreFloat3(&diffAngles, vectDiffAngles);
 
     if (diffAngles.x >= PI_DIV12 || diffAngles.x <= -PI_DIV12 || diffAngles.z >= PI_DIV12 || diffAngles.z <= -PI_DIV12)
     {
-        if (m_isGrounded)
+        if (m_isGrounded || m_isOnWall)
         {
-            impulse.y += 2.f;
+            XMFLOAT3 impulse;
+            XMStoreFloat3(&impulse, XMVectorScale(vUp, 2.f));
 
             PhysicComponent& physic = GetComponent<PhysicComponent>();
             physic.AddImpulse(impulse);
             physic.m_useGravity = true;
             m_isGrounded = false;
+            m_isorientedGround = true;
+            m_isOnWall = false;
+
         }
     }
 }
 
 void Frog::RotateUpdate()
 {
+    if (m_isGrounded)
+        return;
+
     Ecs* ecs = &App::Get()->GetEcs();
 
     TransformComponent* transform = &GetComponent<TransformComponent>();
@@ -213,26 +307,33 @@ void Frog::RotateUpdate()
     {
         return;
     }
+     
+
+    XMVECTOR vUp = XMLoadFloat3(&m_normal);
 
     XMFLOAT3 camForward = cameraTransform->GetWorldForward();
+    XMVECTOR vcamForward = XMLoadFloat3(&camForward);
+    XMVECTOR vTargetFwd = XMVector3Normalize(vcamForward - XMVectorScale(vUp, XMVectorGetX(XMVector3Dot(vcamForward, vUp))));
+
     XMFLOAT3 frogForward = transform->GetWorldForward();
+    XMVECTOR vfrogForward = XMLoadFloat3(&frogForward);
+    vfrogForward = XMVector3Normalize(vfrogForward);
 
-    XMVECTOR camForwardVect = XMLoadFloat3(&camForward);
-    camForwardVect = XMVector3Normalize(camForwardVect);
-    XMVECTOR frogForwardVect = XMLoadFloat3(&frogForward);
-    frogForwardVect = XMVector3Normalize(frogForwardVect);
+    XMVECTOR vDot = XMVector3Dot(vfrogForward, vTargetFwd);
 
-    XMVECTOR vectDiffAngles = XMVectorSubtractAngles(camForwardVect, frogForwardVect);
-    XMFLOAT3 diffAngles;
-    XMStoreFloat3(&diffAngles, vectDiffAngles);
+    float dot = XMVectorGetX(vDot);
 
-    if (abs(diffAngles.x) >= EPSILON || abs(diffAngles.z) >= EPSILON)
-    {
-        if (m_isGrounded == false)
-        {
-            transform->LookToWorld({ frogForward.x + diffAngles.x / 12, 0.0f, frogForward.z + diffAngles.z / 12 });
-        }
-    }
+    if (dot >= 1.f - EPSILON)
+        return;
+
+    XMVECTOR vNewFwd = XMVector3Normalize(XMVectorLerp(vfrogForward, vTargetFwd, 0.15f));
+
+    XMFLOAT3 newFwd;
+    XMStoreFloat3(&newFwd, vNewFwd);
+
+    XMFLOAT3 upToUse;
+    XMStoreFloat3(&upToUse, vUp);
+    transform->LookToWorld(newFwd, upToUse);
 }
 
 void Frog::InclineArrow()
@@ -338,13 +439,13 @@ void Frog::ControllerGroundPound()
     pc.AddImpulse({ 0,-20,0 });
 }
 
-void Frog::FloorWallCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
+
+void Frog::UseGravity(XMFLOAT3 normal)
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     TransformComponent& transform = GetComponent<TransformComponent>();
 
     XMFLOAT3 up = transform.GetWorldUp();
-    XMFLOAT3 normal = other.m_normal;
 
     XMVECTOR vUp = XMLoadFloat3(&up);
     XMVECTOR vOtherNormal = XMLoadFloat3(&normal);
@@ -357,7 +458,12 @@ void Frog::FloorWallCollision(const SingleCollisionInfo& self, const SingleColli
         physic.m_useGravity = false;
     else
         physic.m_useGravity = true;
+}
 
+void Frog::FloorWallCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
+{
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
 
     m_isGrounded = true;
     m_isOnWall = false;
@@ -429,4 +535,30 @@ void Frog::Move(float _forward, float _right)
     XMFLOAT3 direction;
     XMStoreFloat3(&direction, vDirection);
     Jump(direction);
+}
+
+void Frog::SetCheckpoint(XMFLOAT3 center)
+{
+    m_checkpointCenter = center;
+    m_checkpointCenter.y += 2.f;
+    m_hasCheckpoint = true;
+}
+
+void Frog::Respawn()
+{
+    if (!m_hasCheckpoint)
+        return;
+
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    transform.SetWorldPosition(m_checkpointCenter);
+
+    PhysicComponent& physic = GetComponent<PhysicComponent>();
+    physic.m_velocity = { 0.f, 0.f, 0.f };
+    physic.m_useGravity = true;
+    physic.m_dirGravity = m_gravity;
+
+    m_isGrounded = false;
+    m_isorientedGround = true;
+    m_isOnWall = false;
+    m_normal = { 0.f, 1.f, 0.f };
 }

@@ -22,10 +22,14 @@ void Frog2::OnInit()
 
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::FrogEllie;
+    box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+    box.m_shouldCollideWith.insert((size)ColliderTag::Ground);
+    box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
 
     SetBehavior();
     SetController();
 
+    m_maxImpulse = 25.f;
 }
 
 void Frog2::OnUpdate()
@@ -63,6 +67,7 @@ void Frog2::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     if(onFrog)
     {
         m_isGrounded = true;
+        m_isorientedGround = true;
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
     }

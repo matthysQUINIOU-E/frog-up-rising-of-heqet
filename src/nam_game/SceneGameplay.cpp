@@ -1,8 +1,5 @@
 #include "pch.h"
 #include "SceneGameplay.h"
-#include "Button.h"
-#include "SceneLevelChoice.h"
-#include "SceneTag.h"
 #include "TextureTag.h"
 #include "ColliderTag.h"
 #include "Camera.h"
@@ -11,6 +8,10 @@
 #include "Dragonfly.h"
 #include "Spider.h"
 #include "Grasshopper.h"
+#include "Checkpoint.h"
+#include "Button.h"
+#include "SceneLevelChoice.h"
+#include "SceneTag.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -40,7 +41,7 @@ void SceneGameplay::Init()
         go.AddComponent<MeshRendererComponent>(mrc);
         go.AddComponent<TransformComponent>(TransformComponent());
         BoxColliderComponent& box = go.SetBoxCollider();
-        box.m_tag = (size)ColliderTag::Platform;
+        box.m_tag = (size)ColliderTag::Ground;
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     }
@@ -123,7 +124,7 @@ void SceneGameplay::Init()
         go.AddComponent<MeshRendererComponent>(mrc);
         TransformComponent tc;
         tc.SetWorldPosition({ 0,5,-15 });
-        tc.SetWorldYPR(0.f, XM_PIDIV4, 0.f);
+        tc.SetWorldYPR(0.f, XM_PIDIV4, XM_PIDIV4);
         go.AddComponent<TransformComponent>(tc);
         BoxColliderComponent& box = go.SetBoxCollider();
         box.m_tag = (size)ColliderTag::Platform;
@@ -131,7 +132,6 @@ void SceneGameplay::Init()
         box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
         box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
     }
-
 
     {
         GameObject& go = CreateGameObject<GameObject>();
@@ -164,6 +164,12 @@ void SceneGameplay::Init()
     {
         Dragonfly& dragonfly = CreateGameObject<Dragonfly>();
         dragonfly.SetPosition({ 0.0f, 0.5f, 5.0f });
+    }
+    //checkpoint
+    {
+        Checkpoint& checkpoint = CreateGameObject<Checkpoint>();
+        TransformComponent& transform = checkpoint.GetComponent<TransformComponent>();
+        transform.SetWorldPosition({10,21,45});
     }
 }
 

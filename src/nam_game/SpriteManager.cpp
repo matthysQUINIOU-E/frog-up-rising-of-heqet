@@ -92,7 +92,7 @@ Sprite* SpriteManager::InitSprite(SpriteTag spriteTag)
 		mrc.mp_sprite->m_drawLayer = 7;
 		break;
 	case SpriteTag::ButtonLeft1:
-		mrc.mp_sprite->BuildRect({ 114,114 }, { 1,1,1,1 });
+		mrc.mp_sprite->BuildRect({ 114,114 }, { 1 ,1,1,1 });
 		mrc.mp_sprite->SetTexture((size)TextureTag::ButtonLeft1);
 		mrc.mp_sprite->m_drawLayer = 7;
 		break;
@@ -155,6 +155,36 @@ Sprite* SpriteManager::InitSprite(SpriteTag spriteTag)
 		mrc.mp_sprite->BuildRect({ 1280,720 }, { 1,1,1,1 });
 		mrc.mp_sprite->SetTexture((size)TextureTag::PlateWood);
 		mrc.mp_sprite->m_drawLayer = 8;
+		break;
+	case SpriteTag::Jauge5:
+		mrc.mp_sprite->BuildRect({ 400,50 }, { 1,1,1,1 });
+		mrc.mp_sprite->SetTexture((size)TextureTag::Jauge5);
+		mrc.mp_sprite->m_drawLayer = 7;
+		break;
+	case SpriteTag::Jauge4:
+		mrc.mp_sprite->BuildRect({ 400,50 }, { 1,1,1,1 });
+		mrc.mp_sprite->SetTexture((size)TextureTag::Jauge4);
+		mrc.mp_sprite->m_drawLayer = 7;
+		break;
+	case SpriteTag::Jauge3:
+		mrc.mp_sprite->BuildRect({ 400,50 }, { 1,1,1,1 });
+		mrc.mp_sprite->SetTexture((size)TextureTag::Jauge3);
+		mrc.mp_sprite->m_drawLayer = 7;
+		break;
+	case SpriteTag::Jauge2:
+		mrc.mp_sprite->BuildRect({ 400,50 }, { 1,1,1,1 });
+		mrc.mp_sprite->SetTexture((size)TextureTag::Jauge2);
+		mrc.mp_sprite->m_drawLayer = 7;
+		break;
+	case SpriteTag::Jauge1:
+		mrc.mp_sprite->BuildRect({ 400,50 }, { 1,1,1,1 });
+		mrc.mp_sprite->SetTexture((size)TextureTag::Jauge1);
+		mrc.mp_sprite->m_drawLayer = 7;
+		break;
+	case SpriteTag::Jauge0:
+		mrc.mp_sprite->BuildRect({ 400,50 }, { 1,1,1,1 });
+		mrc.mp_sprite->SetTexture((size)TextureTag::Jauge0);
+		mrc.mp_sprite->m_drawLayer = 7;
 		break;
 	default:
 		mrc.mp_sprite->BuildRect({50,50},{1,1,1,1});

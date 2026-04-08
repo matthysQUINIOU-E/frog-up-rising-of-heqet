@@ -12,6 +12,7 @@ protected:
 	bool m_isFrogActive = false;
 	bool m_isSpacePressed = false;
 	bool m_isGrounded = false;
+	bool m_isorientedGround = false;
 	bool m_isOnWall = false;
 	bool m_isOrientedWall = false;
 	bool m_isRotate = false;
@@ -42,6 +43,12 @@ protected:
 	
 	FrogTongue* m_tongue = nullptr;
 
+	DirectX::XMFLOAT3 m_checkpointCenter = { 0.f, 1.f, 0.f };
+	bool m_hasCheckpoint = true;
+
+	float m_gravityTimerTarget;
+	nam::Timer m_gravityTimer;
+
 protected:
 	void Jump(DirectX::XMFLOAT3 direction);
 
@@ -50,6 +57,8 @@ public:
 	void OnUpdate() override;
 	void OnController() override;
 	void OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other) override;
+	void SetCheckpoint(DirectX::XMFLOAT3 center);
+	void Respawn();
 private:
 	void ChargeJump();
 	void Move(float _forward, float _right);
@@ -65,4 +74,6 @@ private:
 
 	void FloorWallCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other);
 	void FrogCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other);
+
+	void UseGravity(DirectX::XMFLOAT3 normal);
 };

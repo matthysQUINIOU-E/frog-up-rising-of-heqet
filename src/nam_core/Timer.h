@@ -24,6 +24,7 @@ namespace nam
 
 		const float GetProgress() const;
 		void ResetProgress();
+		void SetProgress(float targetTime);
 
 		const float GetTargetTime() const;
 		void SetTargetTime(float time);
