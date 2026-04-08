@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Constant.h"
 #include "ColliderTag.h"
+#include "TextureTag.h"
 #include "FrogArrow.h"
 #include "FrogTongue.h"
 #include "Controller.h"
@@ -15,14 +16,17 @@ void Frog::OnInit()
 {
     MeshRendererComponent mrc;
     mrc.CreateMeshInstance();
-    mrc.mp_mesh->BuildBox({ 1.f,1.f, 1.f }, { 0.5f,0.5f,0.5f,1.f });
+    mrc.mp_mesh->LoadObj(L"../../res/Assets/Frog/Frog.obj", { 1.f, 1.f, 1.f });
+    mrc.mp_mesh->SetTexture((size)TextureTag::Frog);
+    
     AddComponent<MeshRendererComponent>(mrc);
 
     TransformComponent tc;
     tc.SetWorldPosition({ -1.f,2.f,0.f });
     AddComponent<TransformComponent>(tc);
 
-    AddComponent<PhysicComponent>(PhysicComponent());
+    PhysicComponent pc;
+    AddComponent<PhysicComponent>(pc);
 
     Scene& scene = GetScene();
     m_arrow = &scene.CreateGameObject<FrogArrow>(false);

@@ -18,8 +18,6 @@ void Frog1::OnInit()
 {
     Frog::OnInit();
 
-    MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
-    mrc.mp_mesh->SetColor({ 0.5f, 0.0f, 0.0f, 1.f });
 
     TransformComponent& tc = GetComponent<TransformComponent>();
     tc.SetWorldPosition({ -1.f,2.f,0.f });

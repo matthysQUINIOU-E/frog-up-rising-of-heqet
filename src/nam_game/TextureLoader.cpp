@@ -43,5 +43,5 @@ void TextureLoader::LoadAllTexture(nam::App* app)
     app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge4.dds", (size)TextureTag::Jauge4);
     app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge5.dds", (size)TextureTag::Jauge5);
 
-
+    app->LoadTexture(L"../../res/Textures/Frog/FrogTexture.dds", (size)TextureTag::Frog);
 }
