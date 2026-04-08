@@ -32,10 +32,6 @@ void Frog::OnInit()
     m_stompedTimer.Init(m_targetTimeStomped);
     m_unstompTimer.Init(m_unstompStepDuration);
 
-    m_tongue = &scene.CreateGameObject<FrogTongue>(false);
-    TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
-    tongueTransform.SetParent(&GetComponent<TransformComponent>());
-
     m_gravityTimerTarget = 0.5f;
     m_gravityTimer.Init(m_gravityTimerTarget);
 }

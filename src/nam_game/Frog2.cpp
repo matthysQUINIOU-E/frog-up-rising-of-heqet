@@ -25,6 +25,15 @@ void Frog2::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
     box.m_shouldCollideWith.insert((size)ColliderTag::Ground);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+    box.m_shouldCollideWith.insert((size)ColliderTag::TongueJoel);
+
+    Scene& scene = GetScene();
+    m_tongue = &scene.CreateGameObject<FrogTongue>(false);
+    TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
+    tongueTransform.SetParent(&GetComponent<TransformComponent>());
+    BoxColliderComponent& tongueCollider = m_tongue->GetComponent<BoxColliderComponent>();
+    tongueCollider.m_tag = (size)ColliderTag::TongueEllie;
+    tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
 
     SetBehavior();
     SetController();

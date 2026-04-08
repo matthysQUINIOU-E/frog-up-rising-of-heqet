@@ -7,6 +7,7 @@
 #include "Constant.h"
 #include "SpriteManager.h"
 #include "Jauge.h"
+#include "FrogTongue.h"
 
 
 using namespace nam;
@@ -30,11 +31,18 @@ void Frog1::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::Ground);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
     box.m_shouldCollideWith.insert((size)ColliderTag::Checkpoint);
-
+    box.m_shouldCollideWith.insert((size)ColliderTag::TongueEllie);
 
     Scene& scene = GetScene();
     m_jauge = &scene.CreateGameObject<Jauge>();
     m_jaugeTimer.Init(m_jaugeTimerTarget, true);
+
+    m_tongue = &scene.CreateGameObject<FrogTongue>(false);
+    TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
+    tongueTransform.SetParent(&GetComponent<TransformComponent>());
+    BoxColliderComponent& tongueCollider = m_tongue->GetComponent<BoxColliderComponent>();
+    tongueCollider.m_tag = (size)ColliderTag::TongueJoel;
+    tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
 
     SetBehavior();
     SetController();
@@ -72,7 +80,7 @@ void Frog1::OnUpdate()
 
     Frog::OnUpdate();
 
-    if (m_isOrientedWall)
+    if (m_isOrientedWall && m_isFrogActive)
     {
         m_isRecharging = false;
         m_jauge->SetActive(true);
@@ -90,7 +98,7 @@ void Frog1::OnUpdate()
             m_isOrientedWall = false;
         }
     }
-    else if (m_isorientedGround && m_jaugeProgress < m_jaugeTimerTarget)
+    else if (m_isorientedGround && m_jaugeProgress < m_jaugeTimerTarget && m_isFrogActive)
     {
         m_isRecharging = true;
         m_jauge->SetActive(true);
@@ -108,9 +116,11 @@ void Frog1::OnUpdate()
         }
     }
     else if (!m_isOrientedWall && !m_isRecharging)
-    {
         m_jauge->SetActive(false);
-    }
+    
+    else if (!m_isFrogActive)
+        m_jauge->SetActive(false);
+
 }
 
 void Frog1::OnController()
@@ -123,6 +133,9 @@ void Frog1::OnController()
 
     if (Controller::Get(ControlType::SwitchFrog2))
         m_isFrogActive = false;
+
+    if (!m_isFrogActive)
+        return;
 
     if (m_isSpacePressed)
     {

@@ -16,8 +16,8 @@ void FrogTongue::OnInit()
 	AddComponent<TransformComponent>(tongueTransform);
 
 	BoxColliderComponent& tongueCollider = SetBoxCollider();
-	tongueCollider.m_tag = (size)ColliderTag::Tongue;
 	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Ground);
 	tongueCollider.m_noIntersectionPush = true;
 
 	SetBehavior();
@@ -76,8 +76,7 @@ void FrogTongue::OnUpdate()
 
 void FrogTongue::OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other)
 {
-	if(other.m_tag == (size)ColliderTag::Platform)
-		m_arrived = true;
+	m_arrived = true;
 }
 
 void FrogTongue::SetFire(bool _fire, Frog _frog)
