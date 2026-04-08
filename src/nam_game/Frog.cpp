@@ -6,6 +6,7 @@
 #include "FrogArrow.h"
 #include "FrogTongue.h"
 #include "Controller.h"
+#include "Swallow.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -34,6 +35,9 @@ void Frog::OnInit()
 
     m_gravityTimerTarget = 0.5f;
     m_gravityTimer.Init(m_gravityTimerTarget);
+
+    Swallow sw;
+    AddComponent<Swallow>(sw);
 }
 
 void Frog::OnUpdate()
@@ -83,6 +87,9 @@ void Frog::OnUpdate()
         m_isFiring = false;
     }
 
+    if (m_tongue->m_move == 0.f)
+        m_tongue->SetActive(false);
+
     
     if (m_gravityTimer.IsTargetReached())
     {
@@ -94,10 +101,17 @@ void Frog::OnUpdate()
         m_gravityTimer.ResetProgress();
     }
 
+    Swallow& swallow = GetComponent<Swallow>();
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    if(swallow.m_isSwallowed)
+    {
+        transform.SetWorldPosition(m_otherFrogTransform->GetWorldPosition());
+    }
+    
     if (!m_isFrogActive)
         return;
 
-    if (m_isSpacePressed && (m_isGrounded || m_isOnWall))
+    if (m_isSpacePressed && (m_isGrounded || m_isOnWall) && m_isStompted == false)
         ChargeJump();
 
     RotateUpdate();
@@ -130,12 +144,7 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
 
     PhysicComponent& physic = GetComponent<PhysicComponent>();
     TransformComponent& transform = GetComponent<TransformComponent>();
-
-    //XMFLOAT3 selfNormal = self.m_normal;
-    //XMVECTOR vSelfNormal = XMLoadFloat3(&selfNormal);
-    //XMFLOAT3 frogUp = transform.GetWorldUp();
-    //XMVECTOR vFrogUp = XMLoadFloat3(&frogUp);
-    //float dotUp = XMVectorGetX(XMVector3Dot(vSelfNormal, vFrogUp));
+    Swallow& swallow = GetComponent<Swallow>();
 
     bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) &&  self.m_normal.y <= -0.5f;
     bool onFloor = other.m_tag == (size)ColliderTag::Ground;
@@ -146,6 +155,7 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
 
         UseGravity(other.m_normal);
        
+        swallow.m_isSwallowed = false;
         m_isGrounded = true;
         m_isorientedGround = true;
         m_isOnWall = false;
@@ -409,9 +419,11 @@ void Frog::ControllerTongue()
         else
         {
             m_isFiring = true;
+
         }
 
-        m_tongue->SetFire(m_isFiring, *this);
+        m_tongue->SetActive(true);
+        m_tongue->SetFire(m_isFiring);
     }
 }
 
@@ -496,7 +508,7 @@ void Frog::FrogCollision(const SingleCollisionInfo& self, const SingleCollisionI
     XMVECTOR collisionNormal = XMLoadFloat3(&self.m_normal);
     float dot = XMVectorGetX(XMVector3Dot(vUp, collisionNormal));
     float angle = acosf(dot); 
-    float threshold = XMConvertToRadians(45.0f);
+    constexpr float threshold = XMConvertToRadians(45.0f);
 
     if (angle <= threshold) {
         m_isStompted = true;
@@ -557,4 +569,13 @@ void Frog::Respawn()
     m_isorientedGround = true;
     m_isOnWall = false;
     m_normal = { 0.f, 1.f, 0.f };
+}
+
+void Frog::SpitOut()
+{
+
+}
+
+void Frog::IsSwallowed()
+{
 }

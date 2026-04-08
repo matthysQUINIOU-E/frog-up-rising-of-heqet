@@ -19,7 +19,7 @@ public:
 	void SetJauge(JaugeType type);
 	void Update();
 private:
-	JaugeType m_type;
+	JaugeType m_type = JaugeType::Jauge5;
 	JaugeType m_previousType = JaugeType::Jauge5;
 };
 
