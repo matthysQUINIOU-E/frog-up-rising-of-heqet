@@ -67,7 +67,7 @@ void Frog2::OnController()
     Frog::OnController();
 
     Swallow& swallow = GetComponent<Swallow>();
-    if (Input::IsKeyDown('F') && swallow.m_hasSwallowed)
+    if (Input::IsKeyDown('F') && swallow.m_hasSwallowed && m_isGrounded)
     {
         SpitOut();
     }
@@ -89,7 +89,8 @@ void Frog2::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
         physic.m_useGravity = false;
         physic.m_velocity = { 0.f,0.f,0.f };
     }
-    else if (other.m_tag == (size)ColliderTag::TongueJoel)
+    
+    if (other.m_tag == (size)ColliderTag::TongueJoel)
     {
         IsSwallowed();
     }

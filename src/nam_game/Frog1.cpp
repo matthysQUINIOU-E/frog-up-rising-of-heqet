@@ -194,7 +194,7 @@ void Frog1::OnController()
 
 
     Swallow& swallow = GetComponent<Swallow>();
-    if (Input::IsKeyDown('F') && swallow.m_hasSwallowed)
+    if (Input::IsKeyDown('F') && swallow.m_hasSwallowed && (m_isGrounded || m_isOnWall))
     {
         SpitOut();
     }
@@ -221,7 +221,8 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     {
         CollisionOnWall(self, other);
     }
-    else if (other.m_tag == (size)ColliderTag::TongueEllie)
+    
+    if (other.m_tag == (size)ColliderTag::TongueEllie)
     {
         IsSwallowed();
     }
