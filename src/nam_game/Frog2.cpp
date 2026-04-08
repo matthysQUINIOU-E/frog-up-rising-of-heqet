@@ -25,6 +25,8 @@ void Frog2::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::Platform);
     box.m_shouldCollideWith.insert((size)ColliderTag::Ground);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+    box.m_shouldCollideWith.insert((size)ColliderTag::Checkpoint);
+    box.m_shouldCollideWith.insert((size)ColliderTag::PressurePlate);
 
     SetBehavior();
     SetController();
