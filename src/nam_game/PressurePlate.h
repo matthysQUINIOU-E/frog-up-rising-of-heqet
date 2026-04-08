@@ -14,7 +14,7 @@ private:
 	nam::Timer m_timerUpDelay; 
 	float m_timerUpDelayTarget = 1.f;
 
-	DirectX::XMFLOAT3 m_pushedScale = { 1,0.4,1 };
+	DirectX::XMFLOAT3 m_pushedScale = { 1,0.4f,1 };
 
 public:
 	void OnInit() override;

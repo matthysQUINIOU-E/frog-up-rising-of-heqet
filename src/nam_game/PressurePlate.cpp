@@ -20,7 +20,7 @@ void PressurePlate::OnInit()
 
 	MeshRendererComponent mrc;
 	mrc.CreateMeshInstance();
-	mrc.mp_mesh->BuildBox({ 1,0.3,1 }, {1,1,1,1});
+	mrc.mp_mesh->BuildBox({ 1,0.3f,1 }, {1,1,1,1});
 	AddComponent<MeshRendererComponent>(mrc);
 
 	m_timerCanToggleDelay.Init(m_timerCanToggleDelayTarget);
