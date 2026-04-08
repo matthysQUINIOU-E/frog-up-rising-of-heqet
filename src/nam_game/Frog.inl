@@ -9,7 +9,7 @@ inline bool Frog::CheckComponent()
     nam::Ecs& ecs = GetEcs();
 
     ecs.ForEach<TagFrog, nam::BoxColliderComponent, nam::TransformComponent, nam::PhysicComponent, Swallow>
-        ([&](uint32_t entity, TagFrog& tag, nam::BoxColliderComponent& _collider, nam::TransformComponent& _transform, nam::PhysicComponent _physic, Swallow& _swallow)
+        ([&](uint32_t entity, TagFrog& tag, nam::BoxColliderComponent& _collider, nam::TransformComponent& _transform, nam::PhysicComponent& _physic, Swallow& _swallow)
         {
             m_otherFrogCollider = &_collider;
             m_otherFrogTransform = &_transform;

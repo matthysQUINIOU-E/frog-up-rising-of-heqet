@@ -55,8 +55,8 @@ protected:
 
 protected:
 	void Jump(DirectX::XMFLOAT3 direction);
-	virtual void SpitOut();
-	virtual void IsSwallowed();
+	virtual void SpitOut() = 0;
+	virtual void IsSwallowed() = 0;
 
 	template<typename TagFrog>
 	bool CheckComponent();

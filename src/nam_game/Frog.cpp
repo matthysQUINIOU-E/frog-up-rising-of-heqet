@@ -136,73 +136,20 @@ void Frog::OnController()
 
 void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
-    //if (onPlateform || onFloor)
-    //    FloorWallCollision(self,other);
 
     if (other.m_tag == (size)ColliderTag::FrogEllie || other.m_tag == (size)ColliderTag::FrogJoel)
         FrogCollision(self,other);
-
-    PhysicComponent& physic = GetComponent<PhysicComponent>();
-    TransformComponent& transform = GetComponent<TransformComponent>();
-    Swallow& swallow = GetComponent<Swallow>();
 
     bool onPlateform = (other.m_tag == (size)ColliderTag::Platform) &&  self.m_normal.y <= -0.5f;
     bool onFloor = other.m_tag == (size)ColliderTag::Ground;
 
     if (onPlateform || onFloor)
-    {
-        m_gravityTimer.ResetProgress();
-
-        UseGravity(other.m_normal);
-       
-        swallow.m_isSwallowed = false;
-        m_isGrounded = true;
-        m_isorientedGround = true;
-        m_isOnWall = false;
-        m_isOrientedWall = false;
-        physic.m_dirGravity = self.m_normal;
-        physic.m_velocity = { 0.f,0.f,0.f };
-        m_normal = other.m_normal;
-
-        if (m_normal.y == 1)
-        {
-            transform.SetWorldUp(m_normal);
-        }
-        else
-        {
-            XMVECTOR vNormal = XMLoadFloat3(&m_normal);
-
-            XMFLOAT3 currentFwd = transform.GetWorldForward();
-            XMVECTOR vCurrentFwd = XMLoadFloat3(&currentFwd);
-            XMVECTOR vProjFwd = vCurrentFwd - XMVectorScale(vNormal, XMVectorGetX(XMVector3Dot(vCurrentFwd, vNormal)));
-
-            float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
-
-            XMVECTOR vForward;
-            if (projLen > EPSILON)
-            {
-                vForward = XMVector3Normalize(vProjFwd);
-            }
-            else
-            {
-                float dotY = abs(XMVectorGetX(XMVector3Dot(vNormal, XMVectorSet(0.f, 1.f, 0.f, 0.f))));
-                XMVECTOR vRef = (dotY < 0.9f)
-                    ? XMVectorSet(0.f, 1.f, 0.f, 0.f)
-                    : XMVectorSet(0.f, 0.f, 1.f, 0.f);
-                XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vRef, vNormal));
-                vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
-            }
-
-            XMFLOAT3 newForward;
-            XMStoreFloat3(&newForward, vForward);
-            transform.LookToWorld(newForward, m_normal);
-        }
-    }
+       FloorWallCollision(self,other);
 
     if (other.m_tag == (size)ColliderTag::Checkpoint)
     {
-        TransformComponent* transform = other.m_transform;
-        XMFLOAT3 m_center = transform->GetWorldPosition();
+        TransformComponent* otherTransform = other.m_transform;
+        XMFLOAT3 m_center = otherTransform->GetWorldPosition();
         SetCheckpoint(m_center);
     }
 }
@@ -447,7 +394,6 @@ void Frog::ControllerGroundPound()
     pc.AddImpulse({ 0,-20,0 });
 }
 
-
 void Frog::UseGravity(XMFLOAT3 normal)
 {
     PhysicComponent& physic = GetComponent<PhysicComponent>();
@@ -472,15 +418,22 @@ void Frog::FloorWallCollision(const SingleCollisionInfo& self, const SingleColli
 {
     TransformComponent& transform = GetComponent<TransformComponent>();
     PhysicComponent& physic = GetComponent<PhysicComponent>();
+    Swallow& swallow = GetComponent<Swallow>();
 
+    m_gravityTimer.ResetProgress();
+
+    UseGravity(other.m_normal);
+
+    swallow.m_isSwallowed = false;
     m_isGrounded = true;
+    m_isorientedGround = true;
     m_isOnWall = false;
     m_isOrientedWall = false;
     physic.m_dirGravity = self.m_normal;
     physic.m_velocity = { 0.f,0.f,0.f };
     m_normal = other.m_normal;
 
-    if (m_normal.y == 1)
+    if (m_normal.y >= 1.f - EPSILON)
     {
         transform.SetWorldUp(m_normal);
     }
@@ -488,16 +441,30 @@ void Frog::FloorWallCollision(const SingleCollisionInfo& self, const SingleColli
     {
         XMVECTOR vNormal = XMLoadFloat3(&m_normal);
 
-        XMVECTOR vGlobalUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-        XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vGlobalUp, vNormal));
+        XMFLOAT3 currentFwd = transform.GetWorldForward();
+        XMVECTOR vCurrentFwd = XMLoadFloat3(&currentFwd);
+        XMVECTOR vProjFwd = vCurrentFwd - XMVectorScale(vNormal, XMVectorGetX(XMVector3Dot(vCurrentFwd, vNormal)));
 
-        XMVECTOR vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+        float projLen = XMVectorGetX(XMVector3Length(vProjFwd));
+
+        XMVECTOR vForward;
+        if (projLen > EPSILON)
+        {
+            vForward = XMVector3Normalize(vProjFwd);
+        }
+        else
+        {
+            float dotY = abs(XMVectorGetX(XMVector3Dot(vNormal, XMVectorSet(0.f, 1.f, 0.f, 0.f))));
+            XMVECTOR vRef = (dotY < 0.9f)
+                ? XMVectorSet(0.f, 1.f, 0.f, 0.f)
+                : XMVectorSet(0.f, 0.f, 1.f, 0.f);
+            XMVECTOR vRight = XMVector3Normalize(XMVector3Cross(vRef, vNormal));
+            vForward = XMVector3Normalize(XMVector3Cross(vNormal, vRight));
+        }
 
         XMFLOAT3 newForward;
         XMStoreFloat3(&newForward, vForward);
-
         transform.LookToWorld(newForward, m_normal);
-
     }
 }
 
@@ -571,11 +538,3 @@ void Frog::Respawn()
     m_normal = { 0.f, 1.f, 0.f };
 }
 
-void Frog::SpitOut()
-{
-
-}
-
-void Frog::IsSwallowed()
-{
-}

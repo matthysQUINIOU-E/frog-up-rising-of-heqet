@@ -27,6 +27,7 @@ void Frog2::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::Ground);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     box.m_shouldCollideWith.insert((size)ColliderTag::TongueJoel);
+    box.m_shouldCollideWith.insert((size)ColliderTag::Checkpoint);
 
     Scene& scene = GetScene();
     m_tongue = &scene.CreateGameObject<FrogTongue>(false);
