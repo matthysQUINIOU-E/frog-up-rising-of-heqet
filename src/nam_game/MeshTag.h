@@ -5,6 +5,9 @@ enum class MeshTag : nam::size
 	Frog2,
 	Fly,
 	Spider,
+	Dragonfly,
+	Dinosaur,
+	Grasshopper,
 	Size
 };
 

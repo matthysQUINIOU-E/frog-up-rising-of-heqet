@@ -43,6 +43,18 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Spider.obj", { 1.f, 1.f, 1.f });
 		mrc.mp_mesh->SetColor({ 0.15f, 0.15f, 0.15f, 1.f });
 		break;
+	case MeshTag::Dragonfly:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/DragonFly.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.1f, 0.5f, 1.f });
+		break;
+	case MeshTag::Dinosaur:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/DINOSAUR.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.25f, 1.f });
+		break;
+	case MeshTag::Grasshopper:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Grasshopper.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.75f, 0.25f, 1.f });
+		break;
 	default:
 		mrc.mp_mesh->BuildBox({ 1,1,1 }, { 1,1,1,1 });
 		break;
