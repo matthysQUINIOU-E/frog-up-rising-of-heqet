@@ -14,10 +14,15 @@ enum class MeshTag : nam::size
 	Rock,
 	TreeStump,
 	Checkpoint,
-	Endpoint,
 	SmallPlatform,
 	Platform,
 	GrassPlatform,
+	PressurePlate,
+	GrassePlatform,
+	RockPlatform,
+	Bridge,
+	Log,
+	Mountain,
 	Size
 };
 

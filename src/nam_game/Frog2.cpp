@@ -57,18 +57,19 @@ void Frog2::OnUpdate()
 
 void Frog2::OnController()
 {
-    if (GameVariables::s_isGamePaused)
+    Swallow& swallow = GetComponent<Swallow>();
+
+    if (GameVariables::s_isGamePaused || swallow.m_isSwallowed == true)
         return;
 
     if (Controller::Get(ControlType::SwitchFrog1))
         m_isFrogActive = false;
 
-    if (Controller::Get(ControlType::SwitchFrog2))
+    if (Controller::Get(ControlType::SwitchFrog2) )
         m_isFrogActive = true;
 
     Frog::OnController();
 
-    Swallow& swallow = GetComponent<Swallow>();
     if (Input::IsKeyDown('F') && swallow.m_hasSwallowed && m_isGrounded)
     {
         SpitOut();
@@ -136,4 +137,5 @@ void Frog2::SpitOut()
     m_otherFrogCollider->m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
     m_otherFrogCollider->m_shouldCollideWith.insert((size)ColliderTag::TongueEllie);
     m_otherFrogPhysic->m_useGravity = true;
+    m_otherFrogSwallow->m_isSwallowed = false;
 }

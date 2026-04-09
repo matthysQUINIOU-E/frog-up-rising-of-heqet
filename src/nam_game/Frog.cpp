@@ -419,13 +419,11 @@ void Frog::FloorWallCollision(const SingleCollisionInfo& self, const SingleColli
 {
     TransformComponent& transform = GetComponent<TransformComponent>();
     PhysicComponent& physic = GetComponent<PhysicComponent>();
-    Swallow& swallow = GetComponent<Swallow>();
 
     m_gravityTimer.ResetProgress();
 
     UseGravity(other.m_normal);
 
-    swallow.m_isSwallowed = false;
     m_isGrounded = true;
     m_isorientedGround = true;
     m_isOnWall = false;

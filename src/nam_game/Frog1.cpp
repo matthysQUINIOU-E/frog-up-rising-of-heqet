@@ -95,7 +95,7 @@ void Frog1::SpitOut()
     m_otherFrogCollider->m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     m_otherFrogCollider->m_shouldCollideWith.insert((size)ColliderTag::TongueJoel);
     m_otherFrogPhysic->m_useGravity = true;
-
+    m_otherFrogSwallow->m_isSwallowed = false;
 }
 
 void Frog1::IsSwallowed()
@@ -169,7 +169,9 @@ void Frog1::OnUpdate()
 
 void Frog1::OnController()
 {
-    if (GameVariables::s_isGamePaused)
+    Swallow& swallow = GetComponent<Swallow>();
+
+    if (GameVariables::s_isGamePaused || swallow.m_isSwallowed == true)
         return;
 
     if (Controller::Get(ControlType::SwitchFrog1))
@@ -194,7 +196,6 @@ void Frog1::OnController()
         ControllerMoveWall();
 
 
-    Swallow& swallow = GetComponent<Swallow>();
     if (Input::IsKeyDown('F') && swallow.m_hasSwallowed && (m_isGrounded || m_isOnWall))
     {
         SpitOut();

@@ -87,6 +87,30 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/GrassPlateform.obj", { 1.f, 1.f, 1.f });
 		mrc.mp_mesh->SetColor({ 0.75f, 1.f, 0.f, 1.f });
 		break;
+	case MeshTag::PressurePlate:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/PressurePlate.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.f, 1.f });
+		break;
+	case MeshTag::GrassePlatform:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Platform.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.f, 1.f });
+		break;
+	case MeshTag::RockPlatform:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Platform.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.25f, 1.f });
+		break;
+	case MeshTag::Bridge:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Bridge.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.f, 1.f });
+		break;
+	case MeshTag::Log:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Log.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.f, 1.f });
+		break;
+	case MeshTag::Mountain:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Mountain.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.25f, 1.f });
+		break;
 	default:
 		mrc.mp_mesh->BuildBox({ 1,1,1 }, { 1,1,1,1 });
 		break;
