@@ -7,4 +7,7 @@ constexpr std::string_view SCENE_PATH = "../../Res/Scene/";
 constexpr std::string_view SAVE_PATH = "../../Res/UserData/save.json";
 constexpr std::string_view CONFIG_PATH = "../../Res/UserData/config.json";
 constexpr std::string_view LEVEL_1_FILE = "Level1.json";
+constexpr std::string_view LEVEL_2_FILE = "Level2.json";
+constexpr std::string_view LEVEL_3_FILE = "Level3.json";
+
 

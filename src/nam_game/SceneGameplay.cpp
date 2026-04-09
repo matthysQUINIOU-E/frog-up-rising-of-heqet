@@ -22,12 +22,16 @@ void SceneGameplay::LoadLevel(Level level)
 
     Camera& camera = CreateGameObject<Camera>();
 
-    switch (level) // TODO :: add other levels
+    switch (level)
     {
     case Level::Level1 :
         MapLoader::Load((std::string)LEVEL_1_FILE, this);
         break;
-    default:
-        MapLoader::Load((std::string)LEVEL_1_FILE, this);
+    case Level::Level2:
+        MapLoader::Load((std::string)LEVEL_2_FILE, this);
+        break;
+    case Level::Level3:
+        MapLoader::Load((std::string)LEVEL_3_FILE, this);
+        break;
     }
 }
