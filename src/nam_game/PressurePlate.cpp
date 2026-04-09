@@ -16,7 +16,8 @@ void PressurePlate::OnInit()
 	box.m_tag = (size)ColliderTag::PressurePlate;
 	box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
 	box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
-	box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
+	box.m_shouldCollideWith.insert((size)ColliderTag::TongueEllie);
+	box.m_shouldCollideWith.insert((size)ColliderTag::TongueJoel);
 
 	MeshRendererComponent mrc;
 	mrc.CreateMeshInstance();

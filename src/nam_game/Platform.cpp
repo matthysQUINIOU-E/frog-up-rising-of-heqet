@@ -13,7 +13,8 @@ void Platform::OnInit()
 	box.m_tag = (size)ColliderTag::Platform;
 	box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
 	box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
-	box.m_shouldCollideWith.insert((size)ColliderTag::Tongue);
+	box.m_shouldCollideWith.insert((size)ColliderTag::TongueEllie);
+	box.m_shouldCollideWith.insert((size)ColliderTag::TongueJoel);
 	// add checkpoint / others...
 
 	AddComponent<TransformComponent>({});
@@ -67,7 +68,7 @@ void Platform::OnUpdate()
 
 void Platform::OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other)
 {
-	if (other.m_tag == (size)ColliderTag::Tongue)
+	if (other.m_tag == (size)ColliderTag::TongueEllie || other.m_tag == (size)ColliderTag::TongueJoel)
 		return;
 
 	m_linkedTransforms[other.m_transform] = 0.f;
