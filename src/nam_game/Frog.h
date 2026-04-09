@@ -84,7 +84,6 @@ private:
 	void ControllerJump();
 	void ControllerTongue();
 	void ControllerGroundPound();
-	void ControllerFlying();
 
 	void FloorWallCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other);
 	void FrogCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other);

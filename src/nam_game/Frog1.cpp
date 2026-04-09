@@ -33,9 +33,6 @@ void Frog1::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::Ground);
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
     box.m_shouldCollideWith.insert((size)ColliderTag::Checkpoint);
-    box.m_shouldCollideWith.insert((size)ColliderTag::CollectDrag);
-    box.m_shouldCollideWith.insert((size)ColliderTag::CollectSpid);
-    box.m_shouldCollideWith.insert((size)ColliderTag::CollectGras);
     box.m_shouldCollideWith.insert((size)ColliderTag::PressurePlate);
     box.m_shouldCollideWith.insert((size)ColliderTag::TongueEllie);
 

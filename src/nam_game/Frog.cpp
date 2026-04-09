@@ -129,7 +129,6 @@ void Frog::OnController()
 
     ControllerJump();
     ControllerMove();
-    ControllerFlying();
     ControllerTongue();
     ControllerGroundPound();
     InclineArrow();
