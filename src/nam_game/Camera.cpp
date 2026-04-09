@@ -3,6 +3,9 @@
 #include "Controller.h"
 #include "SceneTag.h"
 #include "GameVariables.h"
+#include "Frog1.h"
+#include "Frog2.h"
+
 
 using namespace nam;
 using namespace DirectX;

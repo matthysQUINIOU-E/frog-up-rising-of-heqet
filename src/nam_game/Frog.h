@@ -1,10 +1,9 @@
 #pragma once
-struct Frog1Tag {};
-struct Frog2Tag {};
 
 class Timer;
 class FrogArrow;
 class FrogTongue;
+struct Swallow;
 
 class Frog : public nam::GameObject
 {
@@ -46,11 +45,21 @@ protected:
 	DirectX::XMFLOAT3 m_checkpointCenter = { 0.f, 1.f, 0.f };
 	bool m_hasCheckpoint = true;
 
-	float m_gravityTimerTarget;
+	float m_gravityTimerTarget = 0.f;
 	nam::Timer m_gravityTimer;
+
+	nam::TransformComponent* m_otherFrogTransform = nullptr;
+	nam::BoxColliderComponent* m_otherFrogCollider = nullptr;
+	nam::PhysicComponent* m_otherFrogPhysic = nullptr;
+	Swallow* m_otherFrogSwallow = nullptr;
 
 protected:
 	void Jump(DirectX::XMFLOAT3 direction);
+	virtual void SpitOut() = 0;
+	virtual void IsSwallowed() = 0;
+
+	template<typename TagFrog>
+	bool CheckComponent();
 
 public:
 	void OnInit() override;
@@ -77,3 +86,5 @@ private:
 
 	void UseGravity(DirectX::XMFLOAT3 normal);
 };
+
+#include "Frog.inl"

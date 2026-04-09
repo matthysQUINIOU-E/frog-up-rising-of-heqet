@@ -1,7 +1,9 @@
 #pragma once
 #include "Frog.h"
+struct Frog1Tag {};
 
 class Jauge;
+class Frog2;
 
 class Frog1 : public Frog
 {
@@ -15,10 +17,12 @@ private:
 	void ControllerMoveWall();
 	void CollisionOnWall(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other);
 	void UpdateJaugeDisplay(float progress);
+	void SpitOut() override;
+	void IsSwallowed() override;
 private:
 	Jauge* m_jauge = nullptr;
 	nam::Timer m_jaugeTimer;
-	float m_jaugeTimerTarget = 15.f;
+	float m_jaugeTimerTarget = 10.f;
 
 	float m_jaugeProgress = 0.f;
 	bool m_isRecharging = false;

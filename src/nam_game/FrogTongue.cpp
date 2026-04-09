@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "FrogTongue.h"
 #include "ColliderTag.h"
+#include "Swallow.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -16,8 +17,8 @@ void FrogTongue::OnInit()
 	AddComponent<TransformComponent>(tongueTransform);
 
 	BoxColliderComponent& tongueCollider = SetBoxCollider();
-	tongueCollider.m_tag = (size)ColliderTag::Tongue;
 	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Platform);
+	tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::Ground);
 	tongueCollider.m_noIntersectionPush = true;
 
 	SetBehavior();
@@ -30,7 +31,7 @@ void FrogTongue::OnUpdate()
 	if (!m_isFiring)
 		return;
 
-	m_pos = m_frog.GetComponent<TransformComponent>().GetWorldPosition(); // bancale mais ca marche
+	m_pos = m_frog->GetComponent<TransformComponent>().GetWorldPosition(); 
 
 	TransformComponent& tc = GetComponent<TransformComponent>();
 	XMFLOAT3 fwd = tc.GetWorldForward();
@@ -72,23 +73,34 @@ void FrogTongue::OnUpdate()
 	XMFLOAT3 newPos = { m_pos.x + (fwd.x * offset), m_pos.y + (fwd.y * offset), m_pos.z + (fwd.z * offset) };
 
 	tc.SetWorldPosition(newPos);
+
 }
 
 void FrogTongue::OnCollision(const nam::SingleCollisionInfo& self, const nam::SingleCollisionInfo& other)
 {
-	if(other.m_tag == (size)ColliderTag::Platform)
-		m_arrived = true;
+	m_arrived = true;
+	bool frog1 = self.m_tag == (size)ColliderTag::TongueJoel && other.m_tag == (size)ColliderTag::FrogEllie;
+	bool frog2 = self.m_tag == (size)ColliderTag::TongueEllie && other.m_tag == (size)ColliderTag::FrogJoel;
+
+	if(frog1 || frog2)
+	{
+		Swallow& sw = m_frog->GetComponent<Swallow>();
+		sw.m_hasSwallowed = true;
+	}
 }
 
-void FrogTongue::SetFire(bool _fire, Frog _frog)
+void FrogTongue::SetFrog(Frog* frog)
+{
+	m_frog = frog;
+}
+
+void FrogTongue::SetFire(bool _fire)
 {
 	if (_fire && !m_isFiring)
 	{
 		m_isFiring = true;
 		m_arrived = false;
 		m_move = 0.0f;
-
-		m_frog = _frog;
 	}
 	else if (!_fire && m_isFiring)
 	{
