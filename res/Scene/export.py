@@ -2,6 +2,7 @@ import bpy
 import json
 import os
 import re
+import ast
 
 def _parse_value(value_str):
     value_str = value_str.strip()
@@ -121,13 +122,14 @@ def export_scene(json_path):
         rot = obj.matrix_world.to_quaternion()
         scl = obj.matrix_world.to_scale()
 
-        obj_id, gameobject, flags, link_target = parse_object_name(obj.name)
+        obj_id, gameobject, flags, link_target, properties = parse_object_name(obj.name)
 
         objects_raw.append({
             "name": obj.name,
             "id": obj_id,
             "gameobject": gameobject,
             "flags": flags,
+            "properties": properties,
             "link": link_target,  
             "position": [pos.x, pos.y, pos.z],
             "rotation": [rot.x, rot.y, rot.z, rot.w],

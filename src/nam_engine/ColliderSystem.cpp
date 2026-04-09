@@ -66,6 +66,8 @@ namespace nam
             }
         );
 
+        if (m_spatialHash.IsEmpty())
+            return;
 
         ecs.ForEach<BoxColliderComponent, TransformComponent, MeshRendererComponent>(
             [&](u32 e1, BoxColliderComponent& b1, TransformComponent& t1, MeshRendererComponent& m) {

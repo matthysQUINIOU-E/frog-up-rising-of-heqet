@@ -50,7 +50,9 @@ namespace nam
 		for (u32 entity : m_gameObjectToDelete)
 		{
 			GameObject* gameObject = mp_gameObjects->Get(entity);
-			gameObject->Destroy();
+			Entity ent = gameObject->GetEntity();
+			mp_ecs->DestroyEntity(ent);
+			gameObject->OnDestroy();
 			mp_gameObjects->Remove(entity);
 			delete gameObject;
 		}

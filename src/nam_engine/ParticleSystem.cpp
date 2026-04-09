@@ -17,7 +17,7 @@ namespace nam
 
 		ecs.ForEach<TransformComponent, ParticleEmitersComponent>([&](uint32_t entity, TransformComponent& transform, ParticleEmitersComponent& emiters) {
 			
-            if (MAX_PARTICLES_SPAWNS_PER_FRAME >= particlesToSpawn.size())
+            if (MAX_PARTICLES_SPAWNS_PER_FRAME <= particlesToSpawn.size())
                 return;
             
             transform.UpdateWorldData();

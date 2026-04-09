@@ -5,14 +5,15 @@ namespace nam
     class SpatialHash
     {
     private:
-        UnMap<size_t, Vector<u32>> grid;
-        float cellSize;
-        float invCellSize;
+        UnMap<size_t, Vector<u32>> m_grid;
+        float m_cellSize;
+        float m_invCellSize;
 
     public:
         SpatialHash(float size = 10.0f);
 
         void Clear();
+        bool IsEmpty();
 
         void Insert(u32 entity, const DirectX::BoundingOrientedBox& box);
         void Insert(u32 entity, const DirectX::BoundingSphere& sphere);

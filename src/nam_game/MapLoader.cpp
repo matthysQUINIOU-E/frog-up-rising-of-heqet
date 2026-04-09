@@ -37,7 +37,7 @@ void MapLoader::Load(std::string file, nam::Scene* scene)
     }
 }
 
-GameObject* MapLoader::GameObjectFactory(nam::Scene* scene, nlohmann::json_abi_v3_12_0::json& obj, UnMap<u32, GameObject*>& sceneObjects)
+GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_0::json& obj, UnMap<u32, GameObject*>& sceneObjects)
 {
     GameObject* go = nullptr;
 
@@ -177,6 +177,230 @@ GameObject* MapLoader::GameObjectFactory(nam::Scene* scene, nlohmann::json_abi_v
         break;
     }
 
+    case MapLoaderFlag::DirectionalLight:
+    {
+        go = &scene->CreateGameObject<GameObject>();
+        float intensity = 1.f;
+        XMFLOAT3 direction = { 0,-1,0 };
+        XMFLOAT3 color = { 1,1,1 };
+
+        if (obj.contains("properties") && obj["properties"].is_object())
+        {
+            for (const auto& [key, value] : obj["properties"].items()) {
+                MapLoaderFlag prop = MapLoaderFlagConvertor::StringToEnum(key);
+                switch (prop)
+                {
+                case MapLoaderFlag::Color:
+                    if (value.is_array() && value.size() >= 3) {
+                        color.x = value[0].get<float>();
+                        color.y = value[1].get<float>();
+                        color.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::Direction:
+                    if (value.is_array() && value.size() >= 3) {
+                        direction.x = value[0].get<float>();
+                        direction.y = value[1].get<float>();
+                        direction.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::Intensity:
+                    intensity = value.get<float>();
+                    break;
+                }
+            }
+        }
+
+        LightComponent lc;
+        lc.CreateLightInstance();
+        lc.mp_light->SetToDirectionalLight(intensity, direction, color);
+        go->AddComponent<LightComponent>(lc);
+
+        break;
+    }
+
+    case MapLoaderFlag::PointLight:
+    {
+        go = &scene->CreateGameObject<GameObject>();
+        go->AddComponent<TransformComponent>({});
+        float intensity = 1.f;
+        float range = 1.f;
+        DirectX::XMFLOAT3 color = { 1,1,1 };
+
+        if (obj.contains("properties") && obj["properties"].is_object())
+        {
+            for (const auto& [key, value] : obj["properties"].items()) {
+                MapLoaderFlag prop = MapLoaderFlagConvertor::StringToEnum(key);
+                switch (prop)
+                {
+                case MapLoaderFlag::Color:
+                    if (value.is_array() && value.size() >= 3) {
+                        color.x = value[0].get<float>();
+                        color.y = value[1].get<float>();
+                        color.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::Range:
+                    range = value.get<float>();
+                    break;
+                case MapLoaderFlag::Intensity:
+                    intensity = value.get<float>();
+                    break;
+                }
+            }
+        }
+
+        LightComponent lc;
+        lc.CreateLightInstance();
+        lc.mp_light->SetToPointLight(intensity, { 0,0,0 }, range, color);
+        go->AddComponent<LightComponent>(lc);
+
+        break;
+    }
+
+    case MapLoaderFlag::SpotLight:
+    {
+        go = &scene->CreateGameObject<GameObject>();
+        go->AddComponent<TransformComponent>({});
+        float intensity = 1.f;
+        float range = 1.f;
+        XMFLOAT3 color = { 1,1,1 };
+        XMFLOAT3 direction = { 0,-1,0 };
+        float beginAngle = 1;
+        float endAngle = 2;
+
+        if (obj.contains("properties") && obj["properties"].is_object())
+        {
+            for (const auto& [key, value] : obj["properties"].items()) {
+                MapLoaderFlag prop = MapLoaderFlagConvertor::StringToEnum(key);
+                switch (prop)
+                {
+                case MapLoaderFlag::Color:
+                    if (value.is_array() && value.size() >= 3) {
+                        color.x = value[0].get<float>();
+                        color.y = value[1].get<float>();
+                        color.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::Direction:
+                    if (value.is_array() && value.size() >= 3) {
+                        direction.x = value[0].get<float>();
+                        direction.y = value[1].get<float>();
+                        direction.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::Range:
+                    range = value.get<float>();
+                    break;
+                case MapLoaderFlag::Intensity:
+                    intensity = value.get<float>();
+                    break;
+                case MapLoaderFlag::BeginAngle:
+                    beginAngle = value.get<float>();
+                    break;
+                case MapLoaderFlag::EndAngle:
+                    endAngle = value.get<float>();
+                    break;
+                }
+            }
+        }
+
+        LightComponent lc;
+        lc.CreateLightInstance();
+        lc.mp_light->SetToSpotLight(intensity, { 0,0,0 }, range, direction, beginAngle, endAngle, color);
+        go->AddComponent<LightComponent>(lc);
+
+        break;
+    }
+
+    case MapLoaderFlag::ParticuleEmiter:
+    {
+        go = &scene->CreateGameObject<GameObject>();
+        go->AddComponent<TransformComponent>({});
+
+        XMFLOAT3 minPos = { 0,0,0 };
+        XMFLOAT3 maxPos = { 0,0,0 };
+        XMFLOAT3 minDir = { -1,-1,-1 };
+        XMFLOAT3 maxDir = { 1,1,1 };
+        XMFLOAT3 startColor = { 1,1,1 };
+        XMFLOAT3 endColor = { 1,1,1 };
+        float minSpeed = 1.f;
+        float maxSpeed = 1.f;
+        float lifeTime = 30.f;
+        float spawnRate = 1000.f;
+
+        if (obj.contains("properties") && obj["properties"].is_object())
+        {
+            for (const auto& [key, value] : obj["properties"].items())
+            {
+                MapLoaderFlag prop = MapLoaderFlagConvertor::StringToEnum(key);
+                switch (prop)
+                {
+                case MapLoaderFlag::MinPos:
+                    if (value.is_array() && value.size() >= 3) {
+                        minPos.x = value[0].get<float>();
+                        minPos.y = value[1].get<float>();
+                        minPos.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::MaxPos:
+                    if (value.is_array() && value.size() >= 3) {
+                        maxPos.x = value[0].get<float>();
+                        maxPos.y = value[1].get<float>();
+                        maxPos.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::MinDir:
+                    if (value.is_array() && value.size() >= 3) {
+                        minDir.x = value[0].get<float>();
+                        minDir.y = value[1].get<float>();
+                        minDir.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::MaxDir:
+                    if (value.is_array() && value.size() >= 3) {
+                        maxDir.x = value[0].get<float>();
+                        maxDir.y = value[1].get<float>();
+                        maxDir.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::StartColor:
+                    if (value.is_array() && value.size() >= 3) {
+                        startColor.x = value[0].get<float>();
+                        startColor.y = value[1].get<float>();
+                        startColor.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::EndColor:
+                    if (value.is_array() && value.size() >= 3) {
+                        endColor.x = value[0].get<float>();
+                        endColor.y = value[1].get<float>();
+                        endColor.z = value[2].get<float>();
+                    }
+                    break;
+                case MapLoaderFlag::MinSpeed:
+                    minSpeed = value.get<float>();
+                    break;
+                case MapLoaderFlag::MaxSpeed:
+                    maxSpeed = value.get<float>();
+                    break;
+                case MapLoaderFlag::LifeTime:
+                    lifeTime = value.get<float>();
+                    break;
+                case MapLoaderFlag::SpawnRate:
+                    spawnRate = value.get<float>();
+                    break;
+                }
+            }
+        }
+
+        ParticleEmitersComponent pec;
+        pec.AddEmiter(maxPos, minPos, maxDir, minDir, startColor, endColor, maxSpeed, minSpeed, lifeTime, spawnRate);
+        go->AddComponent<ParticleEmitersComponent>(pec);
+
+        break;
+    }
+
     default:
         go = &scene->CreateGameObject<GameObject>();
     }
@@ -190,13 +414,13 @@ GameObject* MapLoader::GameObjectFactory(nam::Scene* scene, nlohmann::json_abi_v
     position.z = obj["position"][1];
 
     rotation.x = obj["rotation"][0];
-    rotation.y = obj["rotation"][1];
-    rotation.z = obj["rotation"][2];
+    rotation.y = obj["rotation"][2];
+    rotation.z = obj["rotation"][1];
     rotation.w = obj["rotation"][3];
 
     scale.x = obj["scale"][0];
-    scale.y = obj["scale"][1];
-    scale.z = obj["scale"][2];
+    scale.y = obj["scale"][2];
+    scale.z = obj["scale"][1];
 
     if (!go->HasComponent<TransformComponent>())
         go->AddComponent<TransformComponent>({});

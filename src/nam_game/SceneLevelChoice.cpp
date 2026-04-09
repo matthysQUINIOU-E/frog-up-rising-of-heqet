@@ -23,12 +23,50 @@ void SceneLevelChoice::Init()
 
 	// TODO change the play part when map loader ready
 
-	Button& buttonPlay = CreateGameObject<Button>();
-	buttonPlay.SetButtonType(ButtonType::Play);
-	buttonPlay.SetPosition({ 960,540 });
-	buttonPlay.SetOnClick(
+	GameText& textPlay1 = CreateGameObject<GameText>();
+	textPlay1.SetPostion({ 525,580 });
+	textPlay1.SetText("Level 1");
+
+	Button& buttonPlay1 = CreateGameObject<Button>();
+	buttonPlay1.SetButtonType(ButtonType::Play);
+	buttonPlay1.SetPosition({ 610,480 });
+	buttonPlay1.SetOnClick(
 		[]() {
-			App::Get()->CreateOrGetScene<Scene>((size)SceneTag::Gameplay).SetActive(true);
+			SceneGameplay& sceneGameplay = App::Get()->CreateOrGetScene<SceneGameplay>((size)SceneTag::Gameplay);
+			sceneGameplay.LoadLevel(Level::Level1);
+			sceneGameplay.SetActive(true);
+			App::Get()->CreateOrGetScene<Scene>((size)SceneTag::LevelChoice).SetActive(false);
+		}
+	);
+
+	GameText& textPlay2 = CreateGameObject<GameText>();
+	textPlay2.SetPostion({ 875,580 });
+	textPlay2.SetText("Level 2");
+
+	Button& buttonPlay2 = CreateGameObject<Button>();
+	buttonPlay2.SetButtonType(ButtonType::Play);
+	buttonPlay2.SetPosition({ 960,480 });
+	buttonPlay2.SetOnClick(
+		[]() {
+			SceneGameplay& sceneGameplay = App::Get()->CreateOrGetScene<SceneGameplay>((size)SceneTag::Gameplay);
+			sceneGameplay.LoadLevel(Level::Level2);
+			sceneGameplay.SetActive(true);
+			App::Get()->CreateOrGetScene<Scene>((size)SceneTag::LevelChoice).SetActive(false);
+		}
+	);
+
+	GameText& textPlay3 = CreateGameObject<GameText>();
+	textPlay3.SetPostion({ 1225,580 });
+	textPlay3.SetText("Level 3");
+
+	Button& buttonPlay3 = CreateGameObject<Button>();
+	buttonPlay3.SetButtonType(ButtonType::Play);
+	buttonPlay3.SetPosition({ 1310,480 });
+	buttonPlay3.SetOnClick(
+		[]() {
+			SceneGameplay& sceneGameplay = App::Get()->CreateOrGetScene<SceneGameplay>((size)SceneTag::Gameplay);
+			sceneGameplay.LoadLevel(Level::Level3);
+			sceneGameplay.SetActive(true);
 			App::Get()->CreateOrGetScene<Scene>((size)SceneTag::LevelChoice).SetActive(false);
 		}
 	);
