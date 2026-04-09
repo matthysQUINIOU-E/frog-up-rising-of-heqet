@@ -47,11 +47,6 @@ void Frog2::OnInit()
 
 void Frog2::OnUpdate()
 {
-    TransformComponent* transform = &GetComponent<TransformComponent>();
-    XMFLOAT3 frogForward = transform->GetWorldForward();
-
-    transform->LookToWorld({ frogForward.x, 0.0f, frogForward.z });
-
     Frog::OnUpdate();
 }
 
