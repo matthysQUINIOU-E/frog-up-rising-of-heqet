@@ -8,6 +8,10 @@ enum class MeshTag : nam::size
 	Dragonfly,
 	Dinosaur,
 	Grasshopper,
+	Pine,
+	LittlePine,
+	Rock,
+	TreeStump,
 	Size
 };
 
