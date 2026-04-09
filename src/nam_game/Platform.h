@@ -1,5 +1,6 @@
 #pragma once
 #include "MeshTag.h"
+#include <TextureTag.h>
 
 class Platform : public nam::GameObject
 {
@@ -27,6 +28,7 @@ public:
 	void SetWaypoints(std::vector<DirectX::XMFLOAT3> waypoints);
 	void SetSpeed(float speed);
 	void SetMesh(MeshTag meshTag);
+	void SetTexture(TextureTag textureTag);
 
 private:
 	bool MoveToward(DirectX::XMFLOAT3 pos);

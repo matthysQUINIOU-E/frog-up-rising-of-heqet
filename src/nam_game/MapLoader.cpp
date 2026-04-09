@@ -130,6 +130,9 @@ GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_
                 case MapLoaderFlag::Mesh:
                     platform.SetMesh(static_cast<MeshTag>(value.get<size_t>()));
                     break;
+                case MapLoaderFlag::Texture:
+                    platform.SetTexture(static_cast<TextureTag>(value.get<size_t>()));
+                    break;
                 case MapLoaderFlag::Speed:
                     platform.SetSpeed(value.get<float>());
                     break;

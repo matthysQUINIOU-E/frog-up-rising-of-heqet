@@ -18,7 +18,6 @@ void Frog2::OnInit()
     mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Frog2);
 
     TransformComponent& tc = GetComponent<TransformComponent>();
-    tc.SetWorldPosition({ 1.f,2.f,0.f });
 
     AddComponent<Frog2Tag>({});
 

@@ -20,10 +20,9 @@ void Frog1::OnInit()
     Frog::OnInit();
 
     MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
-    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Rock);
+    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Endpoint);
 
     TransformComponent& tc = GetComponent<TransformComponent>();
-    tc.SetWorldPosition({ -1.f,2.f,0.f });
 
     AddComponent<Frog1Tag>({});
 

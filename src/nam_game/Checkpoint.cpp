@@ -3,6 +3,7 @@
 #include "Frog.h"
 #include "ColliderTag.h"
 #include <SceneTag.h>
+#include "MeshManager.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -13,9 +14,7 @@ void Checkpoint::OnInit()
     AddComponent<TransformComponent>(tc);
 
     MeshRendererComponent mrc;
-    mrc.CreateMeshInstance();
-    mrc.mp_mesh->BuildPlane({ 3.f, 3.f }, { 1.f, 0.f, 0.f, 1.f });
-    AddComponent<MeshRendererComponent>(mrc);
+    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Checkpoint);
 
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::Checkpoint;

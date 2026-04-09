@@ -3,8 +3,22 @@ enum class TextureTag : nam::size
 {
 	BackgroundGreen,
 	PlateWood,
-	Grass,
-	Dirt,
+	Grass1,
+	Grass2,
+	Grass3,
+	Grass4,
+	Grass5,
+	Grass6,
+	Grass7,
+	Grass8,
+	Grass9,
+	Straw,
+	Tile1,
+	Tile2,
+	Tile3,
+	Tile4,
+	Tile5,
+	RockSoil,
 	ButtonCog0,
 	ButtonLeft0,
 	ButtonRight0,
@@ -42,6 +56,7 @@ enum class TextureTag : nam::size
 	LittlePine,
 	Rock,
 	TreeStump,
+	Checkpoint,
 	Size
 };
 

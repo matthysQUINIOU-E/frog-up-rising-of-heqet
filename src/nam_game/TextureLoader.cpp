@@ -6,8 +6,23 @@ using namespace nam;
 
 void TextureLoader::LoadAllTexture(nam::App* app)
 {
-    app->LoadTexture(L"../../res/Textures/dirt.dds", (size)TextureTag::Dirt);
-    app->LoadTexture(L"../../res/Textures/grass.dds", (size)TextureTag::Grass);
+    app->LoadTexture(L"../../res/Textures/grass1.dds", (size)TextureTag::Grass1);
+    app->LoadTexture(L"../../res/Textures/grass2.dds", (size)TextureTag::Grass2);
+    app->LoadTexture(L"../../res/Textures/grass3.dds", (size)TextureTag::Grass3);
+    app->LoadTexture(L"../../res/Textures/grass4.dds", (size)TextureTag::Grass4);
+    app->LoadTexture(L"../../res/Textures/grass5.dds", (size)TextureTag::Grass5);
+    app->LoadTexture(L"../../res/Textures/grass6.dds", (size)TextureTag::Grass6);
+    app->LoadTexture(L"../../res/Textures/grass7.dds", (size)TextureTag::Grass7);
+    app->LoadTexture(L"../../res/Textures/grass8.dds", (size)TextureTag::Grass8);
+    app->LoadTexture(L"../../res/Textures/grass9.dds", (size)TextureTag::Grass9);
+    app->LoadTexture(L"../../res/Textures/straw.dds", (size)TextureTag::Straw);
+    app->LoadTexture(L"../../res/Textures/tile1.dds", (size)TextureTag::Tile1);
+    app->LoadTexture(L"../../res/Textures/tile2.dds", (size)TextureTag::Tile2);
+    app->LoadTexture(L"../../res/Textures/tile3.dds", (size)TextureTag::Tile3);
+    app->LoadTexture(L"../../res/Textures/tile4.dds", (size)TextureTag::Tile4);
+    app->LoadTexture(L"../../res/Textures/tile5.dds", (size)TextureTag::Tile5);
+    app->LoadTexture(L"../../res/Textures/rockSoil.dds", (size)TextureTag::RockSoil);
+
     app->LoadTexture(L"../../res/Textures/backgroundGreen.dds", (size)TextureTag::BackgroundGreen);
     app->LoadTexture(L"../../res/Textures/plateWood.dds", (size)TextureTag::PlateWood);
 
@@ -51,5 +66,5 @@ void TextureLoader::LoadAllTexture(nam::App* app)
     app->LoadTexture(L"../../res/Textures/Environment/LittlePine.dds", (size)TextureTag::LittlePine);
     app->LoadTexture(L"../../res/Textures/Environment/Rock.dds", (size)TextureTag::Rock);
     app->LoadTexture(L"../../res/Textures/Environment/TreeStump.dds", (size)TextureTag::TreeStump);
-
+    app->LoadTexture(L"../../res/Textures/Environment/checkpoint.dds", (size)TextureTag::Checkpoint);
 }

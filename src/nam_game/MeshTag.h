@@ -13,6 +13,8 @@ enum class MeshTag : nam::size
 	LittlePine,
 	Rock,
 	TreeStump,
+	Checkpoint,
+	Endpoint,
 	Size
 };
 

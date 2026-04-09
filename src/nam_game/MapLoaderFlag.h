@@ -18,6 +18,7 @@ enum class MapLoaderFlag
 
 	//other flags
 	Mesh, // #mesh:1 (linked to MeshTag enum)
+	Texture, // #texture:2 (linked to TextureTag enum)
 	Waypoints, // #waypoints:[[0,0,0],[0,5,0],[0,10,5]] (for mooving platforms)
 	Speed, // #speed:2.5 (for mooving platforms)
 	LoopWaypoints, // #loopWaypoints:1 (for mooving platforms)

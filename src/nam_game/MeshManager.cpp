@@ -71,6 +71,10 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/TreeStump.obj", { 1.f, 1.f, 1.f });
 		mrc.mp_mesh->SetTexture((size)TextureTag::TreeStump);
 		break;
+	case MeshTag::Checkpoint:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/checkpoint.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetTexture((size)TextureTag::Checkpoint);
+		break;
 	default:
 		mrc.mp_mesh->BuildBox({ 1,1,1 }, { 1,1,1,1 });
 		break;

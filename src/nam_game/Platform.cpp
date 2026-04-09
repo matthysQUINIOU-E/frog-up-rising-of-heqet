@@ -109,6 +109,12 @@ void Platform::SetMesh(MeshTag meshTag)
 	mrc.mp_mesh = MeshManager::GetMesh(meshTag);
 }
 
+void Platform::SetTexture(TextureTag textureTag)
+{
+	MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
+	mrc.mp_mesh->SetTexture((size)textureTag);
+}
+
 bool Platform::MoveToward(DirectX::XMFLOAT3 pos)
 {
 	float dt = App::Get()->GetChrono().GetScaledDeltaTime();
