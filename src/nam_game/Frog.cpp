@@ -367,7 +367,6 @@ void Frog::ControllerTongue()
         else
         {
             m_isFiring = true;
-
         }
 
         m_tongue->SetActive(true);

@@ -35,6 +35,9 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Frog2/Frog.obj", { 1.f, 1.f, 1.f });
 		mrc.mp_mesh->SetTexture((size)TextureTag::Frog2);
 		break;
+	case MeshTag::Tongue:
+		mrc.mp_mesh->BuildBox({ 0.1f, 0.1f, 0.99f }, { 1.0f, 0.411f, 0.705f, 1.0f });
+		break;
 	case MeshTag::Fly:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Fly.obj", { 1.f, 1.f, 1.f });
 		mrc.mp_mesh->SetTexture((size)TextureTag::Fly);

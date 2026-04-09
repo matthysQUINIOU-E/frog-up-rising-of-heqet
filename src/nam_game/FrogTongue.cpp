@@ -2,6 +2,7 @@
 #include "FrogTongue.h"
 #include "ColliderTag.h"
 #include "Swallow.h"
+#include "MeshManager.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -9,8 +10,7 @@ using namespace DirectX;
 void FrogTongue::OnInit()
 {
 	MeshRendererComponent tongueMesh;
-	tongueMesh.CreateMeshInstance();
-	tongueMesh.mp_mesh->BuildBox({ 0.1f, 0.1f, 0.99f }, { 1.0f, 0.411f, 0.705f, 1.0f });
+	tongueMesh.mp_mesh = MeshManager::GetMesh(MeshTag::Tongue);
 	AddComponent<MeshRendererComponent>(tongueMesh);
 
 	TransformComponent tongueTransform;

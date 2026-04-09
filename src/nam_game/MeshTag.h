@@ -3,6 +3,7 @@ enum class MeshTag : nam::size
 {
 	Frog1,
 	Frog2,
+	Tongue,
 	Platform1,
 	Fly,
 	Spider,
