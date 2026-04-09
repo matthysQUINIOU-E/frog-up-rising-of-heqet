@@ -43,6 +43,34 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Spider.obj", { 1.f, 1.f, 1.f });
 		mrc.mp_mesh->SetColor({ 0.15f, 0.15f, 0.15f, 1.f });
 		break;
+	case MeshTag::Dragonfly:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/DragonFly.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.1f, 0.5f, 1.f });
+		break;
+	case MeshTag::Dinosaur:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/DINOSAUR.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.25f, 1.f });
+		break;
+	case MeshTag::Grasshopper:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Grasshopper.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.25f, 0.75f, 0.25f, 1.f });
+		break;
+	case MeshTag::Pine:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Pine.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetTexture((size)TextureTag::Pine);
+		break;
+	case MeshTag::LittlePine:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/LittlePine.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetTexture((size)TextureTag::LittlePine);
+		break;
+	case MeshTag::Rock:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Rock.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetTexture((size)TextureTag::Rock);
+		break;
+	case MeshTag::TreeStump:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/TreeStump.obj", { 1.f, 1.f, 1.f });
+		mrc.mp_mesh->SetTexture((size)TextureTag::TreeStump);
+		break;
 	default:
 		mrc.mp_mesh->BuildBox({ 1,1,1 }, { 1,1,1,1 });
 		break;

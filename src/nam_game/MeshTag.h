@@ -6,6 +6,13 @@ enum class MeshTag : nam::size
 	Platform1,
 	Fly,
 	Spider,
+	Dragonfly,
+	Dinosaur,
+	Grasshopper,
+	Pine,
+	LittlePine,
+	Rock,
+	TreeStump,
 	Size
 };
 

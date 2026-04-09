@@ -38,6 +38,10 @@ enum class TextureTag : nam::size
 	Frog1,
 	Frog2,
 	Fly,
+	Pine,
+	LittlePine,
+	Rock,
+	TreeStump,
 	Size
 };
 
