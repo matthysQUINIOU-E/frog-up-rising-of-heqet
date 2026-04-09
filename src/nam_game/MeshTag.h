@@ -12,6 +12,12 @@ enum class MeshTag : nam::size
 	LittlePine,
 	Rock,
 	TreeStump,
+	PressurePlate,
+	GrassPlatform,
+	RockPlatform,
+	Bridge,
+	Log,
+	Mountain,
 	Size
 };
 
