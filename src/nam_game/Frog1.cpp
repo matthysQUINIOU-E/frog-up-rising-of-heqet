@@ -148,7 +148,7 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     TransformComponent& transform = GetComponent<TransformComponent>();
 
     bool onFrog = (other.m_tag == (size)ColliderTag::FrogEllie) && self.m_normal.y < 0.f;
-    m_isOnWall = self.m_normal.y == 0.f && (other.m_tag != (size)ColliderTag::FrogEllie);
+    m_isOnWall = self.m_normal.y == 0.f && (other.m_tag != (size)ColliderTag::FrogEllie) && (other.m_tag != (size)ColliderTag::Checkpoint);
 
     if (onFrog)
     {

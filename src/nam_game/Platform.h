@@ -23,7 +23,7 @@ public:
 	void SetPosition(DirectX::XMFLOAT3 position);
 
 	void SetEventListen(uint32_t id);
-	void LoopWaypoins(bool loop);
+	void LoopWaypoints(bool loop);
 	void SetWaypoints(std::vector<DirectX::XMFLOAT3> waypoints);
 	void SetSpeed(float speed);
 	void SetMesh(MeshTag meshTag);

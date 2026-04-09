@@ -9,7 +9,7 @@ using namespace DirectX;
 
 void Platform::OnInit()
 {
-	BoxColliderComponent box = SetBoxCollider();
+	BoxColliderComponent& box = SetBoxCollider();
 	box.m_tag = (size)ColliderTag::Platform;
 	box.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
 	box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
@@ -18,7 +18,7 @@ void Platform::OnInit()
 
 	AddComponent<TransformComponent>({});
 	MeshRendererComponent mrc;
-	mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Platform1);
+	mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Platform1); // TODO :: change
 	AddComponent<MeshRendererComponent>(mrc);
 
 	SetBehavior();
@@ -86,7 +86,7 @@ void Platform::SetPosition(DirectX::XMFLOAT3 position)
 	transform.SetWorldPosition(position);
 }
 
-void Platform::LoopWaypoins(bool loop)
+void Platform::LoopWaypoints(bool loop)
 {
 	m_loopWaypoints = loop;
 }

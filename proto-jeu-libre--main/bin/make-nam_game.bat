@@ -1,2 +1,0 @@
-SolutionGenerator.exe -bp -make 3ACA6B16-4E14-68E8-2EB4-356308514D07
-PAUSE
