@@ -18,7 +18,7 @@ namespace nam
 
 			if (physic.m_useGravity) {
 				XMVECTOR vDir = XMLoadFloat3(&physic.m_dirGravity);
-				vDir = XMVectorScale(vDir, gravity);
+				vDir = XMVectorScale(vDir, gravity * physic.m_gravityScale);
 				XMFLOAT3 dir;
 				XMStoreFloat3(&dir, vDir);
 				physic.AddImpulse(dir);

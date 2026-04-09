@@ -39,8 +39,8 @@ void Frog::OnInit()
     m_gravityTimerTarget = 0.5f;
     m_gravityTimer.Init(m_gravityTimerTarget);
 
-    m_collectTimerTarget = 2.0f;
-    m_collectTimer.Init(m_collectTimerTarget, true, true);
+    m_collectTimerTarget = 5.0f;
+    m_collectTimer.Init(m_collectTimerTarget);
 }
 
 void Frog::OnUpdate()
@@ -99,23 +99,6 @@ void Frog::OnUpdate()
         physic.m_useGravity = true;
         physic.m_dirGravity = m_gravity;
         m_gravityTimer.ResetProgress();
-    }
-
-    if (m_isFlying) // a test
-    {
-        if (m_collectTimer.IsTargetReached())
-        {
-            m_isFlying = false;
-
-            PhysicComponent& physic = GetComponent<PhysicComponent>();
-            physic.m_useGravity = true;
-            physic.m_dirGravity = m_gravity;
-        }
-        else
-        {
-            PhysicComponent& physic = GetComponent<PhysicComponent>();
-            physic.m_useGravity = false;
-        }
     }
 
     if (!m_isFrogActive)
@@ -220,18 +203,6 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         XMFLOAT3 m_center = transform->GetWorldPosition();
         SetCheckpoint(m_center);
     }
-
-    if (other.m_tag == (size)ColliderTag::CollectDrag) // a test
-    {
-        std::cout << "storm" << std::endl;
-        m_isFlying = true;
-
-        m_collectTimer.ResetProgress();
-
-        PhysicComponent& physic = GetComponent<PhysicComponent>();
-        physic.m_useGravity = false;
-        physic.m_velocity = { 0.f, 0.f, 0.f };
-    }
 }
 
 void Frog::ChargeJump()
@@ -269,7 +240,6 @@ void Frog::Jump(XMFLOAT3 direction)
 
 void Frog::Rotate()
 {
-
     Ecs& ecs = GetEcs();
 
     XMFLOAT3 impulse = { 0.f, 0.0f, 0.f };
@@ -317,7 +287,6 @@ void Frog::Rotate()
             m_isGrounded = false;
             m_isorientedGround = true;
             m_isOnWall = false;
-
         }
     }
 }
@@ -340,7 +309,6 @@ void Frog::RotateUpdate()
     {
         return;
     }
-     
 
     XMVECTOR vUp = XMLoadFloat3(&m_normal);
 
@@ -493,6 +461,12 @@ void Frog::ControllerFlying()
 
         if (Controller::Get(ControlType::Right))
             right += 1.f;
+
+        if (Controller::Get(ControlType::JumpRelease))
+        {
+            PhysicComponent& physic = GetComponent<PhysicComponent>();
+            physic.AddImpulse({ 0.f, 5.f, 0.f });
+        }
     }
 
     if (forward == 0.f && right == 0.f)
