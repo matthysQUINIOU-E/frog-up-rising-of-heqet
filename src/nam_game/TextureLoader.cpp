@@ -43,5 +43,13 @@ void TextureLoader::LoadAllTexture(nam::App* app)
     app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge4.dds", (size)TextureTag::Jauge4);
     app->LoadTexture(L"../../res/Textures/Endurance-gauge/jauge5.dds", (size)TextureTag::Jauge5);
 
+    app->LoadTexture(L"../../res/Textures/Frog/FrogTexture.dds", (size)TextureTag::Frog1);
+    app->LoadTexture(L"../../res/Textures/Frog/FrogTexture2.dds", (size)TextureTag::Frog2);
+    app->LoadTexture(L"../../res/Textures/Collectible/Fly.dds", (size)TextureTag::Fly);
+
+    app->LoadTexture(L"../../res/Textures/Environment/Pine.dds", (size)TextureTag::Pine);
+    app->LoadTexture(L"../../res/Textures/Environment/LittlePine.dds", (size)TextureTag::LittlePine);
+    app->LoadTexture(L"../../res/Textures/Environment/Rock.dds", (size)TextureTag::Rock);
+    app->LoadTexture(L"../../res/Textures/Environment/TreeStump.dds", (size)TextureTag::TreeStump);
 
 }

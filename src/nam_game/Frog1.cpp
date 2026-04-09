@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Frog1.h"
+#include "Frog2.h"
 #include "ColliderTag.h"
 #include "Camera.h"
 #include "Controller.h"
@@ -7,6 +8,8 @@
 #include "Constant.h"
 #include "SpriteManager.h"
 #include "Jauge.h"
+#include "FrogTongue.h"
+#include "MeshManager.h"
 
 
 using namespace nam;
@@ -17,7 +20,7 @@ void Frog1::OnInit()
     Frog::OnInit();
 
     MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
-    mrc.mp_mesh->SetColor({ 0.5f, 0.0f, 0.0f, 1.f });
+    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Rock);
 
     TransformComponent& tc = GetComponent<TransformComponent>();
     tc.SetWorldPosition({ -1.f,2.f,0.f });
@@ -34,11 +37,19 @@ void Frog1::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::CollectSpid);
     box.m_shouldCollideWith.insert((size)ColliderTag::CollectGras);
     box.m_shouldCollideWith.insert((size)ColliderTag::PressurePlate);
-
+    box.m_shouldCollideWith.insert((size)ColliderTag::TongueEllie);
 
     Scene& scene = GetScene();
     m_jauge = &scene.CreateGameObject<Jauge>();
     m_jaugeTimer.Init(m_jaugeTimerTarget, true);
+
+    m_tongue = &scene.CreateGameObject<FrogTongue>(false);
+    TransformComponent& tongueTransform = m_tongue->GetComponent<TransformComponent>();
+    tongueTransform.SetParent(&GetComponent<TransformComponent>());
+    BoxColliderComponent& tongueCollider = m_tongue->GetComponent<BoxColliderComponent>();
+    tongueCollider.m_tag = (size)ColliderTag::TongueJoel;
+    tongueCollider.m_shouldCollideWith.insert((size)ColliderTag::FrogEllie);
+    m_tongue->SetFrog(this);
 
     SetBehavior();
     SetController();
@@ -69,6 +80,47 @@ void Frog1::UpdateJaugeDisplay(float progress)
         m_jauge->SetJauge(JaugeType::Jauge5);
 }
 
+void Frog1::SpitOut()
+{
+    if (CheckComponent<Frog2Tag>() == false)
+        return;
+
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    Swallow& swallow = GetComponent<Swallow>();
+
+    float offset = 3.f;
+    XMFLOAT3 pos = transform.GetWorldPosition();
+    XMFLOAT3 forward = transform.GetWorldForward();
+    XMFLOAT3 newPos = { pos.x + (forward.x * offset), pos.y + forward.y, pos.z + (forward.z * offset) };
+    m_otherFrogTransform->SetWorldPosition(newPos);
+    m_otherFrogTransform->SetWorldScale({ 1.f, 1.f, 1.f });
+    swallow.m_hasSwallowed = false;
+
+    m_otherFrogCollider->m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
+    m_otherFrogCollider->m_shouldCollideWith.insert((size)ColliderTag::TongueJoel);
+    m_otherFrogPhysic->m_useGravity = true;
+
+}
+
+void Frog1::IsSwallowed()
+{
+    if (CheckComponent<Frog2Tag>() == false)
+        return;
+
+    TransformComponent& transform = GetComponent<TransformComponent>();
+    Swallow& swallow = GetComponent<Swallow>();
+    BoxColliderComponent& box = GetComponent<BoxColliderComponent>();
+    PhysicComponent& pc = GetComponent<PhysicComponent>();
+
+    box.m_shouldCollideWith.erase((size)ColliderTag::FrogEllie);
+    box.m_shouldCollideWith.erase((size)ColliderTag::TongueEllie);
+    transform.SetWorldScale({ 0.01f, 0.01f, 0.01f });
+    transform.SetWorldPosition(m_otherFrogTransform->GetWorldPosition());
+    pc.m_useGravity = false;
+    swallow.m_isSwallowed = true;
+
+}
+
 void Frog1::OnUpdate()
 {
     float dt = App::Get()->GetChrono().GetScaledDeltaTime();
@@ -76,7 +128,7 @@ void Frog1::OnUpdate()
 
     Frog::OnUpdate();
 
-    if (m_isOrientedWall)
+    if (m_isOrientedWall && m_isFrogActive)
     {
         m_isRecharging = false;
         m_jauge->SetActive(true);
@@ -94,7 +146,7 @@ void Frog1::OnUpdate()
             m_isOrientedWall = false;
         }
     }
-    else if (m_isorientedGround && m_jaugeProgress < m_jaugeTimerTarget)
+    else if (m_isorientedGround && m_jaugeProgress < m_jaugeTimerTarget && m_isFrogActive)
     {
         m_isRecharging = true;
         m_jauge->SetActive(true);
@@ -112,9 +164,11 @@ void Frog1::OnUpdate()
         }
     }
     else if (!m_isOrientedWall && !m_isRecharging)
-    {
         m_jauge->SetActive(false);
-    }
+    
+    else if (!m_isFrogActive)
+        m_jauge->SetActive(false);
+
 }
 
 void Frog1::OnController()
@@ -128,6 +182,9 @@ void Frog1::OnController()
     if (Controller::Get(ControlType::SwitchFrog2))
         m_isFrogActive = false;
 
+    if (!m_isFrogActive)
+        return;
+
     if (m_isSpacePressed)
     {
         PhysicComponent& physic = GetComponent<PhysicComponent>();
@@ -139,13 +196,19 @@ void Frog1::OnController()
 
     if (m_isOnWall)
         ControllerMoveWall();
+
+
+    Swallow& swallow = GetComponent<Swallow>();
+    if (Input::IsKeyDown('F') && swallow.m_hasSwallowed && (m_isGrounded || m_isOnWall))
+    {
+        SpitOut();
+    }
 }
 
 void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
     Frog::OnCollision(self, other);
     PhysicComponent& physic = GetComponent<PhysicComponent>();
-    TransformComponent& transform = GetComponent<TransformComponent>();
 
     bool onFrog = (other.m_tag == (size)ColliderTag::FrogEllie) && self.m_normal.y < 0.f;
     m_isOnWall = self.m_normal.y == 0.f && (other.m_tag != (size)ColliderTag::FrogEllie) && (other.m_tag != (size)ColliderTag::Checkpoint);
@@ -161,6 +224,11 @@ void Frog1::OnCollision(const SingleCollisionInfo& self, const SingleCollisionIn
     else if (m_isOnWall)
     {
         CollisionOnWall(self, other);
+    }
+    
+    if (other.m_tag == (size)ColliderTag::TongueEllie)
+    {
+        IsSwallowed();
     }
 }
 
