@@ -16,6 +16,7 @@ protected:
 	bool m_isOrientedWall = false;
 	bool m_isRotate = false;
 	bool m_isFiring = false;
+	bool m_isFlying = false;
 
 	float m_jumpImpulse = 0.f;
 	float m_maxImpulse = 15.f;
@@ -47,6 +48,9 @@ protected:
 
 	float m_gravityTimerTarget = 0.f;
 	nam::Timer m_gravityTimer;
+	
+	float m_collectTimerTarget = 0.0f;
+	nam::Timer m_collectTimer;
 
 	nam::TransformComponent* m_otherFrogTransform = nullptr;
 	nam::BoxColliderComponent* m_otherFrogCollider = nullptr;

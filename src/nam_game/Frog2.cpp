@@ -28,7 +28,6 @@ void Frog2::OnInit()
     box.m_shouldCollideWith.insert((size)ColliderTag::FrogJoel);
     box.m_shouldCollideWith.insert((size)ColliderTag::TongueJoel);
     box.m_shouldCollideWith.insert((size)ColliderTag::Checkpoint);
-    box.m_shouldCollideWith.insert((size)ColliderTag::Checkpoint);
     box.m_shouldCollideWith.insert((size)ColliderTag::PressurePlate);
 
     Scene& scene = GetScene();

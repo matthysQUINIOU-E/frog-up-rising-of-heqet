@@ -36,6 +36,9 @@ void Frog::OnInit()
     m_gravityTimerTarget = 0.5f;
     m_gravityTimer.Init(m_gravityTimerTarget);
 
+    m_collectTimerTarget = 5.0f;
+    m_collectTimer.Init(m_collectTimerTarget);
+    
     Swallow sw;
     AddComponent<Swallow>(sw);
 }
@@ -47,6 +50,7 @@ void Frog::OnUpdate()
     m_stompedTimer.Update(dt);
     m_unstompTimer.Update(dt);
     m_gravityTimer.Update(dt);
+    m_collectTimer.Update(dt);
 
     if (m_arrowTimer.IsTargetReached())
     {
@@ -189,7 +193,6 @@ void Frog::Jump(XMFLOAT3 direction)
 
 void Frog::Rotate()
 {
-
     Ecs& ecs = GetEcs();
 
     XMFLOAT3 impulse = { 0.f, 0.0f, 0.f };
@@ -237,7 +240,6 @@ void Frog::Rotate()
             m_isGrounded = false;
             m_isorientedGround = true;
             m_isOnWall = false;
-
         }
     }
 }
@@ -260,7 +262,6 @@ void Frog::RotateUpdate()
     {
         return;
     }
-     
 
     XMVECTOR vUp = XMLoadFloat3(&m_normal);
 

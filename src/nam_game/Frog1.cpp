@@ -20,7 +20,7 @@ void Frog1::OnInit()
     Frog::OnInit();
 
     MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
-    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Endpoint);
+    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Frog1);
 
     TransformComponent& tc = GetComponent<TransformComponent>();
 

@@ -15,6 +15,9 @@ enum class MeshTag : nam::size
 	TreeStump,
 	Checkpoint,
 	Endpoint,
+	SmallPlatform,
+	Platform,
+	GrassPlatform,
 	Size
 };
 
