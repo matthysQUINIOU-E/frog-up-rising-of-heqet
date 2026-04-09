@@ -90,7 +90,6 @@ void Frog::OnUpdate()
     {
         m_isFiring = false;
     }
-
     
     if (m_gravityTimer.IsTargetReached())
     {
@@ -100,6 +99,23 @@ void Frog::OnUpdate()
         physic.m_useGravity = true;
         physic.m_dirGravity = m_gravity;
         m_gravityTimer.ResetProgress();
+    }
+
+    if (m_isFlying) // a test
+    {
+        if (m_collectTimer.IsTargetReached())
+        {
+            m_isFlying = false;
+
+            PhysicComponent& physic = GetComponent<PhysicComponent>();
+            physic.m_useGravity = true;
+            physic.m_dirGravity = m_gravity;
+        }
+        else
+        {
+            PhysicComponent& physic = GetComponent<PhysicComponent>();
+            physic.m_useGravity = false;
+        }
     }
 
     if (!m_isFrogActive)
@@ -205,10 +221,16 @@ void Frog::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInf
         SetCheckpoint(m_center);
     }
 
-    if (other.m_tag == (size)ColliderTag::CollectDrag)
+    if (other.m_tag == (size)ColliderTag::CollectDrag) // a test
     {
         std::cout << "storm" << std::endl;
         m_isFlying = true;
+
+        m_collectTimer.ResetProgress();
+
+        PhysicComponent& physic = GetComponent<PhysicComponent>();
+        physic.m_useGravity = false;
+        physic.m_velocity = { 0.f, 0.f, 0.f };
     }
 }
 
