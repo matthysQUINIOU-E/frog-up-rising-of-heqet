@@ -86,7 +86,7 @@ void Platform::SetPosition(DirectX::XMFLOAT3 position)
 	transform.SetWorldPosition(position);
 }
 
-void Platform::LoopWaypoins(bool loop)
+void Platform::LoopWaypoints(bool loop)
 {
 	m_loopWaypoints = loop;
 }
