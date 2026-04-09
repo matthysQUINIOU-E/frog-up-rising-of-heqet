@@ -9,6 +9,7 @@
 #include "Frog2.h"
 #include "PressurePlate.h"
 #include "MeshManager.h"
+#include "GameLight.h"
 
 using namespace nam;
 using namespace DirectX;
@@ -182,7 +183,6 @@ GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_
 
     case MapLoaderFlag::DirectionalLight:
     {
-        go = &scene->CreateGameObject<GameObject>();
         float intensity = 1.f;
         XMFLOAT3 direction = { 0,-1,0 };
         XMFLOAT3 color = { 1,1,1 };
@@ -213,19 +213,16 @@ GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_
                 }
             }
         }
+        GameLight gl = scene->CreateGameObject<GameLight>();
+        gl.SetToDirectional(intensity, direction, color);
 
-        LightComponent lc;
-        lc.CreateLightInstance();
-        lc.mp_light->SetToDirectionalLight(intensity, direction, color);
-        go->AddComponent<LightComponent>(lc);
+        go = &gl;
 
         break;
     }
 
     case MapLoaderFlag::PointLight:
     {
-        go = &scene->CreateGameObject<GameObject>();
-        go->AddComponent<TransformComponent>({});
         float intensity = 1.f;
         float range = 1.f;
         DirectX::XMFLOAT3 color = { 1,1,1 };
@@ -253,18 +250,16 @@ GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_
             }
         }
 
-        LightComponent lc;
-        lc.CreateLightInstance();
-        lc.mp_light->SetToPointLight(intensity, { 0,0,0 }, range, color);
-        go->AddComponent<LightComponent>(lc);
+        GameLight gl = scene->CreateGameObject<GameLight>();
+        gl.SetToPoint(intensity, { 0,0,0 }, range, color);
+
+        go = &gl;
 
         break;
     }
 
     case MapLoaderFlag::SpotLight:
     {
-        go = &scene->CreateGameObject<GameObject>();
-        go->AddComponent<TransformComponent>({});
         float intensity = 1.f;
         float range = 1.f;
         XMFLOAT3 color = { 1,1,1 };
@@ -308,10 +303,10 @@ GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_
             }
         }
 
-        LightComponent lc;
-        lc.CreateLightInstance();
-        lc.mp_light->SetToSpotLight(intensity, { 0,0,0 }, range, direction, beginAngle, endAngle, color);
-        go->AddComponent<LightComponent>(lc);
+        GameLight gl = scene->CreateGameObject<GameLight>();
+        gl.SetToSpot(intensity, { 0,0,0 }, range, direction, beginAngle, endAngle, color);
+
+        go = &gl;
 
         break;
     }
