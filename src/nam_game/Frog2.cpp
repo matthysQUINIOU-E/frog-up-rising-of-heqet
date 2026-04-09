@@ -15,7 +15,7 @@ void Frog2::OnInit()
     Frog::OnInit();
 
     MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
-    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Frog2);
+    mrc.mp_mesh = MeshManager::GetMesh(MeshTag::SmallPlatform);
 
     TransformComponent& tc = GetComponent<TransformComponent>();
     tc.SetWorldPosition({ 1.f,2.f,0.f });

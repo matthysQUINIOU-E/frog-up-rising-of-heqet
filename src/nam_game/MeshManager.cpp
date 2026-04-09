@@ -73,15 +73,15 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		break;
 	case MeshTag::SmallPlatform:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/SmallPlateform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.5f, 0.5f, 0.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.5f, 0.2f, 0.f, 1.f });
 		break;
 	case MeshTag::Platform:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Plateform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.75f, 0.75f, 0.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.5f, 0.2f, 0.f, 1.f });
 		break;
 	case MeshTag::GrassPlatform:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/GrassPlateform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.75f, 1.f, 0.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.5f, 0.5f, 0.f, 1.f });
 		break;
 	default:
 		mrc.mp_mesh->BuildBox({ 1,1,1 }, { 1,1,1,1 });
