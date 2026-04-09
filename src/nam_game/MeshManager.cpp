@@ -73,7 +73,7 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		break;
 	case MeshTag::SmallPlatform:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/SmallPlateform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.75f, 0.75f, 0.f, 1.f });
+		mrc.mp_mesh->SetColor({ 0.5f, 0.5f, 0.f, 1.f });
 		break;
 	case MeshTag::Platform:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Plateform.obj", { 1.f, 1.f, 1.f });
