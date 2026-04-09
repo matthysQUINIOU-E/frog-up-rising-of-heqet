@@ -37,7 +37,8 @@ MapLoaderFlag MapLoaderFlagConvertor::StringToEnum(std::string str)
         {"range", MapLoaderFlag::Range},
         {"spotLight", MapLoaderFlag::SpotLight},
         {"beginAngle", MapLoaderFlag::BeginAngle},
-        {"endAngle", MapLoaderFlag::EndAngle}
+        {"endAngle", MapLoaderFlag::EndAngle},
+        {"texture", MapLoaderFlag::Texture}
     };
     auto it = map.find(str);
     return (it != map.end()) ? it->second : MapLoaderFlag::None;

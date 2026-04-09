@@ -2,7 +2,7 @@
 #include "PressurePlate.h"
 #include "EventRegister.h"
 #include "ColliderTag.h"
-
+#include "MeshManager.h"
 using namespace nam;
 using namespace DirectX;
 
@@ -20,8 +20,7 @@ void PressurePlate::OnInit()
 	box.m_shouldCollideWith.insert((size)ColliderTag::TongueJoel);
 
 	MeshRendererComponent mrc;
-	mrc.CreateMeshInstance();
-	mrc.mp_mesh->BuildBox({ 1,0.3f,1 }, {1,1,1,1});
+	mrc.mp_mesh = MeshManager::GetMesh(MeshTag::PressurePlate);
 	AddComponent<MeshRendererComponent>(mrc);
 
 	m_timerCanToggleDelay.Init(m_timerCanToggleDelayTarget);

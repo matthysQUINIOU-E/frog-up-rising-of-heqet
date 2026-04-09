@@ -107,7 +107,7 @@ def topological_sort(objects):
         if obj['id'] is not None and obj['id'] not in visited:
             dfs(obj['id'])
 
-    order.reverse()
+    # order.reverse()
     order.extend(no_id)
     return order
 
@@ -143,5 +143,5 @@ def export_scene(json_path):
     with open(json_path, "w") as f:
         json.dump(output, f, separators=(',', ':'), indent=None)
 
-output_path = r"C:\Users\matth\Documents\GitHub\frog-up-rising-of-heqet\res\Scene\Level1.json"
+output_path = r"C:\Users\mquiniou\Documents\GitHub\frog-up-rising-of-heqet\res\Scene\Level1.json"
 export_scene(output_path)
