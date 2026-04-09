@@ -55,7 +55,7 @@ GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_
                 switch (prop)
                 {
                 case MapLoaderFlag::LevelEnd:
-                    //TODO :: add feature
+                    c.SetLevelEnd((bool)value.get<int>());
                     break;
                 }
             }
@@ -134,7 +134,7 @@ GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_
                     platform.SetSpeed(value.get<float>());
                     break;
                 case MapLoaderFlag::LoopWaypoints:
-                    platform.LoopWaypoints(value.get<bool>());
+                    platform.LoopWaypoints((bool)value.get<int>());
                     break;
                 case MapLoaderFlag::Waypoints:
                 {
@@ -168,7 +168,7 @@ GameObject* MapLoader::GameObjectFactory(Scene* scene, nlohmann::json_abi_v3_12_
                 switch (prop)
                 {
                 case MapLoaderFlag::ToggleMode:
-                    pressurePlate.SetToggleMode(value.get<bool>());
+                    pressurePlate.SetToggleMode((bool)value.get<int>());
                     break;
                 }
             }

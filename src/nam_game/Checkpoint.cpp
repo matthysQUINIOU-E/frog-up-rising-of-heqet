@@ -2,6 +2,7 @@
 #include "Checkpoint.h"
 #include "Frog.h"
 #include "ColliderTag.h"
+#include <SceneTag.h>
 
 using namespace nam;
 using namespace DirectX;
@@ -24,4 +25,15 @@ void Checkpoint::OnInit()
 
 void Checkpoint::OnCollision(const SingleCollisionInfo& self, const SingleCollisionInfo& other)
 {
+    if ((other.m_tag == (size)ColliderTag::FrogEllie || other.m_tag == (size)ColliderTag::FrogJoel) && m_levelEnd)
+    {
+        App::Get()->CreateOrGetScene<Scene>((size)SceneTag::Gameplay).SetActive(false);
+        App::Get()->CreateOrGetScene<Scene>((size)SceneTag::Victory).SetActive(true);
+        Input::ShowMouse();
+    }
+}
+
+void Checkpoint::SetLevelEnd(bool end)
+{
+    m_levelEnd = end;
 }
