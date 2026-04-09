@@ -32,7 +32,17 @@ namespace nam
 		}
 
 		SparseSetPage<DenseType>& page = m_pages[pageIndex];
-		u32 localIndex = page.m_count;
+		u32 localIndex;
+		if (page.m_freeLocal.empty())
+		{
+			localIndex = page.m_count;
+		}
+		else
+		{
+			localIndex = page.m_freeLocal.back();
+			page.m_freeLocal.pop_back();
+			page.m_maskFreeLocal.set(localIndex, false);
+		}
 
 		page.m_data[localIndex] = denseType;
 		page.m_entities[localIndex] = id;
@@ -51,17 +61,9 @@ namespace nam
 
 		const PageIndex& pageIndex = m_entityToPageIndex[id];
 		SparseSetPage<DenseType>& page = m_pages[pageIndex.m_pageIndex];
-		u32 lastIndex = page.m_count - 1;
 
-		if (pageIndex.m_localIndex != lastIndex) {
-			u32 lastEntity = page.m_entities[lastIndex];
-
-			page.m_data[pageIndex.m_localIndex] = std::move(page.m_data[lastIndex]);
-			page.m_entities[pageIndex.m_localIndex] = lastEntity;
-
-			m_entityToPageIndex[lastEntity].m_localIndex = pageIndex.m_localIndex;
-		}
-
+		page.m_maskFreeLocal.set(pageIndex.m_localIndex, true);
+		page.m_freeLocal.push_back(pageIndex.m_localIndex);
 		page.m_count--;
 		m_entityToPageIndex[id] = { INVALID_PAGE, 0 };
 
@@ -99,7 +101,9 @@ namespace nam
 		entities.reserve(Size());
 
 		for (const auto& page : m_pages) {
-			for (u32 j = 0; j < page.m_count; ++j) {
+			for (u32 j = 0; j < page.m_count + page.m_freeLocal.size(); ++j) {
+				if (page.m_maskFreeLocal.test(j))
+					continue;
 				entities.push_back(page.m_entities[j]);
 			}
 		}
