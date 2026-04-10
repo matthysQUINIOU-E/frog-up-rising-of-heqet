@@ -324,7 +324,7 @@ namespace nam
 		ID3D12GraphicsCommandList* pCommandList = mp_commandManager->GetCommandList();
 
 		auto currentBackBufferView = mp_swapChainManager->CurrentBackBufferView();
-		pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::Black, 0, nullptr);
+		pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::SkyBlue, 0, nullptr);
 
 		auto depthStencilView = DepthStencilView();
 		pCommandList->ClearDepthStencilView(depthStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);

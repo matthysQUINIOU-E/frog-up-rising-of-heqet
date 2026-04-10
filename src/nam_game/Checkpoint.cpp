@@ -15,6 +15,7 @@ void Checkpoint::OnInit()
 
     MeshRendererComponent mrc;
     mrc.mp_mesh = MeshManager::GetMesh(MeshTag::Checkpoint);
+    AddComponent<MeshRendererComponent>(mrc);
 
     BoxColliderComponent& box = SetBoxCollider();
     box.m_tag = (size)ColliderTag::Checkpoint;
