@@ -40,20 +40,16 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		mrc.mp_mesh->SetTexture((size)TextureTag::Fly);
 		break;
 	case MeshTag::Spider:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Spider.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.15f, 0.15f, 0.15f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Spider.obj", { 0.f, 0.f, 0.f });
 		break;
 	case MeshTag::Dragonfly:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/DragonFly.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.1f, 0.5f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/DragonFly.obj", { 0.25f, 0.f, 0.5f });
 		break;
 	case MeshTag::Dinosaur:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/DINOSAUR.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.25f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/DINOSAUR.obj", { 0.3f, 0.3f, 0.3f });
 		break;
 	case MeshTag::Grasshopper:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Grasshopper.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.75f, 0.25f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Collectible/Grasshopper.obj", { 0.2f, 0.5f, 0.f });
 		break;
 	case MeshTag::Pine:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Pine.obj", { 1.f, 1.f, 1.f });
@@ -77,39 +73,34 @@ Mesh* MeshManager::InitMesh(MeshTag meshTag)
 		break;
 	case MeshTag::SmallPlatform:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/SmallPlateform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.5f, 0.5f, 0.f, 1.f });
 		break;
 	case MeshTag::Platform:
 		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Plateform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.75f, 0.75f, 0.f, 1.f });
 		break;
 	case MeshTag::GrassPlatform:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/GrassPlateform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.75f, 1.f, 0.f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/GrassPlateform.obj", { 0.2f, 0.7f, 0.3f });
 		break;
 	case MeshTag::PressurePlate:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/PressurePlate.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/PressurePlate.obj", { 0.5f, 0.5f, 0.5f });
 		break;
 	case MeshTag::GrassePlatform:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Platform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Plateform.obj", { 0.7f, 0.6f, 0.5f });
 		break;
 	case MeshTag::RockPlatform:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Platform.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.25f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Platform.obj", { 0.5f, 0.5f, 0.5f });
+		break;
+	case MeshTag::SandPlatform:
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Platform.obj", { 0.5f, 0.5f, 0.5f });
+		mrc.mp_mesh->SetTexture((size)TextureTag::Sand);
 		break;
 	case MeshTag::Bridge:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Bridge.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Bridge.obj", { 0.4f, 0.5f, 0.1f });
 		break;
 	case MeshTag::Log:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Log.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Log.obj", { 0.4f, 0.5f, 0.1f });
 		break;
 	case MeshTag::Mountain:
-		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Mountain.obj", { 1.f, 1.f, 1.f });
-		mrc.mp_mesh->SetColor({ 0.25f, 0.25f, 0.25f, 1.f });
+		mrc.mp_mesh->LoadObj(L"../../res/Assets/Environment/Mountain.obj", { 0.5f, 0.5f, 0.5f });
 		break;
 	default:
 		mrc.mp_mesh->BuildBox({ 1,1,1 }, { 1,1,1,1 });

@@ -15,6 +15,7 @@ void TextureLoader::LoadAllTexture(nam::App* app)
     app->LoadTexture(L"../../res/Textures/grass7.dds", (size)TextureTag::Grass7);
     app->LoadTexture(L"../../res/Textures/grass8.dds", (size)TextureTag::Grass8);
     app->LoadTexture(L"../../res/Textures/grass9.dds", (size)TextureTag::Grass9);
+    app->LoadTexture(L"../../res/Textures/Sand.dds", (size)TextureTag::Sand);
     app->LoadTexture(L"../../res/Textures/straw.dds", (size)TextureTag::Straw);
     app->LoadTexture(L"../../res/Textures/tile1.dds", (size)TextureTag::Tile1);
     app->LoadTexture(L"../../res/Textures/tile2.dds", (size)TextureTag::Tile2);

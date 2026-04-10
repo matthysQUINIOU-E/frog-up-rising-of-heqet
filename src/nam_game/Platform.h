@@ -29,6 +29,7 @@ public:
 	void SetSpeed(float speed);
 	void SetMesh(MeshTag meshTag);
 	void SetTexture(TextureTag textureTag);
+	void SetColor(DirectX::XMFLOAT3 color);
 
 private:
 	bool MoveToward(DirectX::XMFLOAT3 pos);

@@ -20,6 +20,7 @@ enum class MeshTag : nam::size
 	PressurePlate,
 	GrassePlatform,
 	RockPlatform,
+	SandPlatform,
 	Bridge,
 	Log,
 	Mountain,

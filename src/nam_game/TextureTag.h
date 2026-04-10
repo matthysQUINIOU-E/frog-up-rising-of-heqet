@@ -12,6 +12,7 @@ enum class TextureTag : nam::size
 	Grass7,
 	Grass8,
 	Grass9,
+	Sand,
 	Straw,
 	Tile1,
 	Tile2,

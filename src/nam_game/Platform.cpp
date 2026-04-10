@@ -115,6 +115,13 @@ void Platform::SetTexture(TextureTag textureTag)
 	mrc.mp_mesh->SetTexture((size)textureTag);
 }
 
+void Platform::SetColor(XMFLOAT3 color)
+{
+	MeshRendererComponent& mrc = GetComponent<MeshRendererComponent>();
+	XMFLOAT4 col = { color.x, color.y, color.z, 1.f };
+	mrc.mp_mesh->SetColor(col);
+}
+
 bool Platform::MoveToward(DirectX::XMFLOAT3 pos)
 {
 	float dt = App::Get()->GetChrono().GetScaledDeltaTime();
